@@ -1,0 +1,22 @@
+{
+  "name": "codesign",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.11.0",
+    "@babel/parser": "^7.11.3",
+    "next": "9.5.2",
+    "react": "16.13.1",
+    "react-children-utilities": "^2.1.5",
+    "react-dom": "16.13.1",
+    "react-render-hook": "^2.0.0"
+  },
+  "devDependencies": {
+    "next-transpile-modules": "^4.1.0"
+  }
+}
