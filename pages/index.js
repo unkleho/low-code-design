@@ -1,6 +1,7 @@
-import RenderHook from 'react-render-hook';
+// import RenderHook from 'react-render-hook';
 import React from 'react';
-import Head from 'next/head';
+import ReactDOM from 'react-dom';
+// import Head from 'next/head';
 import { deepMap } from 'react-children-utilities';
 
 import styles from '../styles/Home.module.css';
@@ -29,28 +30,20 @@ const Wrapper = ({ children }) => {
 
 export default function Home() {
   const ref = React.useRef();
+  const [targetInst, setTargetInst] = React.useState();
+
+  // React.useEffect(() => {
+  //   console.log(RenderHook);
+  //   // console.log(RenderHook.isAttached);
+  //   const component = RenderHook.findComponent(ref.current);
+  //   console.log(component.data.children[2].child._debugSource);
+  //   // Use _reactInternalInstance._debugSource to get fileName
+  // }, []);
 
   React.useEffect(() => {
-    console.log(RenderHook);
-    // console.log(RenderHook.isAttached);
-    const component = RenderHook.findComponent(ref.current);
-    console.log(component.data.children[2].child._debugSource);
-    // Use _reactInternalInstance._debugSource to get fileName
-
-    // console.log(window.__REACT_DEVTOOLS_GLOBAL_HOOK__);
-    // console.log(window.__REACT_DEVTOOLS_GLOBAL_HOOK__.reactDevtoolsAgent);
-    // emit - nothing
-    // listeners - seems for Chrome extension
-    // RenderHook.hook.sub('mount', (component) => {
-    //   console.log(component);
-    // });
-    // RenderHook.hook.on('message', (component) => {
-    //   console.log(component);
-    // });
-    // var elementData = window.__REACT_DEVTOOLS_GLOBAL_HOOK__.reactDevtoolsAgent.elementData.values();
-  }, []);
-
-  const [counter, setCounter] = React.useState(0);
+    // Fake click the ref so it triggers onClick handler
+    ref.current.click();
+  }, [ref]);
 
   return (
     <Wrapper>
@@ -59,18 +52,24 @@ export default function Home() {
         className={styles.container}
         id="kaho"
         onClick={(event) => {
-          const component = RenderHook.findComponent(event.target);
-          console.log(component);
+          // const component = RenderHook.findComponent(event.target);
+          // console.log(component);
 
-          setCounter(counter + 1);
+          // console.log(event);
+          // console.log(event._dispatchInstances);
+          // console.log(event._dispatchListeners);
+          // console.log(event._targetInst);
+
+          setTargetInst(event._targetInst);
         }}
+        // onMouseOver={(event) => {
+        //   console.log(event);
+        // }}
       >
-        <Head>
+        {/* <Head>
           <title>Create Next App</title>
           <link rel="icon" href="/favicon.ico" />
-        </Head>
-
-        {counter}
+        </Head> */}
 
         <Example />
 
@@ -114,18 +113,62 @@ export default function Home() {
             </a>
           </div>
         </main>
-
-        {/* <footer className={styles.footer}> */}
-        {/* <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          > */}
-        {/* Powered by{' '} */}
-        {/* <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} /> */}
-        {/* </a> */}
-        {/* </footer> */}
       </div>
+
+      <ComponentTree targetInst={targetInst} />
     </Wrapper>
   );
 }
+
+// const MyComponent = () => ReactDOM.createPortal(<FOO/>, 'dom-location')
+
+function canUseDOM() {
+  return !!(
+    typeof window !== 'undefined' &&
+    window.document &&
+    window.document.createElement
+  );
+}
+
+const ComponentTree = ({ targetInst }) => {
+  if (canUseDOM()) {
+    return ReactDOM.createPortal(
+      <ul
+        style={{
+          position: 'fixed',
+          top: 0,
+          backgroundColor: 'white',
+        }}
+      >
+        {targetInst?.memoizedProps.children.map((child, i) => {
+          return <ComponentTreeChild component={child} key={i} />;
+        })}
+      </ul>,
+      document.body
+    );
+  }
+
+  return null;
+};
+
+const ComponentTreeChild = ({ component }) => {
+  if (component.type) {
+    console.log(component.type);
+    console.log(component);
+    return (
+      <li>
+        {component.type.name ? component.type.name : component.type}
+        {component.props.className ? ` (${component.props.className})` : null}
+        {Array.isArray(component.props.children) && (
+          <ul>
+            {component.props.children.map((child, i) => (
+              <ComponentTreeChild component={child} key={i} />
+            ))}
+          </ul>
+        )}
+      </li>
+    );
+  }
+
+  return null;
+};
