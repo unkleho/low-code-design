@@ -1,44 +1,46 @@
-// import RenderHook from 'react-render-hook';
+import RenderHook from 'react-render-hook';
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import Head from 'next/head';
-import { deepMap } from 'react-children-utilities';
+import axios from 'axios';
+// import { deepMap } from 'react-children-utilities';
 
 import styles from '../styles/Home.module.css';
 import Example from '../components/Example';
 
-const Wrapper = ({ children }) => {
-  // console.log(children);
+// const Wrapper = ({ children }) => {
+// console.log(children);
 
-  // console.log(children.props.children[1]._source);
+// console.log(children.props.children[1]._source);
 
-  return deepMap(children, (child) => {
-    // console.log(child.type);
-    if (child && child.type) {
-      // console.log(child._source);
-      return React.cloneElement(child, {
-        ...child.props,
-        'data-id': 'test',
-      });
-    }
+// return deepMap(children, (child) => {
+//   // console.log(child.type);
+//   if (child && child.type) {
+//     // console.log(child._source);
+//     return React.cloneElement(child, {
+//       ...child.props,
+//       'data-id': 'test',
+//     });
+//   }
 
-    return child;
-  });
+//   return child;
+// });
 
-  // return children;
-};
+//   return children;
+// };
 
 export default function Home() {
   const ref = React.useRef();
   const [targetInst, setTargetInst] = React.useState();
+  const [targetData, setTargetData] = React.useState();
 
-  // React.useEffect(() => {
-  //   console.log(RenderHook);
-  //   // console.log(RenderHook.isAttached);
-  //   const component = RenderHook.findComponent(ref.current);
-  //   console.log(component.data.children[2].child._debugSource);
-  //   // Use _reactInternalInstance._debugSource to get fileName
-  // }, []);
+  React.useEffect(() => {
+    console.log(RenderHook);
+    // console.log(RenderHook.isAttached);
+    const component = RenderHook.findComponent(ref.current);
+    console.log(component);
+    // console.log(component.data.children[2].child._debugSource);
+    // Use _reactInternalInstance._debugSource to get fileName
+  }, []);
 
   React.useEffect(() => {
     // Fake click the ref so it triggers onClick handler
@@ -46,31 +48,29 @@ export default function Home() {
   }, [ref]);
 
   return (
-    <Wrapper>
+    // <Wrapper>
+    <>
       <div
         ref={ref}
         className={styles.container}
         id="kaho"
         onClick={(event) => {
-          // const component = RenderHook.findComponent(event.target);
+          const component = RenderHook.findComponent(event.target);
           // console.log(component);
+          // console.log(component.data);
+          // console.log(component.internalInstance._debugSource);
+          setTargetData(component.data);
 
           // console.log(event);
           // console.log(event._dispatchInstances);
           // console.log(event._dispatchListeners);
           // console.log(event._targetInst);
 
-          setTargetInst(event._targetInst);
+          if (!targetInst) {
+            setTargetInst(event._targetInst);
+          }
         }}
-        // onMouseOver={(event) => {
-        //   console.log(event);
-        // }}
       >
-        {/* <Head>
-          <title>Create Next App</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head> */}
-
         <Example />
 
         <main className={styles.main}>
@@ -115,8 +115,9 @@ export default function Home() {
         </main>
       </div>
 
-      <ComponentTree targetInst={targetInst} />
-    </Wrapper>
+      <ComponentTree targetInst={targetInst} targetData={targetData} />
+    </>
+    // </Wrapper>
   );
 }
 
@@ -130,20 +131,74 @@ function canUseDOM() {
   );
 }
 
-const ComponentTree = ({ targetInst }) => {
+const ComponentTree = ({ targetInst, targetData }) => {
+  console.log(targetData);
+  const [inputValue, setInputValue] = React.useState();
+
+  const targetClassName = targetData?.props.className;
+  const targetLineNumber = targetData?.source.lineNumber;
+  const targetPathname = targetData?.source.fileName;
+
+  React.useEffect(() => {
+    setInputValue(targetClassName);
+  }, [targetClassName]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    targetData.publicInstance.className = inputValue;
+
+    const result = await axios.get('/api/hello', {
+      params: {
+        className: inputValue,
+        lineNumber: targetLineNumber,
+        pathname: targetPathname,
+      },
+    });
+
+    console.log(result.data);
+  };
+
+  const handleInputChange = (event) => {
+    setInputValue(event.target.value);
+  };
+
   if (canUseDOM()) {
     return ReactDOM.createPortal(
-      <ul
+      <div
         style={{
           position: 'fixed',
           top: 0,
           backgroundColor: 'white',
         }}
       >
-        {targetInst?.memoizedProps.children.map((child, i) => {
-          return <ComponentTreeChild component={child} key={i} />;
-        })}
-      </ul>,
+        <ul>
+          {targetInst?.memoizedProps?.children?.map((child, i) => {
+            return <ComponentTreeChild component={child} key={i} />;
+          })}
+        </ul>
+
+        {targetData && (
+          <div
+            style={{
+              padding: '1rem',
+            }}
+          >
+            <p>{targetData.type}</p>
+            <p>
+              {targetData.source.lineNumber} {targetData.source.columnNumber}{' '}
+              {targetData.source.fileName}
+            </p>
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={inputValue || ''}
+                onChange={handleInputChange}
+              />
+            </form>
+          </div>
+        )}
+      </div>,
       document.body
     );
   }
@@ -153,8 +208,8 @@ const ComponentTree = ({ targetInst }) => {
 
 const ComponentTreeChild = ({ component }) => {
   if (component.type) {
-    console.log(component.type);
-    console.log(component);
+    // console.log(component.type);
+    // console.log(component);
     return (
       <li>
         {component.type.name ? component.type.name : component.type}
