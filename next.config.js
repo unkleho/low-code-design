@@ -9,12 +9,12 @@ module.exports = withTM({
       const entries = await originalEntry();
 
       // This breaks fast-refresh for some reason
-      if (
-        entries['main.js'] &&
-        !entries['main.js'].includes('./lib/react-render-hook.js')
-      ) {
-        entries['main.js'].unshift('./lib/react-render-hook.js');
-      }
+      // if (
+      //   entries['main.js'] &&
+      //   !entries['main.js'].includes('./lib/react-render-hook.js')
+      // ) {
+      //   entries['main.js'].unshift('./lib/react-render-hook.js');
+      // }
 
       return entries;
     };

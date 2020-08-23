@@ -1,4 +1,4 @@
-import RenderHook from 'react-render-hook';
+// import RenderHook from 'react-render-hook';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -34,10 +34,10 @@ export default function Home() {
   const [targetData, setTargetData] = React.useState();
 
   React.useEffect(() => {
-    console.log(RenderHook);
+    // console.log(RenderHook);
     // console.log(RenderHook.isAttached);
-    const component = RenderHook.findComponent(ref.current);
-    console.log(component);
+    // const component = RenderHook.findComponent(ref.current);
+    // console.log(component);
     // console.log(component.data.children[2].child._debugSource);
     // Use _reactInternalInstance._debugSource to get fileName
   }, []);
@@ -55,16 +55,23 @@ export default function Home() {
         className={styles.container}
         id="kaho"
         onClick={(event) => {
-          const component = RenderHook.findComponent(event.target);
+          // const component = RenderHook.findComponent(event.target);
           // console.log(component);
           // console.log(component.data);
           // console.log(component.internalInstance._debugSource);
-          setTargetData(component.data);
+          // setTargetData(component.data);
 
-          // console.log(event);
-          // console.log(event._dispatchInstances);
+          console.log('onClick');
+          console.log(event._dispatchInstances);
           // console.log(event._dispatchListeners);
-          // console.log(event._targetInst);
+          console.log(event._targetInst);
+
+          setTargetData({
+            type: event._targetInst.type,
+            className: event._targetInst.stateNode.className,
+            lineNumber: event._targetInst._debugSource.lineNumber,
+            pathname: event._targetInst._debugSource.fileName,
+          });
 
           if (!targetInst) {
             setTargetInst(event._targetInst);
@@ -135,9 +142,9 @@ const ComponentTree = ({ targetInst, targetData }) => {
   console.log(targetData);
   const [inputValue, setInputValue] = React.useState();
 
-  const targetClassName = targetData?.props.className;
-  const targetLineNumber = targetData?.source.lineNumber;
-  const targetPathname = targetData?.source.fileName;
+  const targetClassName = targetData?.className;
+  const targetLineNumber = targetData?.lineNumber;
+  const targetPathname = targetData?.pathname;
 
   React.useEffect(() => {
     setInputValue(targetClassName);
@@ -146,9 +153,9 @@ const ComponentTree = ({ targetInst, targetData }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    targetData.publicInstance.className = inputValue;
+    // targetData.publicInstance.className = inputValue;
 
-    const result = await axios.get('/api/hello', {
+    const result = await axios.get('/api/component', {
       params: {
         className: inputValue,
         lineNumber: targetLineNumber,
@@ -169,7 +176,7 @@ const ComponentTree = ({ targetInst, targetData }) => {
         style={{
           position: 'fixed',
           top: 0,
-          backgroundColor: 'white',
+          // backgroundColor: 'white',
         }}
       >
         <ul>
@@ -186,8 +193,7 @@ const ComponentTree = ({ targetInst, targetData }) => {
           >
             <p>{targetData.type}</p>
             <p>
-              {targetData.source.lineNumber} {targetData.source.columnNumber}{' '}
-              {targetData.source.fileName}
+              {targetData.lineNumber} {targetData.pathname}
             </p>
             <form onSubmit={handleSubmit}>
               <input
