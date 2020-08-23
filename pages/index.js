@@ -71,6 +71,7 @@ export default function Home() {
             className: event._targetInst.stateNode.className,
             lineNumber: event._targetInst._debugSource.lineNumber,
             pathname: event._targetInst._debugSource.fileName,
+            node: event._targetInst.stateNode,
           });
 
           if (!targetInst) {
@@ -154,6 +155,7 @@ const ComponentTree = ({ targetInst, targetData }) => {
     event.preventDefault();
 
     // targetData.publicInstance.className = inputValue;
+    targetData.node.className = inputValue;
 
     const result = await axios.get('/api/component', {
       params: {
