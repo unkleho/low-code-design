@@ -21,4 +21,30 @@ Babel generate seems to remove new lines, so may need a different parser - CST? 
 
 Maybe try plain old regex and split. No need for babel anymore, just convert file to an array using split('/n')
 
-Need to build tree now
+Need to build tree now. Should be able to do it with `sibling`.
+
+Good info on fiber https://programmer.help/blogs/rootfiber-for-react-source-parsing.html
+
+Utilities to get fiberNodes without onClick - https://github.com/bendtherules/react-fiber-traverse. Should be able to build a proper component tree with this library.
+
+Great article describing how Fiber works and why it is a singly linked list tree traversal algorithm.
+https://indepth.dev/the-how-and-why-on-reacts-usage-of-linked-list-in-fiber-to-walk-the-components-tree/
+
+```
+# FiberNode
+event._targetInst = {
+  elementType: 'div',
+  child: FiberNode (child),
+  index: number,
+  return: FiberNode (parent),
+  sibling: FiberNode (sibling),
+  stateNode: HTMLElement,
+  type: 'div',
+  _debugOwner: FiberNode (parent component)
+  _debugSource: {
+    columnNumber: number,
+    fileName: 'path/to/component',
+    lineNumber: number,
+  }
+}
+```

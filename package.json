@@ -18,6 +18,7 @@
     "react-children-utilities": "^2.1.5",
     "react-devtools": "^4.8.2",
     "react-dom": "16.13.1",
+    "react-fiber-traverse": "0.0.8",
     "react-render-hook": "^2.0.0"
   },
   "devDependencies": {

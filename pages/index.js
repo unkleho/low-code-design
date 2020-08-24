@@ -1,10 +1,16 @@
 // import RenderHook from 'react-render-hook';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {
+  Utils,
+  findNodeByComponentRef,
+  findNodeByComponentName,
+  traverse,
+} from 'react-fiber-traverse';
 import axios from 'axios';
 // import { deepMap } from 'react-children-utilities';
 
-import styles from '../styles/Home.module.css';
+import styles from '../styles/HomePage.module.css';
 import Example from '../components/Example';
 
 // const Wrapper = ({ children }) => {
@@ -28,11 +34,12 @@ import Example from '../components/Example';
 //   return children;
 // };
 
-export default function Home() {
+export default function HomePage() {
   const ref = React.useRef();
-  const [targetInst, setTargetInst] = React.useState();
+  const [topLevelInst, setTopLevelInst] = React.useState();
   const [targetData, setTargetData] = React.useState();
   const [counter, setCounter] = React.useState(0);
+  const [nodes, setNodes] = React.useState([]);
 
   React.useEffect(() => {
     // console.log(RenderHook);
@@ -41,13 +48,40 @@ export default function Home() {
     // console.log(component);
     // console.log(component.data.children[2].child._debugSource);
     // Use _reactInternalInstance._debugSource to get fileName
+    // const root = Utils.getRootFiberNodeFromDOM(
+    //   document.getElementById('__next')
+    // );
+    // console.log(root);
   }, []);
 
   React.useEffect(() => {
     // Fake click the ref so it triggers onClick handler
-    if (!targetInst) {
+    if (!topLevelInst) {
       ref.current.click();
     }
+
+    const rootFiberNode = Utils.getRootFiberNodeFromDOM(
+      document.getElementById('__next')
+    );
+
+    // Doesn't work for some reason
+    // const mainFiberNode = findNodeByComponentRef(rootFiberNode, ref.current);
+
+    let isComponentTree = false;
+    let nodes = [];
+    traverse(rootFiberNode, (node) => {
+      if (node.stateNode?.id === '__codesign' || isComponentTree) {
+        isComponentTree = true;
+        nodes.push(node);
+        // console.log(node);
+      }
+    });
+    // Filter out ComponentTree, otherwise we are inspecting the UI that is inspecting the UI
+    // TODO: Just removing the top ComponentTree for now, but should remove child nodes too for performance
+    setNodes(nodes.filter((node) => node.type?.name !== 'ComponentTree'));
+
+    // console.log(rootFiberNode);
+    // console.log(mainFiberNode);
   }, [ref]);
 
   return (
@@ -56,7 +90,7 @@ export default function Home() {
       <div
         ref={ref}
         className={styles.container}
-        id="kaho"
+        id="__codesign"
         onClick={(event) => {
           // const component = RenderHook.findComponent(event.target);
           // console.log(component);
@@ -66,22 +100,25 @@ export default function Home() {
 
           setCounter(counter + 1);
 
-          console.log('onClick');
+          const targetInst = event._targetInst;
+
+          // console.log('onClick');
           // console.log(event._dispatchInstances);
           // console.log(event._dispatchListeners);
           // console.log(event._targetInst);
 
           setTargetData({
-            type: event._targetInst.type,
-            className: event._targetInst.stateNode.className,
-            lineNumber: event._targetInst._debugSource.lineNumber,
-            columnNumber: event._targetInst._debugSource.columnNumber,
-            pathname: event._targetInst._debugSource.fileName,
-            node: event._targetInst.stateNode,
+            type: targetInst.type,
+            className: targetInst.stateNode.className,
+            lineNumber: targetInst._debugSource.lineNumber,
+            columnNumber: targetInst._debugSource.columnNumber,
+            pathname: targetInst._debugSource.fileName,
+            node: targetInst.stateNode,
           });
 
-          if (!targetInst) {
-            setTargetInst(event._targetInst);
+          if (!topLevelInst) {
+            // console.log(event._dispatchInstances);
+            setTopLevelInst(event._targetInst);
           }
         }}
       >
@@ -131,13 +168,11 @@ export default function Home() {
         </main>
       </div>
 
-      <ComponentTree targetInst={targetInst} targetData={targetData} />
+      <ComponentTree targetData={targetData} nodes={nodes} />
     </>
     // </Wrapper>
   );
 }
-
-// const MyComponent = () => ReactDOM.createPortal(<FOO/>, 'dom-location')
 
 function canUseDOM() {
   return !!(
@@ -147,8 +182,7 @@ function canUseDOM() {
   );
 }
 
-const ComponentTree = ({ targetInst, targetData }) => {
-  // console.log(targetData);
+const ComponentTree = ({ targetData, nodes = [] }) => {
   const [inputValue, setInputValue] = React.useState();
 
   const targetLineNumber = targetData?.lineNumber;
@@ -175,8 +209,10 @@ const ComponentTree = ({ targetInst, targetData }) => {
       },
     });
 
-    // console.log(result.data);
+    console.log(result.data);
   };
+
+  const rootNode = nodes[0];
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -191,12 +227,7 @@ const ComponentTree = ({ targetInst, targetData }) => {
           // backgroundColor: 'white',
         }}
       >
-        <ul>
-          {targetInst?.memoizedProps?.children?.map((child, i) => {
-            return <ComponentTreeChild component={child} key={i} />;
-          })}
-        </ul>
-
+        <NodeTree parentID={rootNode?.return._debugID} nodes={nodes} />
         {targetData && (
           <div
             style={{
@@ -224,24 +255,27 @@ const ComponentTree = ({ targetInst, targetData }) => {
   return null;
 };
 
-const ComponentTreeChild = ({ component }) => {
-  if (component.type) {
-    // console.log(component.type);
-    // console.log(component);
-    return (
-      <li>
-        {component.type.name ? component.type.name : component.type}
-        {component.props.className ? ` (${component.props.className})` : null}
-        {Array.isArray(component.props.children) && (
-          <ul>
-            {component.props.children.map((child, i) => (
-              <ComponentTreeChild component={child} key={i} />
-            ))}
-          </ul>
-        )}
-      </li>
-    );
+const NodeTree = ({ parentID, nodes = [] }) => {
+  const childNodes = nodes.filter((node) => {
+    return node.return._debugID === parentID;
+  });
+
+  if (childNodes.length === 0) {
+    return null;
   }
 
-  return null;
+  return (
+    <ul>
+      {childNodes.map((node) => {
+        console.log(node);
+        return (
+          <li key={node._debugID} className="pl-4">
+            {typeof node.type === 'function' ? node.type.name : node.type}{' '}
+            {node.memoizedProps.className}
+            <NodeTree parentID={node._debugID} nodes={nodes} />
+          </li>
+        );
+      })}
+    </ul>
+  );
 };
