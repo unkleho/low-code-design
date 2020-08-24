@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "dependencies": {
     "@babel/generator": "^7.11.0",
@@ -19,6 +21,8 @@
     "react-render-hook": "^2.0.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^10.4.9",
+    "jest": "^26.4.2",
     "next-transpile-modules": "^4.1.0",
     "postcss-preset-env": "^6.7.0",
     "tailwindcss": "^1.7.3"

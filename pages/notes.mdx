@@ -14,3 +14,11 @@ https://github.com/bruderstein/react-render-hook/issues/4
 But can run in incognito mode
 
 https://github.com/ctrlplusb/react-tree-walker
+
+No need for react-render-hook or devtools! Can get line, source file info from event.\_targetInst.
+
+Babel generate seems to remove new lines, so may need a different parser - CST? https://github.com/cst/cst
+
+Maybe try plain old regex and split. No need for babel anymore, just convert file to an array using split('/n')
+
+Need to build tree now

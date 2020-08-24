@@ -32,6 +32,7 @@ export default function Home() {
   const ref = React.useRef();
   const [targetInst, setTargetInst] = React.useState();
   const [targetData, setTargetData] = React.useState();
+  const [counter, setCounter] = React.useState(0);
 
   React.useEffect(() => {
     // console.log(RenderHook);
@@ -44,7 +45,9 @@ export default function Home() {
 
   React.useEffect(() => {
     // Fake click the ref so it triggers onClick handler
-    ref.current.click();
+    if (!targetInst) {
+      ref.current.click();
+    }
   }, [ref]);
 
   return (
@@ -61,15 +64,18 @@ export default function Home() {
           // console.log(component.internalInstance._debugSource);
           // setTargetData(component.data);
 
+          setCounter(counter + 1);
+
           console.log('onClick');
-          console.log(event._dispatchInstances);
+          // console.log(event._dispatchInstances);
           // console.log(event._dispatchListeners);
-          console.log(event._targetInst);
+          // console.log(event._targetInst);
 
           setTargetData({
             type: event._targetInst.type,
             className: event._targetInst.stateNode.className,
             lineNumber: event._targetInst._debugSource.lineNumber,
+            columnNumber: event._targetInst._debugSource.columnNumber,
             pathname: event._targetInst._debugSource.fileName,
             node: event._targetInst.stateNode,
           });
@@ -81,9 +87,11 @@ export default function Home() {
       >
         <Example />
 
+        {counter}
+
         <main className={styles.main}>
-          <h1 className={styles.title}>
-            Welcome to <a href="https://nextjs.org">Next.js!</a>
+          <h1 className="lowercase">
+            Welcome to <a href="https://nextjs.org">Next.js</a>
           </h1>
 
           <p className={styles.description}>
@@ -140,12 +148,13 @@ function canUseDOM() {
 }
 
 const ComponentTree = ({ targetInst, targetData }) => {
-  console.log(targetData);
+  // console.log(targetData);
   const [inputValue, setInputValue] = React.useState();
 
-  const targetClassName = targetData?.className;
   const targetLineNumber = targetData?.lineNumber;
+  const targetColumnNumber = targetData?.columnNumber;
   const targetPathname = targetData?.pathname;
+  const targetClassName = targetData?.className;
 
   React.useEffect(() => {
     setInputValue(targetClassName);
@@ -159,13 +168,14 @@ const ComponentTree = ({ targetInst, targetData }) => {
 
     const result = await axios.get('/api/component', {
       params: {
-        className: inputValue,
         lineNumber: targetLineNumber,
+        columnNumber: targetColumnNumber,
+        className: inputValue,
         pathname: targetPathname,
       },
     });
 
-    console.log(result.data);
+    // console.log(result.data);
   };
 
   const handleInputChange = (event) => {
