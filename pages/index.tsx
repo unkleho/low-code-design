@@ -3,8 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {
   Utils,
-  findNodeByComponentRef,
-  findNodeByComponentName,
+  // findNodeByComponentRef,
+  // findNodeByComponentName,
   traverse,
 } from 'react-fiber-traverse';
 import axios from 'axios';
@@ -12,93 +12,37 @@ import axios from 'axios';
 
 import styles from '../styles/HomePage.module.css';
 import Example from '../components/Example';
-
-// const Wrapper = ({ children }) => {
-// console.log(children);
-
-// console.log(children.props.children[1]._source);
-
-// return deepMap(children, (child) => {
-//   // console.log(child.type);
-//   if (child && child.type) {
-//     // console.log(child._source);
-//     return React.cloneElement(child, {
-//       ...child.props,
-//       'data-id': 'test',
-//     });
-//   }
-
-//   return child;
-// });
-
-//   return children;
-// };
+import { FiberNode } from 'react-fiber-traverse/dist/mocked-types';
 
 export default function HomePage() {
-  const ref = React.useRef();
-  const [topLevelInst, setTopLevelInst] = React.useState();
   const [targetData, setTargetData] = React.useState();
+  const [prevElement, setPrevElement] = React.useState();
   const [counter, setCounter] = React.useState(0);
-  const [nodes, setNodes] = React.useState([]);
-
-  React.useEffect(() => {
-    // console.log(RenderHook);
-    // console.log(RenderHook.isAttached);
-    // const component = RenderHook.findComponent(ref.current);
-    // console.log(component);
-    // console.log(component.data.children[2].child._debugSource);
-    // Use _reactInternalInstance._debugSource to get fileName
-    // const root = Utils.getRootFiberNodeFromDOM(
-    //   document.getElementById('__next')
-    // );
-    // console.log(root);
-  }, []);
-
-  React.useEffect(() => {
-    // Fake click the ref so it triggers onClick handler
-    if (!topLevelInst) {
-      ref.current.click();
-    }
-
-    const rootFiberNode = Utils.getRootFiberNodeFromDOM(
-      document.getElementById('__next')
-    );
-
-    // Doesn't work for some reason
-    // const mainFiberNode = findNodeByComponentRef(rootFiberNode, ref.current);
-
-    let isComponentTree = false;
-    let nodes = [];
-    traverse(rootFiberNode, (node) => {
-      if (node.stateNode?.id === '__codesign' || isComponentTree) {
-        isComponentTree = true;
-        nodes.push(node);
-        // console.log(node);
-      }
-    });
-    // Filter out ComponentTree, otherwise we are inspecting the UI that is inspecting the UI
-    // TODO: Just removing the top ComponentTree for now, but should remove child nodes too for performance
-    setNodes(nodes.filter((node) => node.type?.name !== 'ComponentTree'));
-
-    // console.log(rootFiberNode);
-    // console.log(mainFiberNode);
-  }, [ref]);
 
   return (
     // <Wrapper>
     <>
       <div
-        ref={ref}
         className={styles.container}
         id="__codesign"
-        onClick={(event) => {
-          // const component = RenderHook.findComponent(event.target);
-          // console.log(component);
-          // console.log(component.data);
-          // console.log(component.internalInstance._debugSource);
-          // setTargetData(component.data);
-
+        onClick={(
+          event: React.MouseEvent<HTMLDivElement, MouseEvent> & {
+            _targetInst: FiberNode & {
+              _debugSource: {
+                lineNumber: number;
+                columnNumber: number;
+                fileName: string;
+              };
+            };
+          }
+        ) => {
           setCounter(counter + 1);
+
+          if (prevElement) {
+            prevElement.style.outline = null;
+          }
+          (event.target as HTMLDivElement).style.outline = '1px solid cyan';
+          setPrevElement(event.target);
 
           const targetInst = event._targetInst;
 
@@ -115,11 +59,6 @@ export default function HomePage() {
             pathname: targetInst._debugSource.fileName,
             node: targetInst.stateNode,
           });
-
-          if (!topLevelInst) {
-            // console.log(event._dispatchInstances);
-            setTopLevelInst(event._targetInst);
-          }
         }}
       >
         <Example />
@@ -168,7 +107,7 @@ export default function HomePage() {
         </main>
       </div>
 
-      <ComponentTree targetData={targetData} nodes={nodes} />
+      <DesignPanels targetData={targetData} />
     </>
     // </Wrapper>
   );
@@ -182,13 +121,38 @@ function canUseDOM() {
   );
 }
 
-const ComponentTree = ({ targetData, nodes = [] }) => {
+const DesignPanels = ({ targetData }) => {
+  const [nodes, setNodes] = React.useState([]);
   const [inputValue, setInputValue] = React.useState();
 
   const targetLineNumber = targetData?.lineNumber;
   const targetColumnNumber = targetData?.columnNumber;
   const targetPathname = targetData?.pathname;
   const targetClassName = targetData?.className;
+
+  React.useEffect(() => {
+    const rootFiberNode = Utils.getRootFiberNodeFromDOM(
+      document.getElementById('__next')
+    );
+
+    // Doesn't work for some reason
+    // const mainFiberNode = findNodeByComponentRef(rootFiberNode, ref.current);
+
+    let isDesignPanels = false;
+    let nodes = [];
+    traverse(rootFiberNode, (node) => {
+      if (node.stateNode?.id === '__codesign' || isDesignPanels) {
+        isDesignPanels = true;
+        nodes.push(node);
+      }
+    });
+    // Filter out DesignPanels, otherwise we are inspecting the UI that is inspecting the UI
+    // TODO: Just removing the top DesignPanels for now, but should remove child nodes too for performance
+    setNodes(nodes.filter((node) => node.type?.name !== 'DesignPanels'));
+
+    // console.log(rootFiberNode);
+    // console.log(mainFiberNode);
+  }, []);
 
   React.useEffect(() => {
     setInputValue(targetClassName);
@@ -267,7 +231,7 @@ const NodeTree = ({ parentID, nodes = [] }) => {
   return (
     <ul>
       {childNodes.map((node) => {
-        console.log(node);
+        // console.log(node);
         return (
           <li key={node._debugID} className="pl-4">
             {typeof node.type === 'function' ? node.type.name : node.type}{' '}
