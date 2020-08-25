@@ -15,7 +15,7 @@ import Example from '../components/Example';
 import { FiberNode } from 'react-fiber-traverse/dist/mocked-types';
 
 export default function HomePage() {
-  const [targetData, setTargetData] = React.useState();
+  const [targetData, setTargetData] = React.useState({});
   const [prevElement, setPrevElement] = React.useState();
   const [counter, setCounter] = React.useState(0);
 
@@ -33,6 +33,7 @@ export default function HomePage() {
                 columnNumber: number;
                 fileName: string;
               };
+              _debugID: number;
             };
           }
         ) => {
@@ -58,6 +59,7 @@ export default function HomePage() {
             columnNumber: targetInst._debugSource.columnNumber,
             pathname: targetInst._debugSource.fileName,
             node: targetInst.stateNode,
+            _debugID: targetInst._debugID,
           });
         }}
       >
@@ -125,6 +127,8 @@ const DesignPanels = ({ targetData }) => {
   const [nodes, setNodes] = React.useState([]);
   const [inputValue, setInputValue] = React.useState();
 
+  console.log(targetData);
+
   const targetLineNumber = targetData?.lineNumber;
   const targetColumnNumber = targetData?.columnNumber;
   const targetPathname = targetData?.pathname;
@@ -191,7 +195,12 @@ const DesignPanels = ({ targetData }) => {
           // backgroundColor: 'white',
         }}
       >
-        <NodeTree parentID={rootNode?.return._debugID} nodes={nodes} />
+        <NodeTree
+          parentID={rootNode?.return._debugID}
+          nodes={nodes}
+          selectedIDs={targetData._debugID ? [targetData._debugID] : []}
+        />
+
         {targetData && (
           <div
             style={{
@@ -219,7 +228,7 @@ const DesignPanels = ({ targetData }) => {
   return null;
 };
 
-const NodeTree = ({ parentID, nodes = [] }) => {
+const NodeTree = ({ parentID, nodes = [], selectedIDs = [] }) => {
   const childNodes = nodes.filter((node) => {
     return node.return._debugID === parentID;
   });
@@ -233,10 +242,20 @@ const NodeTree = ({ parentID, nodes = [] }) => {
       {childNodes.map((node) => {
         // console.log(node);
         return (
-          <li key={node._debugID} className="pl-4">
+          <li
+            key={node._debugID}
+            className={[
+              'pl-4',
+              selectedIDs.includes(node._debugID) ? 'font-bold' : 'font-normal',
+            ].join(' ')}
+          >
             {typeof node.type === 'function' ? node.type.name : node.type}{' '}
             {node.memoizedProps.className}
-            <NodeTree parentID={node._debugID} nodes={nodes} />
+            <NodeTree
+              parentID={node._debugID}
+              nodes={nodes}
+              selectedIDs={selectedIDs}
+            />
           </li>
         );
       })}
