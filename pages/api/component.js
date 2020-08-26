@@ -11,33 +11,6 @@ export default ({ query }, res) => {
 
   const file = fs.readFileSync(pathname, 'utf8');
 
-  // let ast = parse(file, {
-  //   sourceType: 'module',
-  //   plugins: ['jsx'],
-  // });
-
-  // traverse(ast, {
-  //   enter(path) {
-  //     if (
-  //       path.node.type === 'JSXAttribute' &&
-  //       path.node.name.name === 'className' &&
-  //       path.node.loc.start.line === parseInt(lineNumber)
-  //     ) {
-  //       // console.log(path.node);
-  //       path.node.value.value = className;
-  //     }
-  //   },
-  // });
-
-  // const output = generate(
-  //   ast,
-  //   {
-  //     // retainLines: true,
-  //     /* options */
-  //   }
-  //   // file
-  // );
-
   const newFile = updateClassName({
     text: file,
     className,
@@ -45,7 +18,6 @@ export default ({ query }, res) => {
     columnNumber: parseInt(columnNumber),
   });
 
-  // fs.writeFileSync(pathname, output.code);
   fs.writeFileSync(pathname, newFile);
 
   // fs.writeFileSync(
@@ -60,3 +32,35 @@ export default ({ query }, res) => {
 const getFullPathname = (pathname) => {
   return path.join(process.cwd(), pathname);
 };
+
+// Not using this because Babel generate doesn't keep original formatting
+// const parseAst = (file, className, lineNumber) => {
+//   let ast = parse(file, {
+//     sourceType: 'module',
+//     plugins: ['jsx'],
+//   });
+
+//   traverse(ast, {
+//     enter(path) {
+//       if (
+//         path.node.type === 'JSXAttribute' &&
+//         path.node.name.name === 'className' &&
+//         path.node.loc.start.line === parseInt(lineNumber)
+//       ) {
+//         // console.log(path.node);
+//         path.node.value.value = className;
+//       }
+//     },
+//   });
+
+//   const output = generate(
+//     ast,
+//     {
+//       // retainLines: true,
+//       /* options */
+//     }
+//     // file
+//   );
+
+//   return output;
+// };
