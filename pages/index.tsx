@@ -11,7 +11,6 @@ import styles from '../styles/HomePage.module.css';
 export default function HomePage() {
   const [targetData, setTargetData] = React.useState({});
   const [prevElement, setPrevElement] = React.useState<HTMLElement>();
-  const [counter, setCounter] = React.useState(0);
 
   return (
     <div
@@ -23,7 +22,12 @@ export default function HomePage() {
           _targetInst: FiberNode;
         }
       ) => {
-        setCounter(counter + 1);
+        const targetInst = event._targetInst;
+
+        // Skip part of DesignTools
+        if (targetInst.stateNode.dataset.id === 'design-tools') {
+          return true;
+        }
 
         if (prevElement) {
           prevElement.style.outline = null;
@@ -31,8 +35,6 @@ export default function HomePage() {
 
         (event.target as HTMLElement).style.outline = '1px solid cyan';
         setPrevElement(event.target);
-
-        const targetInst = event._targetInst;
 
         // console.log('onClick');
         // console.log(event._dispatchInstances);
@@ -51,8 +53,6 @@ export default function HomePage() {
       }}
     >
       <Example />
-
-      {counter}
 
       <main className={styles.main}>
         <h1 className="lowercase">

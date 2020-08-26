@@ -138,7 +138,10 @@ const NodeTree = ({
   return (
     <ul>
       {childNodes.map((node) => {
-        console.log(node);
+        if (!node.elementType) {
+          return null;
+        }
+
         return (
           <li
             key={node._debugID}
@@ -146,13 +149,17 @@ const NodeTree = ({
               'pl-4',
               selectedIDs.includes(node._debugID) ? 'font-bold' : 'font-normal',
             ].join(' ')}
-            onClick={() => {
-              // TODO: Select corresponding element
-              // console.log(node);
-              // node.stateNode.click();
-            }}
           >
-            {typeof node.type === 'function' ? node.type.name : node.type}
+            <button
+              data-id="design-tools"
+              onClick={(event) => {
+                if (node.stateNode) {
+                  node.stateNode.click();
+                }
+              }}
+            >
+              {typeof node.type === 'function' ? node.type.name : node.type}
+            </button>
             {/* {node.memoizedProps.className} */}
             <NodeTree
               parentID={node._debugID}
