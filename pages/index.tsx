@@ -22,6 +22,9 @@ export default function HomePage() {
           _targetInst: FiberNode;
         }
       ) => {
+        // Stop <a> links from navigating away
+        event.preventDefault();
+
         const targetInst = event._targetInst;
 
         // Skip part of DesignTools

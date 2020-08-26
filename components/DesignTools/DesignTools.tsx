@@ -80,34 +80,39 @@ const DesignTools = ({ targetData }) => {
         style={{
           position: 'fixed',
           top: 0,
+          padding: '1rem',
           // backgroundColor: 'white',
         }}
       >
+        <h2>Current</h2>
+        <div className="mb-4" data-id="design-tools">
+          <p data-id="design-tools">
+            Type:{' '}
+            {targetData.type && (
+              <span
+                title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
+                data-id="design-tools"
+              >{`<${targetData.type}>`}</span>
+            )}
+          </p>
+          <p>ClassName:</p>
+          <form onSubmit={handleSubmit} data-id="design-tools">
+            <input
+              type="text"
+              value={inputValue || ''}
+              className="p-1 border border-blue"
+              data-id="design-tools"
+              onChange={handleInputChange}
+            />
+          </form>
+        </div>
+
+        <h2>Elements</h2>
         <NodeTree
           parentID={rootNode?.return._debugID}
           nodes={nodes}
           selectedIDs={targetData._debugID ? [targetData._debugID] : []}
         />
-
-        {targetData.type && (
-          <div
-            style={{
-              padding: '1rem',
-            }}
-          >
-            <p>{`<${targetData.type}>`}</p>
-            <p>
-              {targetData.lineNumber} {targetData.pathname}
-            </p>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                value={inputValue || ''}
-                onChange={handleInputChange}
-              />
-            </form>
-          </div>
-        )}
       </div>,
       document.body
     );
@@ -143,16 +148,15 @@ const NodeTree = ({
         }
 
         return (
-          <li
-            key={node._debugID}
-            className={[
-              'pl-4',
-              selectedIDs.includes(node._debugID) ? 'font-bold' : 'font-normal',
-            ].join(' ')}
-          >
+          <li key={node._debugID} className="pl-4" data-id="design-tools">
             <button
+              className={[
+                selectedIDs.includes(node._debugID)
+                  ? 'font-bold'
+                  : 'font-normal',
+              ].join(' ')}
               data-id="design-tools"
-              onClick={(event) => {
+              onClick={() => {
                 if (node.stateNode) {
                   node.stateNode.click();
                 }
