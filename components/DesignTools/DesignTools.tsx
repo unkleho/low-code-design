@@ -10,9 +10,20 @@ import axios from 'axios';
 
 import { FiberNode } from '../../types';
 
-const DesignTools = ({ targetData }) => {
+type Props = {
+  targetData?: {
+    lineNumber: number;
+    columnNumber: number;
+    pathname: string;
+    className: string;
+  };
+  // Should be added to all elements as a crude way to prevent selection by overall onClick handler
+  dataId?: string;
+};
+
+const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
   const [nodes, setNodes] = React.useState<FiberNode[]>([]);
-  const [inputValue, setInputValue] = React.useState();
+  const [inputValue, setInputValue] = React.useState('');
 
   // console.log(targetData);
 
@@ -76,44 +87,53 @@ const DesignTools = ({ targetData }) => {
 
   if (canUseDOM()) {
     return ReactDOM.createPortal(
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          padding: '1rem',
-          // backgroundColor: 'white',
-        }}
-      >
-        <h2>Current</h2>
-        <div className="mb-4" data-id="design-tools">
-          <p data-id="design-tools">
-            Type:{' '}
-            {targetData.type && (
-              <span
-                title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
-                data-id="design-tools"
-              >{`<${targetData.type}>`}</span>
-            )}
-          </p>
-          <p>ClassName:</p>
-          <form onSubmit={handleSubmit} data-id="design-tools">
-            <input
-              type="text"
-              value={inputValue || ''}
-              className="p-1 border border-blue"
-              data-id="design-tools"
-              onChange={handleInputChange}
-            />
-          </form>
-        </div>
+      <aside className="fixed top-0 w-64 bg-gray-100 border-r text-sm text-gray-800">
+        <form onSubmit={handleSubmit} data-id={dataId}>
+          <div className="border-b" data-id={dataId}>
+            <div className="px-3 py-2 bg-gray-200 border-b">
+              <h2 className="font-bold">Element</h2>
+            </div>
+            <div className="p-3">
+              <div className="flex items-baseline mb-2">
+                <p className="w-12 mr-2" data-id={dataId}>
+                  Type{' '}
+                </p>
+                <span
+                  className="px-2 py-1 font-bold bg-gray-200"
+                  title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
+                  data-id={dataId}
+                >
+                  {targetData.type && `${targetData.type}`}
+                </span>
+              </div>
+              <div className="flex items-baseline">
+                <p className="w-12 mb-2 mr-2">Class</p>
+                <input
+                  type="text"
+                  value={inputValue || ''}
+                  className="flex-1 p-1 border border-blue"
+                  data-id={dataId}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+          </div>
 
-        <h2>Elements</h2>
-        <NodeTree
-          parentID={rootNode?.return._debugID}
-          nodes={nodes}
-          selectedIDs={targetData._debugID ? [targetData._debugID] : []}
-        />
-      </div>,
+          <div className="border-b">
+            <div className="px-3 py-2 bg-gray-200 border-b">
+              <h2 className="font-bold">Layers</h2>
+            </div>
+            <div className="p-3">
+              <NodeTree
+                parentID={rootNode?.return._debugID}
+                nodes={nodes}
+                selectedIDs={targetData._debugID ? [targetData._debugID] : []}
+                dataId={dataId}
+              />
+            </div>
+          </div>
+        </form>
+      </aside>,
       document.body
     );
   }
@@ -125,12 +145,14 @@ type NodeTreeProps = {
   parentID: number;
   nodes: FiberNode[];
   selectedIDs: number[];
+  dataId?: string;
 };
 
 const NodeTree = ({
   parentID,
   nodes = [],
   selectedIDs = [],
+  dataId = 'design-tools',
 }: NodeTreeProps) => {
   const childNodes = nodes.filter((node) => {
     return node.return._debugID === parentID;
@@ -148,14 +170,14 @@ const NodeTree = ({
         }
 
         return (
-          <li key={node._debugID} className="pl-4" data-id="design-tools">
+          <li key={node._debugID} className="pl-4" data-id={dataId}>
             <button
               className={[
                 selectedIDs.includes(node._debugID)
                   ? 'font-bold'
                   : 'font-normal',
               ].join(' ')}
-              data-id="design-tools"
+              data-id={dataId}
               onClick={() => {
                 if (node.stateNode) {
                   node.stateNode.click();
