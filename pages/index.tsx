@@ -58,7 +58,7 @@ export default function HomePage() {
       <Example />
 
       <main className={styles.main}>
-        <h1 className="lowercase">
+        <h1 className="uppercase text-xl">
           Welcome to <a href="https://nextjs.org">Next.js</a>
         </h1>
 

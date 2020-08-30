@@ -88,26 +88,27 @@ const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
   if (canUseDOM()) {
     return ReactDOM.createPortal(
       <aside className="fixed top-0 w-64 bg-gray-100 border-r text-sm text-gray-800">
-        <form onSubmit={handleSubmit} data-id={dataId}>
-          <div className="border-b" data-id={dataId}>
-            <div className="px-3 py-2 bg-gray-200 border-b">
-              <h2 className="font-bold">Element</h2>
+        <div className="border-b" data-id={dataId}>
+          <div className="flex px-3 py-2 bg-gray-200 border-b">
+            <h2 className="mr-auto font-bold">Element</h2>
+            <Icon name="chevron-down" />
+          </div>
+          <div className="p-3">
+            <div className="flex items-baseline mb-2">
+              <p className="w-12 mr-2" data-id={dataId}>
+                Type{' '}
+              </p>
+              <span
+                className="px-2 py-1 font-bold bg-gray-200"
+                title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
+                data-id={dataId}
+              >
+                {targetData.type && `${targetData.type}`}
+              </span>
             </div>
-            <div className="p-3">
-              <div className="flex items-baseline mb-2">
-                <p className="w-12 mr-2" data-id={dataId}>
-                  Type{' '}
-                </p>
-                <span
-                  className="px-2 py-1 font-bold bg-gray-200"
-                  title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
-                  data-id={dataId}
-                >
-                  {targetData.type && `${targetData.type}`}
-                </span>
-              </div>
-              <div className="flex items-baseline">
-                <p className="w-12 mb-2 mr-2">Class</p>
+            <div className="flex items-baseline">
+              <p className="w-12 mb-2 mr-2">Class</p>
+              <form onSubmit={handleSubmit} data-id={dataId}>
                 <input
                   type="text"
                   value={inputValue || ''}
@@ -115,24 +116,25 @@ const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
                   data-id={dataId}
                   onChange={handleInputChange}
                 />
-              </div>
+              </form>
             </div>
           </div>
+        </div>
 
-          <div className="border-b">
-            <div className="px-3 py-2 bg-gray-200 border-b">
-              <h2 className="font-bold">Layers</h2>
-            </div>
-            <div className="p-3">
-              <NodeTree
-                parentID={rootNode?.return._debugID}
-                nodes={nodes}
-                selectedIDs={targetData._debugID ? [targetData._debugID] : []}
-                dataId={dataId}
-              />
-            </div>
+        <div className="border-b">
+          <div className="flex px-3 py-2 bg-gray-200 border-b">
+            <h2 className="mr-auto font-bold">Layers</h2>
+            <Icon name="chevron-down" />
           </div>
-        </form>
+          <div className="py-1">
+            <NodeTree
+              parentID={rootNode?.return._debugID}
+              nodes={nodes}
+              selectedIDs={targetData._debugID ? [targetData._debugID] : []}
+              dataId={dataId}
+            />
+          </div>
+        </div>
       </aside>,
       document.body
     );
@@ -145,45 +147,64 @@ type NodeTreeProps = {
   parentID: number;
   nodes: FiberNode[];
   selectedIDs: number[];
+  level?: number;
   dataId?: string;
+};
+
+const getChildNodes = (nodes, parentID) => {
+  return nodes.filter((node) => {
+    return node.return._debugID === parentID;
+  });
 };
 
 const NodeTree = ({
   parentID,
   nodes = [],
   selectedIDs = [],
+  level = 0,
   dataId = 'design-tools',
 }: NodeTreeProps) => {
-  const childNodes = nodes.filter((node) => {
-    return node.return._debugID === parentID;
-  });
+  const childNodes = getChildNodes(nodes, parentID);
 
   if (childNodes.length === 0) {
     return null;
   }
 
   return (
-    <ul>
+    <ul className="pl-0">
       {childNodes.map((node) => {
         if (!node.elementType) {
           return null;
         }
 
+        const isSelected = selectedIDs.includes(node._debugID);
+        const grandChildNodes = getChildNodes(nodes, node._debugID);
+
         return (
-          <li key={node._debugID} className="pl-4" data-id={dataId}>
+          <li key={node._debugID} data-id={dataId}>
             <button
               className={[
-                selectedIDs.includes(node._debugID)
-                  ? 'font-bold'
-                  : 'font-normal',
+                'flex w-full py-1',
+                isSelected ? 'font-bold' : 'font-normal',
+                isSelected ? 'bg-gray-200' : '',
               ].join(' ')}
               data-id={dataId}
+              style={{
+                paddingLeft: (level + 1) * 12,
+              }}
               onClick={() => {
                 if (node.stateNode) {
                   node.stateNode.click();
                 }
               }}
             >
+              {grandChildNodes.length > 0 ? (
+                <span className="mr-1 text-gray-500 text-xs">&#9660;</span>
+              ) : (
+                // &#9654; Right Triangle
+                // <Icon name="chevron-down" />
+                <div className="pl-4" />
+              )}
               {typeof node.type === 'function' ? node.type.name : node.type}
             </button>
             {/* {node.memoizedProps.className} */}
@@ -191,6 +212,7 @@ const NodeTree = ({
               parentID={node._debugID}
               nodes={nodes}
               selectedIDs={selectedIDs}
+              level={level + 1}
             />
           </li>
         );
@@ -206,5 +228,69 @@ function canUseDOM() {
     window.document.createElement
   );
 }
+
+const Icon = ({ name }) => {
+  switch (name) {
+    case 'chevron-down':
+      return (
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="chevron-down w-5 h-5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+      );
+    case 'chevron-up':
+      return (
+        <svg
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="chevron-up w-5 h-5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+      );
+    case 'chevron-right':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    case 'code':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            fillRule="evenodd"
+            d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    default:
+      return null;
+  }
+};
 
 export default DesignTools;
