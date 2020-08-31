@@ -31,6 +31,9 @@ const DesignTools = ({
 
     let isDesignTools = false;
     let nodes = [];
+
+    // Traverse fiber node tree, adding each one to nodes.
+    // TODO: Only add nodes within Wrapper
     traverse(rootFiberNode, (node) => {
       if (node.stateNode?.id === '__codesign' || isDesignTools) {
         isDesignTools = true;
@@ -117,6 +120,21 @@ const DesignToolsDisplay = ({
   const className = selectedNode?.stateNode.className;
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
+  // console.log(className.split(' '));
+
+  function getClassNameValue(className = '', prefix) {
+    return className
+      .split(' ')
+      .filter((c) => {
+        return c.includes(prefix);
+      })[0]
+      ?.replace(prefix, '');
+  }
+
+  const paddingValue = getClassNameValue(className, 'p-');
+
+  console.log(paddingValue);
+
   React.useEffect(() => {
     setClassInputValue(className);
   }, [className]);
@@ -144,10 +162,7 @@ const DesignToolsDisplay = ({
     <aside className="fixed top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
       <Panel title="Element">
         <div className="p-3">
-          <div className="flex items-baseline mb-2">
-            <p className="w-12 mr-2" data-id={dataId}>
-              Type{' '}
-            </p>
+          <PanelRow label="Type">
             {type && (
               <span
                 className="px-2 py-1 font-bold bg-gray-200"
@@ -157,75 +172,102 @@ const DesignToolsDisplay = ({
                 {type}
               </span>
             )}
-          </div>
-          <div className="flex items-baseline">
-            <p className="w-12 mb-2 mr-2">Class</p>
-            <form onSubmit={handleSubmit} data-id={dataId}>
+          </PanelRow>
+
+          <PanelRow label="Class">
+            <form className="flex-1" onSubmit={handleSubmit} data-id={dataId}>
               <input
                 type="text"
                 value={classInputValue || ''}
-                className="flex-1 p-1 border border-blue"
+                className="p-1 border border-blue"
                 data-id={dataId}
                 onChange={handleClassInputChange}
               />
             </form>
-          </div>
+          </PanelRow>
         </div>
       </Panel>
 
       <Panel title="Layout">
         <div className="p-3">
-          <div className="flex mb-2">
-            <p className="w-12 mr-2">Position</p>
+          <PanelRow label="Position">
             <select className="px-1 border">
               <option label=" "></option>
               <option>Relative</option>
               <option>Absolute</option>
             </select>
-          </div>
-          <div className="flex">
-            <p className="w-12 mr-2">Display</p>
+          </PanelRow>
+
+          <PanelRow label="Display">
             <select className="px-1 border">
               <option label=" "></option>
               <option>Block</option>
               <option>Flex</option>
             </select>
-          </div>
+          </PanelRow>
         </div>
       </Panel>
 
       <Panel title="Spacing">
         <div className="p-3">
-          <div className="flex items-baseline">
-            <p className="w-12 mr-2">Margin</p>
-            <div className="flex flex-1">
-              <input
-                type="text"
-                placeholder="t"
-                className="flex-1 w-full p-1 mr-1 border border-t-2"
-              />
-              <input
-                type="text"
-                placeholder="r"
-                className="flex-1 w-full p-1 mr-1 border border-r-2"
-              />
-              <input
-                type="text"
-                placeholder="b"
-                className="flex-1 w-full p-1 mr-1 border border-b-2"
-              />
-              <input
-                type="text"
-                placeholder="l"
-                className="flex-1 w-full p-1 border border-l-2"
-              />
-            </div>
-          </div>
+          <PanelRow label="Margin">
+            <input
+              type="text"
+              placeholder="t"
+              // value={marginValue || ''}
+              className="flex-1 w-full p-1 mr-1 border border-t-2"
+            />
+            <input
+              type="text"
+              placeholder="r"
+              className="flex-1 w-full p-1 mr-1 border border-r-2"
+            />
+            <input
+              type="text"
+              placeholder="b"
+              className="flex-1 w-full p-1 mr-1 border border-b-2"
+            />
+            <input
+              type="text"
+              placeholder="l"
+              className="flex-1 w-full p-1 border border-l-2"
+            />
+          </PanelRow>
+          <PanelRow label="Padding">
+            <input
+              type="text"
+              placeholder="t"
+              // value={marginValue || ''}
+              className="flex-1 w-full p-1 mr-1 border border-t-2"
+            />
+            <input
+              type="text"
+              placeholder="r"
+              className="flex-1 w-full p-1 mr-1 border border-r-2"
+            />
+            <input
+              type="text"
+              placeholder="b"
+              className="flex-1 w-full p-1 mr-1 border border-b-2"
+            />
+            <input
+              type="text"
+              placeholder="l"
+              className="flex-1 w-full p-1 border border-l-2"
+            />
+          </PanelRow>
         </div>
       </Panel>
 
       <Panel title="Sizing">
-        <div className="p-3"></div>
+        <div className="p-3">
+          <PanelRow label="Width">
+            <input type="text" className="p-1 border" />
+          </PanelRow>
+          <PanelRow label="Height">
+            <input type="text" className="p-1 border" />
+          </PanelRow>
+        </div>
       </Panel>
 
       <Panel title="Layers">
@@ -255,6 +297,20 @@ const Panel = ({ title, children }: PanelProps) => {
         <Icon name="chevron-down" />
       </div>
       <div>{children}</div>
+    </div>
+  );
+};
+
+type PanelRowProps = {
+  label: string;
+  children: React.ReactNode;
+};
+
+const PanelRow = ({ label, children }: PanelRowProps) => {
+  return (
+    <div className="flex items-baseline mb-2">
+      <p className="w-16 mr-2">{label}</p>
+      <div className="flex flex-1">{children}</div>
     </div>
   );
 };
