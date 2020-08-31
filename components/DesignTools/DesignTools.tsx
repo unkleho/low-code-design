@@ -191,7 +191,7 @@ const DesignToolsDisplay = ({
       <Panel title="Layout">
         <div className="p-3">
           <PanelRow label="Position">
-            <select className="px-1 border">
+            <select className="p-1 border">
               <option label=" "></option>
               <option>Relative</option>
               <option>Absolute</option>
@@ -199,7 +199,7 @@ const DesignToolsDisplay = ({
           </PanelRow>
 
           <PanelRow label="Display">
-            <select className="px-1 border">
+            <select className="p-1 border">
               <option label=" "></option>
               <option>Block</option>
               <option>Flex</option>
@@ -308,8 +308,8 @@ type PanelRowProps = {
 
 const PanelRow = ({ label, children }: PanelRowProps) => {
   return (
-    <div className="flex items-baseline mb-2">
-      <p className="w-16 mr-2">{label}</p>
+    <div className="flex items-baseline mb-2 last:mb-0">
+      <p className="w-12 mr-2 text-xs">{label}</p>
       <div className="flex flex-1">{children}</div>
     </div>
   );
