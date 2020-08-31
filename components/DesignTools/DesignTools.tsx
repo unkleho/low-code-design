@@ -1,11 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
-  Utils,
-  traverse,
-  // findNodeByComponentRef,
-  // findNodeByComponentName,
-} from 'react-fiber-traverse';
+import { Utils, traverse } from 'react-fiber-traverse';
 import axios from 'axios';
 
 import { FiberNode } from '../../types';
@@ -17,22 +12,19 @@ type Props = {
     pathname: string;
     className: string;
   };
+  selectedNodes?: FiberNode[];
   // Should be added to all elements as a crude way to prevent selection by overall onClick handler
   dataId?: string;
+  onSubmit?: Function;
 };
 
-const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
+const DesignTools = ({
+  targetData,
+  selectedNodes = [],
+  dataId = 'design-tools',
+}: // onSubmit,
+Props) => {
   const [nodes, setNodes] = React.useState<FiberNode[]>([]);
-  const [inputValue, setInputValue] = React.useState('');
-
-  // console.log(targetData);
-
-  const targetLineNumber = targetData?.lineNumber;
-  const targetColumnNumber = targetData?.columnNumber;
-  const targetPathname = targetData?.pathname;
-  const targetClassName = targetData?.className;
-
-  const rootNode = nodes[0];
 
   React.useEffect(() => {
     const rootFiberNode = Utils.getRootFiberNodeFromDOM(
@@ -59,103 +51,197 @@ const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
     // console.log(mainFiberNode);
   }, []);
 
-  React.useEffect(() => {
-    setInputValue(targetClassName);
-  }, [targetClassName]);
+  // Make updates to DOM and send API request
+  const handleSubmit = async (
+    events: [
+      {
+        node: FiberNode;
+        update: {
+          className: string;
+        };
+      }
+    ]
+  ) => {
+    const event = events[0]; // Allow multiple node changes in future
+    const { node } = event;
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // targetData.publicInstance.className = inputValue;
-    targetData.node.className = inputValue;
+    // Change DOM element className
+    node.stateNode.className = event.update.className;
 
     const result = await axios.get('/api/component', {
       params: {
-        lineNumber: targetLineNumber,
-        columnNumber: targetColumnNumber,
-        className: inputValue,
-        pathname: targetPathname,
+        lineNumber: node._debugSource.lineNumber,
+        columnNumber: node._debugSource.columnNumber,
+        className: node.stateNode.className,
+        fileName: node._debugSource.fileName,
       },
     });
 
     console.log(result.data);
   };
 
-  const handleInputChange = (event) => {
-    setInputValue(event.target.value);
-  };
-
   if (canUseDOM()) {
     return ReactDOM.createPortal(
-      <aside className="fixed top-0 w-64 bg-gray-100 border-r text-sm text-gray-800">
-        <Panel title="Element">
-          <div className="p-3">
-            <div className="flex items-baseline mb-2">
-              <p className="w-12 mr-2" data-id={dataId}>
-                Type{' '}
-              </p>
-              {targetData.type && (
-                <span
-                  className="px-2 py-1 font-bold bg-gray-200"
-                  title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
-                  data-id={dataId}
-                >
-                  {targetData.type}
-                </span>
-              )}
-            </div>
-            <div className="flex items-baseline">
-              <p className="w-12 mb-2 mr-2">Class</p>
-              <form onSubmit={handleSubmit} data-id={dataId}>
-                <input
-                  type="text"
-                  value={inputValue || ''}
-                  className="flex-1 p-1 border border-blue"
-                  data-id={dataId}
-                  onChange={handleInputChange}
-                />
-              </form>
-            </div>
-          </div>
-        </Panel>
-
-        <Panel title="Layout">
-          <div className="p-3">
-            <div className="flex mb-2">
-              <p className="w-12 mr-2">Position</p>
-              <select className="px-1 border">
-                <option label=" "></option>
-                <option>Relative</option>
-                <option>Absolute</option>
-              </select>
-            </div>
-            <div className="flex">
-              <p className="w-12 mr-2">Display</p>
-              <select className="px-1 border">
-                <option label=" "></option>
-                <option>Block</option>
-                <option>Flex</option>
-              </select>
-            </div>
-          </div>
-        </Panel>
-
-        <Panel title="Layers">
-          <div className="py-1">
-            <NodeTree
-              parentID={rootNode?.return._debugID}
-              nodes={nodes}
-              selectedIDs={targetData._debugID ? [targetData._debugID] : []}
-              dataId={dataId}
-            />
-          </div>
-        </Panel>
-      </aside>,
+      <DesignToolsDisplay
+        selectedNodes={selectedNodes}
+        nodes={nodes}
+        dataId={dataId}
+        onSubmit={handleSubmit}
+      />,
       document.body
     );
   }
 
   return null;
+};
+
+type DesignToolsDisplayProps = {
+  selectedNodes: FiberNode[];
+  nodes: FiberNode[];
+  dataId: string;
+  onSubmit: Function;
+};
+
+const DesignToolsDisplay = ({
+  selectedNodes = [],
+  nodes = [],
+  dataId,
+  onSubmit,
+}: DesignToolsDisplayProps) => {
+  const [classInputValue, setClassInputValue] = React.useState('');
+  const rootNode = nodes[0];
+  const selectedNode = selectedNodes[0]; // Allow multi-select in the future
+
+  const type = selectedNode?.type;
+  const lineNumber = selectedNode?._debugSource.lineNumber;
+  const columnNumber = selectedNode?._debugSource.columnNumber;
+  const fileName = selectedNode?._debugSource.fileName;
+  const className = selectedNode?.stateNode.className;
+  const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
+
+  React.useEffect(() => {
+    setClassInputValue(className);
+  }, [className]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (typeof onSubmit === 'function') {
+      onSubmit([
+        {
+          node: selectedNode,
+          update: {
+            className: classInputValue,
+          },
+        },
+      ]);
+    }
+  };
+
+  const handleClassInputChange = (event) => {
+    setClassInputValue(event.target.value);
+  };
+
+  return (
+    <aside className="fixed top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
+      <Panel title="Element">
+        <div className="p-3">
+          <div className="flex items-baseline mb-2">
+            <p className="w-12 mr-2" data-id={dataId}>
+              Type{' '}
+            </p>
+            {type && (
+              <span
+                className="px-2 py-1 font-bold bg-gray-200"
+                title={`Line ${lineNumber}, column ${columnNumber}, ${fileName}`}
+                data-id={dataId}
+              >
+                {type}
+              </span>
+            )}
+          </div>
+          <div className="flex items-baseline">
+            <p className="w-12 mb-2 mr-2">Class</p>
+            <form onSubmit={handleSubmit} data-id={dataId}>
+              <input
+                type="text"
+                value={classInputValue || ''}
+                className="flex-1 p-1 border border-blue"
+                data-id={dataId}
+                onChange={handleClassInputChange}
+              />
+            </form>
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title="Layout">
+        <div className="p-3">
+          <div className="flex mb-2">
+            <p className="w-12 mr-2">Position</p>
+            <select className="px-1 border">
+              <option label=" "></option>
+              <option>Relative</option>
+              <option>Absolute</option>
+            </select>
+          </div>
+          <div className="flex">
+            <p className="w-12 mr-2">Display</p>
+            <select className="px-1 border">
+              <option label=" "></option>
+              <option>Block</option>
+              <option>Flex</option>
+            </select>
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title="Spacing">
+        <div className="p-3">
+          <div className="flex items-baseline">
+            <p className="w-12 mr-2">Margin</p>
+            <div className="flex flex-1">
+              <input
+                type="text"
+                placeholder="t"
+                className="flex-1 w-full p-1 mr-1 border border-t-2"
+              />
+              <input
+                type="text"
+                placeholder="r"
+                className="flex-1 w-full p-1 mr-1 border border-r-2"
+              />
+              <input
+                type="text"
+                placeholder="b"
+                className="flex-1 w-full p-1 mr-1 border border-b-2"
+              />
+              <input
+                type="text"
+                placeholder="l"
+                className="flex-1 w-full p-1 border border-l-2"
+              />
+            </div>
+          </div>
+        </div>
+      </Panel>
+
+      <Panel title="Sizing">
+        <div className="p-3"></div>
+      </Panel>
+
+      <Panel title="Layers">
+        <div className="py-1">
+          <NodeTree
+            parentID={rootNode?.return._debugID}
+            nodes={nodes}
+            selectedIDs={selectedIDs}
+            dataId={dataId}
+          />
+        </div>
+      </Panel>
+    </aside>
+  );
 };
 
 type PanelProps = {

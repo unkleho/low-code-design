@@ -7,9 +7,9 @@ import path from 'path';
 import updateClassName from '../../lib/update-class-name';
 
 export default ({ query }, res) => {
-  const { lineNumber, columnNumber, className, pathname } = query;
+  const { lineNumber, columnNumber, className, fileName } = query;
 
-  const file = fs.readFileSync(pathname, 'utf8');
+  const file = fs.readFileSync(fileName, 'utf8');
 
   const newFile = updateClassName({
     text: file,
@@ -18,7 +18,7 @@ export default ({ query }, res) => {
     columnNumber: parseInt(columnNumber),
   });
 
-  fs.writeFileSync(pathname, newFile);
+  fs.writeFileSync(fileName, newFile);
 
   // fs.writeFileSync(
   //   getFullPathname('/components/Example.ast.json'),
@@ -29,8 +29,8 @@ export default ({ query }, res) => {
   res.json({ code: JSON.stringify(newFile) });
 };
 
-const getFullPathname = (pathname) => {
-  return path.join(process.cwd(), pathname);
+const getFullPathname = (fileName) => {
+  return path.join(process.cwd(), fileName);
 };
 
 // Not using this because Babel generate doesn't keep original formatting

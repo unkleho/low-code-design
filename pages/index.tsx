@@ -10,6 +10,7 @@ import styles from '../styles/HomePage.module.css';
 
 export default function HomePage() {
   const [targetData, setTargetData] = React.useState({});
+  const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [prevElement, setPrevElement] = React.useState<HTMLElement>();
 
   return (
@@ -53,34 +54,36 @@ export default function HomePage() {
           node: targetInst.stateNode,
           _debugID: targetInst._debugID,
         });
+
+        setSelectedNodes([targetInst]);
       }}
     >
       <Example />
 
-      <main className={styles.main}>
+      <main className="">
         <h1 className="uppercase text-xl">
           Welcome to <a href="https://nextjs.org">Next.js</a>
         </h1>
 
-        <p className={styles.description}>
+        <p className="">
           Get started by editing{' '}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
+        <div className="">
+          <a href="https://nextjs.org/docs" className="">
             <h3>Documentation &rarr;</h3>
             <p>Find in-depth information about Next.js features and API.</p>
           </a>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
+          <a href="https://nextjs.org/learn" className="">
             <h3>Learn &rarr;</h3>
             <p>Learn about Next.js in an interactive course with quizzes!</p>
           </a>
 
           <a
             href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
+            className=""
           >
             <h3>Examples &rarr;</h3>
             <p>Discover and deploy boilerplate example Next.js projects.</p>
@@ -88,7 +91,7 @@ export default function HomePage() {
 
           <a
             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
+            className=""
           >
             <h3>Deploy &rarr;</h3>
             <p>
@@ -97,7 +100,7 @@ export default function HomePage() {
           </a>
         </div>
       </main>
-      <DesignTools targetData={targetData} />
+      <DesignTools targetData={targetData} selectedNodes={selectedNodes} />
     </div>
   );
 }
