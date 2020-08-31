@@ -88,23 +88,21 @@ const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
   if (canUseDOM()) {
     return ReactDOM.createPortal(
       <aside className="fixed top-0 w-64 bg-gray-100 border-r text-sm text-gray-800">
-        <div className="border-b" data-id={dataId}>
-          <div className="flex px-3 py-2 bg-gray-200 border-b">
-            <h2 className="mr-auto font-bold">Element</h2>
-            <Icon name="chevron-down" />
-          </div>
+        <Panel title="Element">
           <div className="p-3">
             <div className="flex items-baseline mb-2">
               <p className="w-12 mr-2" data-id={dataId}>
                 Type{' '}
               </p>
-              <span
-                className="px-2 py-1 font-bold bg-gray-200"
-                title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
-                data-id={dataId}
-              >
-                {targetData.type && `${targetData.type}`}
-              </span>
+              {targetData.type && (
+                <span
+                  className="px-2 py-1 font-bold bg-gray-200"
+                  title={`Line ${targetData.lineNumber}, column ${targetData.columnNumber}, ${targetData.pathname}`}
+                  data-id={dataId}
+                >
+                  {targetData.type}
+                </span>
+              )}
             </div>
             <div className="flex items-baseline">
               <p className="w-12 mb-2 mr-2">Class</p>
@@ -119,13 +117,30 @@ const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
               </form>
             </div>
           </div>
-        </div>
+        </Panel>
 
-        <div className="border-b">
-          <div className="flex px-3 py-2 bg-gray-200 border-b">
-            <h2 className="mr-auto font-bold">Layers</h2>
-            <Icon name="chevron-down" />
+        <Panel title="Layout">
+          <div className="p-3">
+            <div className="flex mb-2">
+              <p className="w-12 mr-2">Position</p>
+              <select className="px-1 border">
+                <option label=" "></option>
+                <option>Relative</option>
+                <option>Absolute</option>
+              </select>
+            </div>
+            <div className="flex">
+              <p className="w-12 mr-2">Display</p>
+              <select className="px-1 border">
+                <option label=" "></option>
+                <option>Block</option>
+                <option>Flex</option>
+              </select>
+            </div>
           </div>
+        </Panel>
+
+        <Panel title="Layers">
           <div className="py-1">
             <NodeTree
               parentID={rootNode?.return._debugID}
@@ -134,13 +149,30 @@ const DesignTools = ({ targetData, dataId = 'design-tools' }: Props) => {
               dataId={dataId}
             />
           </div>
-        </div>
+        </Panel>
       </aside>,
       document.body
     );
   }
 
   return null;
+};
+
+type PanelProps = {
+  title: string;
+  children: React.ReactNode;
+};
+
+const Panel = ({ title, children }: PanelProps) => {
+  return (
+    <div className="border-b">
+      <div className="flex px-3 py-2 bg-gray-200 border-b">
+        <h2 className="mr-auto font-bold">{title}</h2>
+        <Icon name="chevron-down" />
+      </div>
+      <div>{children}</div>
+    </div>
+  );
 };
 
 type NodeTreeProps = {
