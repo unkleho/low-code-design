@@ -20,10 +20,7 @@ type Props = {
   // onSubmit?: Function;
 };
 
-const DesignToolsApp = ({
-  selectedNodes = [],
-  dataId = 'design-tools',
-}: Props) => {
+const DesignToolsApp = ({ selectedNodes = [] }: Props) => {
   const [nodes, setNodes] = React.useState<FiberNode[]>([]);
 
   React.useEffect(() => {
@@ -94,7 +91,6 @@ const DesignToolsApp = ({
         <DesignToolsDisplay
           selectedNodes={selectedNodes}
           nodes={nodes}
-          dataId={dataId}
           onSubmit={handleSubmit}
         />
       </DesignToolsProvider>,
@@ -119,6 +115,8 @@ const DesignToolsDisplay = ({
   onSubmit,
 }: DesignToolsDisplayProps) => {
   const [classInputValue, setClassInputValue] = React.useState('');
+  const [widthInputValue, setWidthInputValue] = React.useState('');
+
   const rootNode = nodes[0];
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
 
@@ -151,12 +149,22 @@ const DesignToolsDisplay = ({
     setClassInputValue(state.className);
   }, [state.className]);
 
+  React.useEffect(() => {
+    setWidthInputValue(state.width);
+  }, [state.width]);
+
   // --------------------------------------------------------------------------
   // Handlers
   // --------------------------------------------------------------------------
 
   const handleFormSubmit = (event) => {
+    console.log(event);
+
     event.preventDefault();
+
+    // Not working
+    // event.nativeEvent.stopPropagation();
+    // event.nativeEvent.stopImmediatePropagation();
 
     dispatch({
       type: types.UPDATE_CLASS_NAME,
@@ -185,178 +193,195 @@ const DesignToolsDisplay = ({
       ]);
     }
   };
-  // console.log(state.position);
 
   return (
     <aside className="fixed top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
-      <Panel title="Element">
-        <div className="p-3">
-          <PanelRow label="Type">
-            {type && (
-              <span
-                className="px-2 py-1 font-bold bg-gray-200"
-                title={`Line ${lineNumber}, column ${columnNumber}, ${fileName}`}
-              >
-                {type}
-              </span>
-            )}
-          </PanelRow>
+      <form className="flex-1" onSubmit={handleFormSubmit}>
+        <Panel title="Element">
+          <div className="p-3">
+            <PanelRow label="Type">
+              {type && (
+                <span
+                  className="px-2 py-1 font-bold bg-gray-200"
+                  title={`Line ${lineNumber}, column ${columnNumber}, ${fileName}`}
+                >
+                  {type}
+                </span>
+              )}
+            </PanelRow>
 
-          <PanelRow label="Class">
-            <form className="flex-1" onSubmit={handleFormSubmit}>
+            <PanelRow label="Class">
               <input
                 type="text"
                 value={classInputValue || ''}
                 className="p-1 border border-blue"
                 onChange={handleClassInputChange}
               />
-            </form>
-          </PanelRow>
-        </div>
-      </Panel>
+            </PanelRow>
+          </div>
+        </Panel>
 
-      <Panel title="Layout">
-        <div className="p-3">
-          <PanelRow label="Position">
-            <select
-              className="p-1 border"
-              value={state.position || ''}
-              onChange={(event) => {
-                const { value } = event.target;
+        <Panel title="Layout">
+          <div className="p-3">
+            <PanelRow label="Position">
+              <select
+                className="p-1 border"
+                value={state.position || ''}
+                onChange={(event) => {
+                  const { value } = event.target;
 
-                const newClassName = state.position
-                  ? // Replace with new value
-                    state.className.replace(state.position, value)
-                  : // Otherwise append to className
-                    `${state.className} ${value}`;
+                  const newClassName = state.position
+                    ? // Replace with new value
+                      state.className.replace(state.position, value)
+                    : // Otherwise append to className
+                      `${state.className} ${value}`;
 
-                dispatch({
-                  type: types.UPDATE_CLASS_NAME,
-                  className: newClassName,
-                });
+                  dispatch({
+                    type: types.UPDATE_CLASS_NAME,
+                    className: newClassName,
+                  });
 
-                handleSubmit({
-                  node: selectedNode,
-                  newClassName,
-                });
-              }}
-            >
-              <option label=" "></option>
-              {['relative', 'absolute', 'sticky'].map((option) => {
-                return (
-                  <option value={option} key={option}>
-                    {option}
-                  </option>
-                );
-              })}
-            </select>
-          </PanelRow>
+                  handleSubmit({
+                    node: selectedNode,
+                    newClassName,
+                  });
+                }}
+              >
+                <option label=" "></option>
+                {['relative', 'absolute', 'sticky'].map((option) => {
+                  return (
+                    <option value={option} key={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </select>
+            </PanelRow>
 
-          <PanelRow label="Display">
-            <select
-              className="p-1 border"
-              value={state.display || ''}
-              onChange={(event) => {
-                const { value } = event.target;
+            <PanelRow label="Display">
+              <select
+                className="p-1 border"
+                value={state.display || ''}
+                onChange={(event) => {
+                  const { value } = event.target;
 
-                const newClassName = state.display
-                  ? // Replace with new value
-                    state.className.replace(state.display, value)
-                  : // Otherwise append to className
-                    `${state.className} ${value}`;
+                  const newClassName = state.display
+                    ? // Replace with new value
+                      state.className.replace(state.display, value)
+                    : // Otherwise append to className
+                      `${state.className} ${value}`;
 
-                dispatch({
-                  type: types.UPDATE_CLASS_NAME,
-                  className: newClassName,
-                });
+                  dispatch({
+                    type: types.UPDATE_CLASS_NAME,
+                    className: newClassName,
+                  });
 
-                handleSubmit({
-                  node: selectedNode,
-                  newClassName,
-                });
-              }}
-            >
-              <option label=" "></option>
-              {['block', 'flex', 'grid'].map((option) => {
-                return (
-                  <option value={option} key={option}>
-                    {option}
-                  </option>
-                );
-              })}
-            </select>
-          </PanelRow>
-        </div>
-      </Panel>
+                  handleSubmit({
+                    node: selectedNode,
+                    newClassName,
+                  });
+                }}
+              >
+                <option label=" "></option>
+                {['block', 'flex', 'grid'].map((option) => {
+                  return (
+                    <option value={option} key={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </select>
+            </PanelRow>
+          </div>
+        </Panel>
 
-      <Panel title="Spacing">
-        <div className="p-3">
-          <PanelRow label="Margin">
-            <input
-              type="text"
-              placeholder="t"
-              value={state.marginTop || ''}
-              className="flex-1 w-full p-1 mr-1 border border-t-2"
-            />
-            <input
-              type="text"
-              placeholder="r"
-              value={state.marginRight || ''}
-              className="flex-1 w-full p-1 mr-1 border border-r-2"
-            />
-            <input
-              type="text"
-              placeholder="b"
-              value={state.marginBottom || ''}
-              className="flex-1 w-full p-1 mr-1 border border-b-2"
-            />
-            <input
-              type="text"
-              placeholder="l"
-              value={state.marginLeft || ''}
-              className="flex-1 w-full p-1 border border-l-2"
-            />
-          </PanelRow>
+        <Panel title="Spacing">
+          <div className="p-3">
+            <PanelRow label="Margin">
+              <input
+                type="text"
+                placeholder="t"
+                value={state.marginTop || ''}
+                className="flex-1 w-full p-1 mr-1 border border-t-2"
+              />
+              <input
+                type="text"
+                placeholder="r"
+                value={state.marginRight || ''}
+                className="flex-1 w-full p-1 mr-1 border border-r-2"
+              />
+              <input
+                type="text"
+                placeholder="b"
+                value={state.marginBottom || ''}
+                className="flex-1 w-full p-1 mr-1 border border-b-2"
+              />
+              <input
+                type="text"
+                placeholder="l"
+                value={state.marginLeft || ''}
+                className="flex-1 w-full p-1 border border-l-2"
+              />
+            </PanelRow>
 
-          <PanelRow label="Padding">
-            <input
-              type="text"
-              placeholder="t"
-              value={state.paddingTop || ''}
-              className="flex-1 w-full p-1 mr-1 border border-t-2"
-            />
-            <input
-              type="text"
-              placeholder="r"
-              value={state.paddingRight || ''}
-              className="flex-1 w-full p-1 mr-1 border border-r-2"
-            />
-            <input
-              type="text"
-              placeholder="b"
-              value={state.paddingBottom || ''}
-              className="flex-1 w-full p-1 mr-1 border border-b-2"
-            />
-            <input
-              type="text"
-              placeholder="l"
-              value={state.paddingLeft || ''}
-              className="flex-1 w-full p-1 border border-l-2"
-            />
-          </PanelRow>
-        </div>
-      </Panel>
+            <PanelRow label="Padding">
+              <input
+                type="text"
+                placeholder="t"
+                value={state.paddingTop || ''}
+                className="flex-1 w-full p-1 mr-1 border border-t-2"
+              />
+              <input
+                type="text"
+                placeholder="r"
+                value={state.paddingRight || ''}
+                className="flex-1 w-full p-1 mr-1 border border-r-2"
+              />
+              <input
+                type="text"
+                placeholder="b"
+                value={state.paddingBottom || ''}
+                className="flex-1 w-full p-1 mr-1 border border-b-2"
+              />
+              <input
+                type="text"
+                placeholder="l"
+                value={state.paddingLeft || ''}
+                className="flex-1 w-full p-1 border border-l-2"
+              />
+            </PanelRow>
+          </div>
+        </Panel>
 
-      <Panel title="Sizing">
-        <div className="p-3">
-          <PanelRow label="Width">
-            <input type="text" className="p-1 border" />
-          </PanelRow>
-          <PanelRow label="Height">
-            <input type="text" className="p-1 border" />
-          </PanelRow>
-        </div>
-      </Panel>
+        <Panel title="Sizing">
+          <div className="p-3">
+            <PanelRow label="Width">
+              <input
+                type="text"
+                className="p-1 border"
+                value={widthInputValue || ''}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  setWidthInputValue(value);
+                }}
+              />
+            </PanelRow>
+            <PanelRow label="Height">
+              <input
+                type="text"
+                className="p-1 border"
+                value={state.height || ''}
+              />
+            </PanelRow>
+          </div>
+        </Panel>
+
+        {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
+        <button type="submit" className="hidden">
+          Submit
+        </button>
+      </form>
 
       <Panel title="Layers">
         <div className="py-1">
@@ -368,6 +393,7 @@ const DesignToolsDisplay = ({
           />
         </div>
       </Panel>
+      {/* </form> */}
     </aside>
   );
 };

@@ -18,6 +18,8 @@ const Wrapper = ({ children }) => {
             _targetInst: FiberNode;
           }
         ) => {
+          console.log('Wrapper event');
+
           // Stop <a> links from navigating away
           event.preventDefault();
 
