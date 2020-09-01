@@ -5,22 +5,22 @@ import axios from 'axios';
 
 import Icon from '../Icon';
 import NodeTree from '../NodeTree';
-
-import { FiberNode } from '../../types';
 import {
   DesignToolsProvider,
   useDesignTools,
   types,
 } from '../../lib/contexts/design-tools-context';
 
+import { FiberNode } from '../../types';
+
 type Props = {
   selectedNodes?: FiberNode[];
   // Should be added to all elements as a crude way to prevent selection by overall onClick handler
   dataId?: string;
-  onSubmit?: Function;
+  // onSubmit?: Function;
 };
 
-const DesignTools = ({
+const DesignToolsApp = ({
   selectedNodes = [],
   dataId = 'design-tools',
 }: Props) => {
@@ -72,18 +72,20 @@ const DesignTools = ({
     const { node } = event;
 
     // Change DOM element className
-    node.stateNode.className = event.update.className;
+    if (node) {
+      node.stateNode.className = event.update.className;
 
-    const result = await axios.get('/api/component', {
-      params: {
-        lineNumber: node._debugSource.lineNumber,
-        columnNumber: node._debugSource.columnNumber,
-        className: node.stateNode.className,
-        fileName: node._debugSource.fileName,
-      },
-    });
+      const result = await axios.get('/api/component', {
+        params: {
+          lineNumber: node._debugSource.lineNumber,
+          columnNumber: node._debugSource.columnNumber,
+          className: node.stateNode.className,
+          fileName: node._debugSource.fileName,
+        },
+      });
 
-    console.log(result.data);
+      console.log(result.data);
+    }
   };
 
   if (canUseDOM()) {
@@ -106,20 +108,21 @@ const DesignTools = ({
 type DesignToolsDisplayProps = {
   selectedNodes: FiberNode[];
   nodes: FiberNode[];
-  dataId: string;
+  // dataId: string;
   onSubmit: Function;
 };
 
 const DesignToolsDisplay = ({
   selectedNodes = [],
   nodes = [],
-  dataId,
+  // dataId,
   onSubmit,
 }: DesignToolsDisplayProps) => {
   const [classInputValue, setClassInputValue] = React.useState('');
   const rootNode = nodes[0];
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
 
+  // TODO: Consider moving this into context
   const type = selectedNode?.type;
   const lineNumber = selectedNode?._debugSource.lineNumber;
   const columnNumber = selectedNode?._debugSource.columnNumber;
@@ -129,6 +132,11 @@ const DesignToolsDisplay = ({
 
   const { state, dispatch } = useDesignTools();
 
+  // --------------------------------------------------------------------------
+  // Effects
+  // --------------------------------------------------------------------------
+
+  // Set initial className when there is a new selectedNode
   React.useEffect(() => {
     setClassInputValue(className);
 
@@ -138,7 +146,16 @@ const DesignToolsDisplay = ({
     });
   }, [className]);
 
-  const handleSubmit = (event) => {
+  // Update className text field and send callback
+  React.useEffect(() => {
+    setClassInputValue(state.className);
+  }, [state.className]);
+
+  // --------------------------------------------------------------------------
+  // Handlers
+  // --------------------------------------------------------------------------
+
+  const handleFormSubmit = (event) => {
     event.preventDefault();
 
     dispatch({
@@ -146,21 +163,29 @@ const DesignToolsDisplay = ({
       className: classInputValue,
     });
 
-    if (typeof onSubmit === 'function') {
-      onSubmit([
-        {
-          node: selectedNode,
-          update: {
-            className: classInputValue,
-          },
-        },
-      ]);
-    }
+    handleSubmit({
+      node: selectedNode,
+      newClassName: classInputValue,
+    });
   };
 
   const handleClassInputChange = (event) => {
     setClassInputValue(event.target.value);
   };
+
+  const handleSubmit = ({ node, newClassName }) => {
+    if (typeof onSubmit === 'function') {
+      onSubmit([
+        {
+          node,
+          update: {
+            className: newClassName,
+          },
+        },
+      ]);
+    }
+  };
+  // console.log(state.position);
 
   return (
     <aside className="fixed top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
@@ -171,7 +196,6 @@ const DesignToolsDisplay = ({
               <span
                 className="px-2 py-1 font-bold bg-gray-200"
                 title={`Line ${lineNumber}, column ${columnNumber}, ${fileName}`}
-                data-id={dataId}
               >
                 {type}
               </span>
@@ -179,12 +203,11 @@ const DesignToolsDisplay = ({
           </PanelRow>
 
           <PanelRow label="Class">
-            <form className="flex-1" onSubmit={handleSubmit} data-id={dataId}>
+            <form className="flex-1" onSubmit={handleFormSubmit}>
               <input
                 type="text"
                 value={classInputValue || ''}
                 className="p-1 border border-blue"
-                data-id={dataId}
                 onChange={handleClassInputChange}
               />
             </form>
@@ -195,23 +218,71 @@ const DesignToolsDisplay = ({
       <Panel title="Layout">
         <div className="p-3">
           <PanelRow label="Position">
-            <select className="p-1 border">
-              <option label=" "></option>
-              {['relative', 'absolute'].map((option) => {
-                const isSelected = className.includes(option);
+            <select
+              className="p-1 border"
+              value={state.position || ''}
+              onChange={(event) => {
+                const { value } = event.target;
 
-                return <option selected={isSelected}>{option}</option>;
+                const newClassName = state.position
+                  ? // Replace with new value
+                    state.className.replace(state.position, value)
+                  : // Otherwise append to className
+                    `${state.className} ${value}`;
+
+                dispatch({
+                  type: types.UPDATE_CLASS_NAME,
+                  className: newClassName,
+                });
+
+                handleSubmit({
+                  node: selectedNode,
+                  newClassName,
+                });
+              }}
+            >
+              <option label=" "></option>
+              {['relative', 'absolute', 'sticky'].map((option) => {
+                return (
+                  <option value={option} key={option}>
+                    {option}
+                  </option>
+                );
               })}
             </select>
           </PanelRow>
 
           <PanelRow label="Display">
-            <select className="p-1 border">
+            <select
+              className="p-1 border"
+              value={state.display || ''}
+              onChange={(event) => {
+                const { value } = event.target;
+
+                const newClassName = state.display
+                  ? // Replace with new value
+                    state.className.replace(state.display, value)
+                  : // Otherwise append to className
+                    `${state.className} ${value}`;
+
+                dispatch({
+                  type: types.UPDATE_CLASS_NAME,
+                  className: newClassName,
+                });
+
+                handleSubmit({
+                  node: selectedNode,
+                  newClassName,
+                });
+              }}
+            >
               <option label=" "></option>
               {['block', 'flex', 'grid'].map((option) => {
-                const isSelected = className.includes(option);
-
-                return <option selected={isSelected}>{option}</option>;
+                return (
+                  <option value={option} key={option}>
+                    {option}
+                  </option>
+                );
               })}
             </select>
           </PanelRow>
@@ -293,7 +364,7 @@ const DesignToolsDisplay = ({
             parentID={rootNode?.return._debugID}
             nodes={nodes}
             selectedIDs={selectedIDs}
-            dataId={dataId}
+            // dataId={dataId}
           />
         </div>
       </Panel>
@@ -340,4 +411,4 @@ function canUseDOM() {
   );
 }
 
-export default DesignTools;
+export default DesignToolsApp;
