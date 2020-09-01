@@ -7,6 +7,11 @@ import Icon from '../Icon';
 import NodeTree from '../NodeTree';
 
 import { FiberNode } from '../../types';
+import {
+  DesignToolsProvider,
+  useDesignTools,
+  types,
+} from '../../lib/contexts/design-tools-context';
 
 type Props = {
   selectedNodes?: FiberNode[];
@@ -83,12 +88,14 @@ const DesignTools = ({
 
   if (canUseDOM()) {
     return ReactDOM.createPortal(
-      <DesignToolsDisplay
-        selectedNodes={selectedNodes}
-        nodes={nodes}
-        dataId={dataId}
-        onSubmit={handleSubmit}
-      />,
+      <DesignToolsProvider>
+        <DesignToolsDisplay
+          selectedNodes={selectedNodes}
+          nodes={nodes}
+          dataId={dataId}
+          onSubmit={handleSubmit}
+        />
+      </DesignToolsProvider>,
       document.body
     );
   }
@@ -117,30 +124,27 @@ const DesignToolsDisplay = ({
   const lineNumber = selectedNode?._debugSource.lineNumber;
   const columnNumber = selectedNode?._debugSource.columnNumber;
   const fileName = selectedNode?._debugSource.fileName;
-  const className = selectedNode?.stateNode.className;
+  const className = selectedNode?.stateNode.className || '';
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
-  // console.log(className.split(' '));
-
-  function getClassNameValue(className = '', prefix) {
-    return className
-      .split(' ')
-      .filter((c) => {
-        return c.includes(prefix);
-      })[0]
-      ?.replace(prefix, '');
-  }
-
-  const paddingValue = getClassNameValue(className, 'p-');
-
-  console.log(paddingValue);
+  const { state, dispatch } = useDesignTools();
 
   React.useEffect(() => {
     setClassInputValue(className);
+
+    dispatch({
+      type: types.UPDATE_CLASS_NAME,
+      className,
+    });
   }, [className]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    dispatch({
+      type: types.UPDATE_CLASS_NAME,
+      className: classInputValue,
+    });
 
     if (typeof onSubmit === 'function') {
       onSubmit([
@@ -193,16 +197,22 @@ const DesignToolsDisplay = ({
           <PanelRow label="Position">
             <select className="p-1 border">
               <option label=" "></option>
-              <option>Relative</option>
-              <option>Absolute</option>
+              {['relative', 'absolute'].map((option) => {
+                const isSelected = className.includes(option);
+
+                return <option selected={isSelected}>{option}</option>;
+              })}
             </select>
           </PanelRow>
 
           <PanelRow label="Display">
             <select className="p-1 border">
               <option label=" "></option>
-              <option>Block</option>
-              <option>Flex</option>
+              {['block', 'flex', 'grid'].map((option) => {
+                const isSelected = className.includes(option);
+
+                return <option selected={isSelected}>{option}</option>;
+              })}
             </select>
           </PanelRow>
         </div>
@@ -214,45 +224,52 @@ const DesignToolsDisplay = ({
             <input
               type="text"
               placeholder="t"
-              // value={marginValue || ''}
+              value={state.marginTop || ''}
               className="flex-1 w-full p-1 mr-1 border border-t-2"
             />
             <input
               type="text"
               placeholder="r"
+              value={state.marginRight || ''}
               className="flex-1 w-full p-1 mr-1 border border-r-2"
             />
             <input
               type="text"
               placeholder="b"
+              value={state.marginBottom || ''}
               className="flex-1 w-full p-1 mr-1 border border-b-2"
             />
             <input
               type="text"
               placeholder="l"
+              value={state.marginLeft || ''}
               className="flex-1 w-full p-1 border border-l-2"
             />
           </PanelRow>
+
           <PanelRow label="Padding">
             <input
               type="text"
               placeholder="t"
-              // value={marginValue || ''}
+              value={state.paddingTop || ''}
               className="flex-1 w-full p-1 mr-1 border border-t-2"
             />
             <input
               type="text"
               placeholder="r"
+              value={state.paddingRight || ''}
               className="flex-1 w-full p-1 mr-1 border border-r-2"
             />
             <input
               type="text"
               placeholder="b"
+              value={state.paddingBottom || ''}
               className="flex-1 w-full p-1 mr-1 border border-b-2"
             />
             <input
               type="text"
               placeholder="l"
+              value={state.paddingLeft || ''}
               className="flex-1 w-full p-1 border border-l-2"
             />
           </PanelRow>
