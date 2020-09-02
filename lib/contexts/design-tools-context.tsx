@@ -14,6 +14,7 @@ function getClassNameValue(className = '', prefix) {
 export const types = {
   UPDATE_CLASS_NAME: 'UPDATE_CLASS_NAME',
   UPDATE_CURRENT_FIELD: 'UPDATE_CURRENT_FIELD',
+  UPDATE_FORM_VALUE: 'UPDATE_FORM_VALUE',
 };
 
 function designToolsReducer(state, action) {
@@ -24,6 +25,16 @@ function designToolsReducer(state, action) {
       return {
         ...state,
         currentField: action.currentField,
+      };
+    }
+
+    case types.UPDATE_FORM_VALUE: {
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          [action.key]: action.value,
+        },
       };
     }
 
@@ -64,6 +75,13 @@ function designToolsReducer(state, action) {
         paddingLeft:
           getClassNameValue(action.className, 'pl-') ||
           getClassNameValue(action.className, 'p-'),
+        // Experiment with keeping form state in context
+        // Will need to access it from handleSubmit, so might as well keep it handy
+        // Could cause perf issues, but whatevs for now
+        form: {
+          className: action.className,
+          width: getClassNameValue(action.className, 'w-'),
+        },
       };
     }
     default: {
@@ -74,12 +92,14 @@ function designToolsReducer(state, action) {
 
 export function DesignToolsProvider(props) {
   const [state, dispatch] = React.useReducer(designToolsReducer, {
+    currentField: null,
     className: null,
     position: null,
     display: null,
     width: '',
     minWidth: '',
     height: '',
+    minHeight: '',
     marginTop: null,
     marginRight: null,
     marginBottom: null,
@@ -88,6 +108,10 @@ export function DesignToolsProvider(props) {
     paddingRight: null,
     paddingBottom: null,
     paddingLeft: null,
+    form: {
+      className: '',
+      width: '',
+    },
   });
   const value = React.useMemo(() => [state, dispatch], [state]);
 

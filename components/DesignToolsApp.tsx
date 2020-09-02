@@ -23,7 +23,7 @@ const DesignToolsApp = ({
   onSubmit,
 }: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
-  const [widthInputValue, setWidthInputValue] = React.useState('');
+  // const [widthInputValue, setWidthInputValue] = React.useState('');
   const [minWidthInputValue, setMinWidthInputValue] = React.useState('');
   const [heightInputValue, setHeightInputValue] = React.useState('');
 
@@ -59,9 +59,9 @@ const DesignToolsApp = ({
     setClassInputValue(state.className);
   }, [state.className]);
 
-  React.useEffect(() => {
-    setWidthInputValue(state.width);
-  }, [state.width]);
+  // React.useEffect(() => {
+  //   setWidthInputValue(state.width);
+  // }, [state.width]);
 
   React.useEffect(() => {
     setMinWidthInputValue(state.minWidth);
@@ -92,7 +92,7 @@ const DesignToolsApp = ({
       newClassName = processClassName(
         classInputValue,
         state.width ? `w-${state.width}` : '',
-        widthInputValue ? `w-${widthInputValue}` : ''
+        state.form.width ? `w-${state.form.width}` : ''
       );
     } else if (state.currentField === 'minWidth') {
       newClassName = processClassName(
@@ -109,7 +109,7 @@ const DesignToolsApp = ({
     }
 
     console.log('currentField', state.currentField);
-    console.log('widthInputValue', widthInputValue);
+    console.log('state.form.width', state.form.width);
     console.log('old', classInputValue);
     console.log('new', newClassName);
 
@@ -311,12 +311,17 @@ const DesignToolsApp = ({
                 type="text"
                 id="element-width"
                 className="flex-1 w-full p-1 mr-4 border"
-                value={widthInputValue || ''}
+                value={state.form.width || ''}
                 onFocus={() => updateCurrentField('width')}
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  setWidthInputValue(value);
+                  // setWidthInputValue(value);
+                  dispatch({
+                    type: types.UPDATE_FORM_VALUE,
+                    key: 'width',
+                    value,
+                  });
                 }}
               />
               <label className="text-xs mr-2">Min-Width</label>
@@ -369,11 +374,9 @@ const DesignToolsApp = ({
             parentID={rootNode?.return._debugID}
             nodes={nodes}
             selectedIDs={selectedIDs}
-            // dataId={dataId}
           />
         </div>
       </Panel>
-      {/* </form> */}
     </aside>
   );
 };
@@ -389,12 +392,29 @@ const DesignToolsAppWrapper = (props) => {
 /**
  * Append or replace a newValue in a className string
  */
-function processClassName(className, oldValue, newValue) {
-  const newClassName = oldValue
-    ? // Replace with new value
-      className.replace(oldValue, newValue)
-    : // Otherwise append to className
-      `${className}${newValue ? ` ${newValue}` : ''}`;
+export function processClassName(className, oldValue, newValue) {
+  let newClassName;
+
+  if (oldValue) {
+    newClassName = className
+      .split(' ')
+      .map((c) => {
+        if (c === oldValue) {
+          return newValue;
+        }
+
+        return c;
+      })
+      .join(' ');
+  } else {
+    newClassName = `${className}${newValue ? ` ${newValue}` : ''}`;
+  }
+
+  // const newClassName = oldValue
+  //   ? // Replace with new value
+  //     className.replace(oldValue, newValue)
+  //   : // Otherwise append to className
+  //     `${className}${newValue ? ` ${newValue}` : ''}`;
 
   return newClassName;
 }
