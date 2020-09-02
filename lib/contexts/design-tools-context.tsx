@@ -100,11 +100,12 @@ export function useDesignTools() {
   }
 
   const [state, dispatch] = context;
-  const increment = () => dispatch({ type: 'INCREMENT' });
+  const updateCurrentField = (currentField) =>
+    dispatch({ type: types.UPDATE_CURRENT_FIELD, currentField });
 
   return {
     state,
     dispatch,
-    increment,
+    updateCurrentField,
   };
 }

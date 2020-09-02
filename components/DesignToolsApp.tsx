@@ -14,14 +14,12 @@ import { FiberNode } from '../types';
 type Props = {
   selectedNodes: FiberNode[];
   nodes: FiberNode[];
-  // dataId: string;
   onSubmit: Function;
 };
 
 const DesignToolsApp = ({
   selectedNodes = [],
   nodes = [],
-  // dataId,
   onSubmit,
 }: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
@@ -39,7 +37,7 @@ const DesignToolsApp = ({
   const className = selectedNode?.stateNode.className || '';
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
-  const { state, dispatch } = useDesignTools();
+  const { state, dispatch, updateCurrentField } = useDesignTools();
 
   // --------------------------------------------------------------------------
   // Effects
@@ -72,6 +70,10 @@ const DesignToolsApp = ({
   // Handlers
   // --------------------------------------------------------------------------
 
+  /**
+   * Make changes to className and send data to parent component whenever user
+   * presses enter in form.
+   */
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
@@ -144,6 +146,7 @@ const DesignToolsApp = ({
                 type="text"
                 value={classInputValue || ''}
                 className="p-1 flex-1 border border-blue"
+                onFocus={() => updateCurrentField('className')}
                 onChange={handleClassInputChange}
               />
             </PanelRow>
@@ -293,12 +296,7 @@ const DesignToolsApp = ({
                 id="element-width"
                 className="flex-1 w-full p-1 mr-4 border"
                 value={widthInputValue || ''}
-                onFocus={() => {
-                  dispatch({
-                    type: types.UPDATE_CURRENT_FIELD,
-                    currentField: 'width',
-                  });
-                }}
+                onFocus={() => updateCurrentField('width')}
                 onChange={(event) => {
                   const { value } = event.target;
 
@@ -306,7 +304,11 @@ const DesignToolsApp = ({
                 }}
               />
               <label className="text-xs mr-2">Min-Width</label>
-              <input type="text" className="flex-1 w-full p-1 border" />
+              <input
+                type="text"
+                className="flex-1 w-full p-1 border"
+                onFocus={() => updateCurrentField('minWidth')}
+              />
             </div>
             <div className="flex items-baseline">
               <label className="w-12 mr-2 text-xs" htmlFor="element-height">
@@ -317,12 +319,7 @@ const DesignToolsApp = ({
                 id="element-height"
                 className="flex-1 w-full p-1 mr-4 border"
                 value={heightInputValue || ''}
-                onFocus={() => {
-                  dispatch({
-                    type: types.UPDATE_CURRENT_FIELD,
-                    currentField: 'height',
-                  });
-                }}
+                onFocus={() => updateCurrentField('height')}
                 onChange={(event) => {
                   const { value } = event.target;
 
@@ -330,7 +327,11 @@ const DesignToolsApp = ({
                 }}
               />
               <label className="text-xs mr-2">Min-Height</label>
-              <input type="text" className="flex-1 w-full p-1 border" />
+              <input
+                type="text"
+                className="flex-1 w-full p-1 border"
+                onFocus={() => updateCurrentField('minHeight')}
+              />
             </div>
           </div>
         </Panel>

@@ -12,7 +12,7 @@ type NodeTreeProps = {
 
 const getChildNodes = (nodes, parentID) => {
   return nodes.filter((node) => {
-    return node.return._debugID === parentID;
+    return node.return?._debugID === parentID;
   });
 };
 
