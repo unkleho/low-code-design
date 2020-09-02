@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import { Utils, traverse } from 'react-fiber-traverse';
 import axios from 'axios';
 
-import Icon from '../Icon';
+import Panel from '../Panel';
+import PanelRow from '../PanelRow';
 import NodeTree from '../NodeTree';
 import {
   DesignToolsProvider,
@@ -15,9 +16,6 @@ import { FiberNode } from '../../types';
 
 type Props = {
   selectedNodes?: FiberNode[];
-  // Should be added to all elements as a crude way to prevent selection by overall onClick handler
-  dataId?: string;
-  // onSubmit?: Function;
 };
 
 const DesignToolsApp = ({ selectedNodes = [] }: Props) => {
@@ -444,37 +442,6 @@ function processClassName(className, oldValue, newValue) {
 
   return newClassName;
 }
-
-type PanelProps = {
-  title: string;
-  children: React.ReactNode;
-};
-
-const Panel = ({ title, children }: PanelProps) => {
-  return (
-    <div className="border-b">
-      <div className="flex px-3 py-2 bg-gray-200 border-b">
-        <h2 className="mr-auto font-bold">{title}</h2>
-        <Icon name="chevron-down" />
-      </div>
-      <div>{children}</div>
-    </div>
-  );
-};
-
-type PanelRowProps = {
-  label: string;
-  children: React.ReactNode;
-};
-
-const PanelRow = ({ label, children }: PanelRowProps) => {
-  return (
-    <div className="flex items-baseline mb-2 last:mb-0">
-      <p className="w-12 mr-2 text-xs">{label}</p>
-      <div className="flex flex-1">{children}</div>
-    </div>
-  );
-};
 
 function canUseDOM() {
   return !!(
