@@ -116,6 +116,7 @@ const DesignToolsDisplay = ({
 }: DesignToolsDisplayProps) => {
   const [classInputValue, setClassInputValue] = React.useState('');
   const [widthInputValue, setWidthInputValue] = React.useState('');
+  const [heightInputValue, setHeightInputValue] = React.useState('');
 
   const rootNode = nodes[0];
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
@@ -153,27 +154,43 @@ const DesignToolsDisplay = ({
     setWidthInputValue(state.width);
   }, [state.width]);
 
+  React.useEffect(() => {
+    setHeightInputValue(state.height);
+  }, [state.height]);
+
   // --------------------------------------------------------------------------
   // Handlers
   // --------------------------------------------------------------------------
 
   const handleFormSubmit = (event) => {
-    console.log(event);
-
     event.preventDefault();
 
     // Not working
     // event.nativeEvent.stopPropagation();
     // event.nativeEvent.stopImmediatePropagation();
 
+    let newClassName;
+
+    newClassName = processClassName(
+      classInputValue,
+      state.width ? `w-${state.width}` : '',
+      widthInputValue ? `w-${widthInputValue}` : ''
+    );
+
+    newClassName = processClassName(
+      newClassName,
+      state.height ? `h-${state.height}` : '',
+      heightInputValue ? `h-${heightInputValue}` : ''
+    );
+
     dispatch({
       type: types.UPDATE_CLASS_NAME,
-      className: classInputValue,
+      className: newClassName,
     });
 
     handleSubmit({
       node: selectedNode,
-      newClassName: classInputValue,
+      newClassName: newClassName,
     });
   };
 
@@ -214,7 +231,7 @@ const DesignToolsDisplay = ({
               <input
                 type="text"
                 value={classInputValue || ''}
-                className="p-1 border border-blue"
+                className="p-1 flex-1 border border-blue"
                 onChange={handleClassInputChange}
               />
             </PanelRow>
@@ -265,11 +282,11 @@ const DesignToolsDisplay = ({
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  const newClassName = state.display
-                    ? // Replace with new value
-                      state.className.replace(state.display, value)
-                    : // Otherwise append to className
-                      `${state.className} ${value}`;
+                  const newClassName = processClassName(
+                    state.className,
+                    state.display,
+                    value
+                  );
 
                   dispatch({
                     type: types.UPDATE_CLASS_NAME,
@@ -355,10 +372,14 @@ const DesignToolsDisplay = ({
 
         <Panel title="Sizing">
           <div className="p-3">
-            <PanelRow label="Width">
+            <div className="flex items-baseline mb-2">
+              <label className="w-12 mr-2 text-xs" htmlFor="element-width">
+                Width
+              </label>
               <input
                 type="text"
-                className="p-1 border"
+                id="element-width"
+                className="flex-1 w-full p-1 mr-4 border"
                 value={widthInputValue || ''}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -366,14 +387,27 @@ const DesignToolsDisplay = ({
                   setWidthInputValue(value);
                 }}
               />
-            </PanelRow>
-            <PanelRow label="Height">
+              <label className="text-xs mr-2">Min-Width</label>
+              <input type="text" className="flex-1 w-full p-1 border" />
+            </div>
+            <div className="flex items-baseline">
+              <label className="w-12 mr-2 text-xs" htmlFor="element-height">
+                Height
+              </label>
               <input
                 type="text"
-                className="p-1 border"
-                value={state.height || ''}
+                id="element-height"
+                className="flex-1 w-full p-1 mr-4 border"
+                value={heightInputValue || ''}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  setHeightInputValue(value);
+                }}
               />
-            </PanelRow>
+              <label className="text-xs mr-2">Min-Height</label>
+              <input type="text" className="flex-1 w-full p-1 border" />
+            </div>
           </div>
         </Panel>
 
@@ -397,6 +431,19 @@ const DesignToolsDisplay = ({
     </aside>
   );
 };
+
+/**
+ * Append or replace a newValue in a className string
+ */
+function processClassName(className, oldValue, newValue) {
+  const newClassName = oldValue
+    ? // Replace with new value
+      className.replace(oldValue, newValue)
+    : // Otherwise append to className
+      `${className}${newValue ? ` ${newValue}` : ''}`;
+
+  return newClassName;
+}
 
 type PanelProps = {
   title: string;
