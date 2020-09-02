@@ -24,6 +24,7 @@ const DesignToolsApp = ({
 }: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
   const [widthInputValue, setWidthInputValue] = React.useState('');
+  const [minWidthInputValue, setMinWidthInputValue] = React.useState('');
   const [heightInputValue, setHeightInputValue] = React.useState('');
 
   const rootNode = nodes[0];
@@ -63,6 +64,10 @@ const DesignToolsApp = ({
   }, [state.width]);
 
   React.useEffect(() => {
+    setMinWidthInputValue(state.minWidth);
+  }, [state.minWidth]);
+
+  React.useEffect(() => {
     setHeightInputValue(state.height);
   }, [state.height]);
 
@@ -89,6 +94,12 @@ const DesignToolsApp = ({
         state.width ? `w-${state.width}` : '',
         widthInputValue ? `w-${widthInputValue}` : ''
       );
+    } else if (state.currentField === 'minWidth') {
+      newClassName = processClassName(
+        classInputValue,
+        state.minWidth ? `min-w-${state.minWidth}` : '',
+        minWidthInputValue ? `min-w-${minWidthInputValue}` : ''
+      );
     } else if (state.currentField === 'height') {
       newClassName = processClassName(
         classInputValue,
@@ -96,6 +107,11 @@ const DesignToolsApp = ({
         heightInputValue ? `h-${heightInputValue}` : ''
       );
     }
+
+    console.log('currentField', state.currentField);
+    console.log('widthInputValue', widthInputValue);
+    console.log('old', classInputValue);
+    console.log('new', newClassName);
 
     dispatch({
       type: types.UPDATE_CLASS_NAME,
@@ -308,6 +324,11 @@ const DesignToolsApp = ({
                 type="text"
                 className="flex-1 w-full p-1 border"
                 onFocus={() => updateCurrentField('minWidth')}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  setMinWidthInputValue(value);
+                }}
               />
             </div>
             <div className="flex items-baseline">

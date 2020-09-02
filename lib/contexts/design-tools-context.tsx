@@ -38,6 +38,7 @@ function designToolsReducer(state, action) {
           return ['block', 'flex', 'grid'].includes(c);
         }),
         width: getClassNameValue(action.className, 'w-'),
+        minWidth: getClassNameValue(action.className, 'min-w-'),
         height: getClassNameValue(action.className, 'h-'),
         marginTop:
           getClassNameValue(action.className, 'mt-') ||
@@ -77,6 +78,7 @@ export function DesignToolsProvider(props) {
     position: null,
     display: null,
     width: '',
+    minWidth: '',
     height: '',
     marginTop: null,
     marginRight: null,
