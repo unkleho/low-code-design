@@ -41,47 +41,11 @@ function designToolsReducer(state, action) {
     case types.UPDATE_CLASS_NAME: {
       return {
         ...state,
-        className: action.className,
-        position: action.className.split(' ').find((c) => {
-          return ['relative', 'absolute', 'sticky'].includes(c);
-        }),
-        display: action.className.split(' ').find((c) => {
-          return ['block', 'flex', 'grid'].includes(c);
-        }),
-        width: getClassNameValue(action.className, 'w-'),
-        minWidth: getClassNameValue(action.className, 'min-w-'),
-        height: getClassNameValue(action.className, 'h-'),
-        marginTop:
-          getClassNameValue(action.className, 'mt-') ||
-          getClassNameValue(action.className, 'm-'),
-        marginRight:
-          getClassNameValue(action.className, 'mr-') ||
-          getClassNameValue(action.className, 'm-'),
-        marginBottom:
-          getClassNameValue(action.className, 'mb-') ||
-          getClassNameValue(action.className, 'm-'),
-        marginLeft:
-          getClassNameValue(action.className, 'ml-') ||
-          getClassNameValue(action.className, 'm-'),
-        paddingTop:
-          getClassNameValue(action.className, 'pt-') ||
-          getClassNameValue(action.className, 'p-'),
-        paddingRight:
-          getClassNameValue(action.className, 'pr-') ||
-          getClassNameValue(action.className, 'p-'),
-        paddingBottom:
-          getClassNameValue(action.className, 'pb-') ||
-          getClassNameValue(action.className, 'p-'),
-        paddingLeft:
-          getClassNameValue(action.className, 'pl-') ||
-          getClassNameValue(action.className, 'p-'),
+        ...buildFormValues(action.className),
         // Experiment with keeping form state in context
         // Will need to access it from handleSubmit, so might as well keep it handy
         // Could cause perf issues, but whatevs for now
-        form: {
-          className: action.className,
-          width: getClassNameValue(action.className, 'w-'),
-        },
+        form: buildFormValues(action.className),
       };
     }
     default: {
@@ -93,25 +57,8 @@ function designToolsReducer(state, action) {
 export function DesignToolsProvider(props) {
   const [state, dispatch] = React.useReducer(designToolsReducer, {
     currentField: null,
-    className: null,
-    position: null,
-    display: null,
-    width: '',
-    minWidth: '',
-    height: '',
-    minHeight: '',
-    marginTop: null,
-    marginRight: null,
-    marginBottom: null,
-    marginLeft: null,
-    paddingTop: null,
-    paddingRight: null,
-    paddingBottom: null,
-    paddingLeft: null,
-    form: {
-      className: '',
-      width: '',
-    },
+    ...defaultFormValues,
+    form: defaultFormValues,
   });
   const value = React.useMemo(() => [state, dispatch], [state]);
 
@@ -133,5 +80,55 @@ export function useDesignTools() {
     state,
     dispatch,
     updateCurrentField,
+  };
+}
+
+const defaultFormValues = {
+  className: '',
+  position: '',
+  display: '',
+  width: '',
+  minWidth: '',
+  height: '',
+  minHeight: '',
+  marginTop: '',
+  marginRight: '',
+  marginBottom: '',
+  marginLeft: '',
+  paddingTop: '',
+  paddingRight: '',
+  paddingBottom: '',
+  paddingLeft: '',
+};
+
+function buildFormValues(className) {
+  return {
+    className,
+    position: className.split(' ').find((c) => {
+      return ['relative', 'absolute', 'sticky'].includes(c);
+    }),
+    display: className.split(' ').find((c) => {
+      return ['block', 'flex', 'grid'].includes(c);
+    }),
+    width: getClassNameValue(className, 'w-'),
+    minWidth: getClassNameValue(className, 'min-w-'),
+    height: getClassNameValue(className, 'h-'),
+    minHeight: getClassNameValue(className, 'min-h-'),
+    marginTop:
+      getClassNameValue(className, 'mt-') || getClassNameValue(className, 'm-'),
+    marginRight:
+      getClassNameValue(className, 'mr-') || getClassNameValue(className, 'm-'),
+    marginBottom:
+      getClassNameValue(className, 'mb-') || getClassNameValue(className, 'm-'),
+    marginLeft:
+      getClassNameValue(className, 'ml-') || getClassNameValue(className, 'm-'),
+    paddingTop:
+      getClassNameValue(className, 'pt-') || getClassNameValue(className, 'p-'),
+    paddingRight:
+      getClassNameValue(className, 'pr-') || getClassNameValue(className, 'p-'),
+    paddingBottom:
+      getClassNameValue(className, 'pb-') || getClassNameValue(className, 'p-'),
+    paddingLeft:
+      getClassNameValue(className, 'pl-') || getClassNameValue(className, 'p-'),
   };
 }
