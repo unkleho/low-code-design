@@ -1,117 +1,29 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { Utils, traverse } from 'react-fiber-traverse';
-import axios from 'axios';
 
-import Panel from '../Panel';
-import PanelRow from '../PanelRow';
-import NodeTree from '../NodeTree';
+import Panel from './Panel';
+import PanelRow from './PanelRow';
+import NodeTree from './NodeTree';
 import {
   DesignToolsProvider,
   useDesignTools,
   types,
-} from '../../lib/contexts/design-tools-context';
+} from '../lib/contexts/design-tools-context';
 
-import { FiberNode } from '../../types';
+import { FiberNode } from '../types';
 
 type Props = {
-  selectedNodes?: FiberNode[];
-};
-
-const DesignToolsApp = ({ selectedNodes = [] }: Props) => {
-  const [nodes, setNodes] = React.useState<FiberNode[]>([]);
-
-  React.useEffect(() => {
-    const rootFiberNode = Utils.getRootFiberNodeFromDOM(
-      document.getElementById('__next')
-    );
-
-    // Doesn't work for some reason
-    // const mainFiberNode = findNodeByComponentRef(rootFiberNode, ref.current);
-
-    let isDesignTools = false;
-    let nodes = [];
-
-    // Traverse fiber node tree, adding each one to nodes.
-    // TODO: Only add nodes within Wrapper
-    traverse(rootFiberNode, (node) => {
-      if (node.stateNode?.id === '__codesign' || isDesignTools) {
-        isDesignTools = true;
-
-        if (node.stateNode?.id !== '__codesign') {
-          nodes.push(node);
-        }
-      }
-    });
-
-    // Filter out DesignTools, otherwise we are inspecting the UI that is inspecting the UI
-    // TODO: Just removing the top DesignTools for now, but should remove child nodes too for performance
-    setNodes(nodes.filter((node) => node.type?.name !== 'DesignTools'));
-
-    // console.log(rootFiberNode);
-    // console.log(mainFiberNode);
-  }, []);
-
-  // Make updates to DOM and send API request
-  const handleSubmit = async (
-    events: [
-      {
-        node: FiberNode;
-        update: {
-          className: string;
-        };
-      }
-    ]
-  ) => {
-    const event = events[0]; // Allow multiple node changes in future
-    const { node } = event;
-
-    // Change DOM element className
-    if (node) {
-      node.stateNode.className = event.update.className;
-
-      const result = await axios.get('/api/component', {
-        params: {
-          lineNumber: node._debugSource.lineNumber,
-          columnNumber: node._debugSource.columnNumber,
-          className: node.stateNode.className,
-          fileName: node._debugSource.fileName,
-        },
-      });
-
-      console.log(result.data);
-    }
-  };
-
-  if (canUseDOM()) {
-    return ReactDOM.createPortal(
-      <DesignToolsProvider>
-        <DesignToolsDisplay
-          selectedNodes={selectedNodes}
-          nodes={nodes}
-          onSubmit={handleSubmit}
-        />
-      </DesignToolsProvider>,
-      document.body
-    );
-  }
-
-  return null;
-};
-
-type DesignToolsDisplayProps = {
   selectedNodes: FiberNode[];
   nodes: FiberNode[];
   // dataId: string;
   onSubmit: Function;
 };
 
-const DesignToolsDisplay = ({
+const DesignToolsApp = ({
   selectedNodes = [],
   nodes = [],
   // dataId,
   onSubmit,
-}: DesignToolsDisplayProps) => {
+}: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
   const [widthInputValue, setWidthInputValue] = React.useState('');
   const [heightInputValue, setHeightInputValue] = React.useState('');
@@ -167,19 +79,21 @@ const DesignToolsDisplay = ({
     // event.nativeEvent.stopPropagation();
     // event.nativeEvent.stopImmediatePropagation();
 
-    let newClassName;
+    let newClassName = classInputValue;
 
-    newClassName = processClassName(
-      classInputValue,
-      state.width ? `w-${state.width}` : '',
-      widthInputValue ? `w-${widthInputValue}` : ''
-    );
-
-    newClassName = processClassName(
-      newClassName,
-      state.height ? `h-${state.height}` : '',
-      heightInputValue ? `h-${heightInputValue}` : ''
-    );
+    if (state.currentField === 'width') {
+      newClassName = processClassName(
+        classInputValue,
+        state.width ? `w-${state.width}` : '',
+        widthInputValue ? `w-${widthInputValue}` : ''
+      );
+    } else if (state.currentField === 'height') {
+      newClassName = processClassName(
+        classInputValue,
+        state.height ? `h-${state.height}` : '',
+        heightInputValue ? `h-${heightInputValue}` : ''
+      );
+    }
 
     dispatch({
       type: types.UPDATE_CLASS_NAME,
@@ -210,7 +124,7 @@ const DesignToolsDisplay = ({
   };
 
   return (
-    <aside className="fixed top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
+    <aside className="fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <Panel title="Element">
           <div className="p-3">
@@ -379,6 +293,12 @@ const DesignToolsDisplay = ({
                 id="element-width"
                 className="flex-1 w-full p-1 mr-4 border"
                 value={widthInputValue || ''}
+                onFocus={() => {
+                  dispatch({
+                    type: types.UPDATE_CURRENT_FIELD,
+                    currentField: 'width',
+                  });
+                }}
                 onChange={(event) => {
                   const { value } = event.target;
 
@@ -397,6 +317,12 @@ const DesignToolsDisplay = ({
                 id="element-height"
                 className="flex-1 w-full p-1 mr-4 border"
                 value={heightInputValue || ''}
+                onFocus={() => {
+                  dispatch({
+                    type: types.UPDATE_CURRENT_FIELD,
+                    currentField: 'height',
+                  });
+                }}
                 onChange={(event) => {
                   const { value } = event.target;
 
@@ -430,6 +356,14 @@ const DesignToolsDisplay = ({
   );
 };
 
+const DesignToolsAppWrapper = (props) => {
+  return (
+    <DesignToolsProvider>
+      <DesignToolsApp {...props} />
+    </DesignToolsProvider>
+  );
+};
+
 /**
  * Append or replace a newValue in a className string
  */
@@ -443,12 +377,4 @@ function processClassName(className, oldValue, newValue) {
   return newClassName;
 }
 
-function canUseDOM() {
-  return !!(
-    typeof window !== 'undefined' &&
-    window.document &&
-    window.document.createElement
-  );
-}
-
-export default DesignToolsApp;
+export default DesignToolsAppWrapper;

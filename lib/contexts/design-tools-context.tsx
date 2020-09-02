@@ -13,12 +13,23 @@ function getClassNameValue(className = '', prefix) {
 
 export const types = {
   UPDATE_CLASS_NAME: 'UPDATE_CLASS_NAME',
+  UPDATE_CURRENT_FIELD: 'UPDATE_CURRENT_FIELD',
 };
 
 function designToolsReducer(state, action) {
+  console.log(state, action);
+
   switch (action.type) {
+    case types.UPDATE_CURRENT_FIELD: {
+      return {
+        ...state,
+        currentField: action.currentField,
+      };
+    }
+
     case types.UPDATE_CLASS_NAME: {
       return {
+        ...state,
         className: action.className,
         position: action.className.split(' ').find((c) => {
           return ['relative', 'absolute', 'sticky'].includes(c);

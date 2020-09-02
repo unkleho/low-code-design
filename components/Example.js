@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Example = () => {
-  return <div className=" uppercase text-xl flex  relative">Example Component</div>;
+  return <div className="flex lowercase text-xl relative">Example Component</div>;
 };
 
 export default Example;

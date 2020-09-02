@@ -1,6 +1,6 @@
 import React from 'react';
 
-import DesignTools from '../components/DesignTools';
+import DesignToolsAppPortal from './DesignToolsAppPortal';
 
 import { FiberNode } from '../types';
 
@@ -18,7 +18,7 @@ const Wrapper = ({ children }) => {
             _targetInst: FiberNode;
           }
         ) => {
-          console.log('Wrapper event');
+          // console.log('Wrapper event');
 
           // Stop <a> links from navigating away
           event.preventDefault();
@@ -43,7 +43,7 @@ const Wrapper = ({ children }) => {
         {children}
       </div>
 
-      <DesignTools selectedNodes={selectedNodes} />
+      <DesignToolsAppPortal selectedNodes={selectedNodes} />
     </>
   );
 };
