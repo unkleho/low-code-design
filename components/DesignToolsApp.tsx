@@ -17,6 +17,21 @@ type Props = {
   onSubmit: Function;
 };
 
+const config = {
+  width: 'w',
+  minWidth: 'min-w',
+  height: 'h',
+  minHeight: 'min-h',
+  marginTop: 'mt',
+  marginRight: 'mr',
+  marginBottom: 'mb',
+  marginLeft: 'ml',
+  paddingTop: 'pt',
+  paddingRight: 'pr',
+  paddingBottom: 'pb',
+  paddingLeft: 'pl',
+};
+
 const DesignToolsApp = ({
   selectedNodes = [],
   nodes = [],
@@ -24,8 +39,8 @@ const DesignToolsApp = ({
 }: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
   // const [widthInputValue, setWidthInputValue] = React.useState('');
-  const [minWidthInputValue, setMinWidthInputValue] = React.useState('');
-  const [heightInputValue, setHeightInputValue] = React.useState('');
+  // const [minWidthInputValue, setMinWidthInputValue] = React.useState('');
+  // const [heightInputValue, setHeightInputValue] = React.useState('');
 
   const rootNode = nodes[0];
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
@@ -59,18 +74,6 @@ const DesignToolsApp = ({
     setClassInputValue(state.className);
   }, [state.className]);
 
-  // React.useEffect(() => {
-  //   setWidthInputValue(state.width);
-  // }, [state.width]);
-
-  React.useEffect(() => {
-    setMinWidthInputValue(state.minWidth);
-  }, [state.minWidth]);
-
-  React.useEffect(() => {
-    setHeightInputValue(state.height);
-  }, [state.height]);
-
   // --------------------------------------------------------------------------
   // Handlers
   // --------------------------------------------------------------------------
@@ -82,36 +85,26 @@ const DesignToolsApp = ({
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
+    const { currentField } = state;
+    let newClassName;
+
     // Not working
     // event.nativeEvent.stopPropagation();
     // event.nativeEvent.stopImmediatePropagation();
 
-    let newClassName = classInputValue;
+    if (currentField === 'className') {
+      newClassName = classInputValue;
+    } else {
+      const oldValue = state[currentField];
+      const newValue = state.form[currentField];
+      const prefix = config[currentField];
 
-    if (state.currentField === 'width') {
       newClassName = processClassName(
         classInputValue,
-        state.width ? `w-${state.width}` : '',
-        state.form.width ? `w-${state.form.width}` : ''
-      );
-    } else if (state.currentField === 'minWidth') {
-      newClassName = processClassName(
-        classInputValue,
-        state.minWidth ? `min-w-${state.minWidth}` : '',
-        minWidthInputValue ? `min-w-${minWidthInputValue}` : ''
-      );
-    } else if (state.currentField === 'height') {
-      newClassName = processClassName(
-        classInputValue,
-        state.height ? `h-${state.height}` : '',
-        heightInputValue ? `h-${heightInputValue}` : ''
+        oldValue ? `${prefix}-${oldValue}` : '',
+        newValue ? `${prefix}-${newValue}` : ''
       );
     }
-
-    console.log('currentField', state.currentField);
-    console.log('state.form.width', state.form.width);
-    console.log('old', classInputValue);
-    console.log('new', newClassName);
 
     dispatch({
       type: types.UPDATE_CLASS_NAME,
@@ -245,59 +238,50 @@ const DesignToolsApp = ({
 
         <Panel title="Spacing">
           <div className="p-3">
-            <PanelRow label="Margin">
-              <input
-                type="text"
-                placeholder="t"
-                value={state.marginTop || ''}
-                className="flex-1 w-full p-1 mr-1 border border-t-2"
-              />
-              <input
-                type="text"
-                placeholder="r"
-                value={state.marginRight || ''}
-                className="flex-1 w-full p-1 mr-1 border border-r-2"
-              />
-              <input
-                type="text"
-                placeholder="b"
-                value={state.marginBottom || ''}
-                className="flex-1 w-full p-1 mr-1 border border-b-2"
-              />
-              <input
-                type="text"
-                placeholder="l"
-                value={state.marginLeft || ''}
-                className="flex-1 w-full p-1 border border-l-2"
-              />
-            </PanelRow>
+            {['margin', 'padding'].map((spacing) => {
+              return (
+                <PanelRow label={spacing} key={spacing}>
+                  {[
+                    {
+                      side: 't',
+                      field: `${spacing}Top`,
+                    },
+                    {
+                      side: 'r',
+                      field: `${spacing}Right`,
+                    },
+                    {
+                      side: 'b',
+                      field: `${spacing}Bottom`,
+                    },
+                    {
+                      side: 'l',
+                      field: `${spacing}Left`,
+                    },
+                  ].map((space) => {
+                    return (
+                      <input
+                        type="text"
+                        placeholder={space.side}
+                        value={state.form[space.field] || ''}
+                        className={`flex-1 w-full p-1 mr-1 border border-${space.side}-4`}
+                        key={space.side}
+                        onFocus={() => updateCurrentField(space.field)}
+                        onChange={(event) => {
+                          const { value } = event.target;
 
-            <PanelRow label="Padding">
-              <input
-                type="text"
-                placeholder="t"
-                value={state.paddingTop || ''}
-                className="flex-1 w-full p-1 mr-1 border border-t-2"
-              />
-              <input
-                type="text"
-                placeholder="r"
-                value={state.paddingRight || ''}
-                className="flex-1 w-full p-1 mr-1 border border-r-2"
-              />
-              <input
-                type="text"
-                placeholder="b"
-                value={state.paddingBottom || ''}
-                className="flex-1 w-full p-1 mr-1 border border-b-2"
-              />
-              <input
-                type="text"
-                placeholder="l"
-                value={state.paddingLeft || ''}
-                className="flex-1 w-full p-1 border border-l-2"
-              />
-            </PanelRow>
+                          dispatch({
+                            type: types.UPDATE_FORM_VALUE,
+                            key: space.field,
+                            value,
+                          });
+                        }}
+                      />
+                    );
+                  })}
+                </PanelRow>
+              );
+            })}
           </div>
         </Panel>
 
@@ -316,7 +300,6 @@ const DesignToolsApp = ({
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  // setWidthInputValue(value);
                   dispatch({
                     type: types.UPDATE_FORM_VALUE,
                     key: 'width',
@@ -328,11 +311,16 @@ const DesignToolsApp = ({
               <input
                 type="text"
                 className="flex-1 w-full p-1 border"
+                value={state.form.minWidth || ''}
                 onFocus={() => updateCurrentField('minWidth')}
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  setMinWidthInputValue(value);
+                  dispatch({
+                    type: types.UPDATE_FORM_VALUE,
+                    key: 'minWidth',
+                    value,
+                  });
                 }}
               />
             </div>
@@ -344,19 +332,33 @@ const DesignToolsApp = ({
                 type="text"
                 id="element-height"
                 className="flex-1 w-full p-1 mr-4 border"
-                value={heightInputValue || ''}
+                value={state.form.height || ''}
                 onFocus={() => updateCurrentField('height')}
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  setHeightInputValue(value);
+                  dispatch({
+                    type: types.UPDATE_FORM_VALUE,
+                    key: 'height',
+                    value,
+                  });
                 }}
               />
               <label className="text-xs mr-2">Min-Height</label>
               <input
                 type="text"
                 className="flex-1 w-full p-1 border"
+                value={state.form.minHeight || ''}
                 onFocus={() => updateCurrentField('minHeight')}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  dispatch({
+                    type: types.UPDATE_FORM_VALUE,
+                    key: 'minHeight',
+                    value,
+                  });
+                }}
               />
             </div>
           </div>
