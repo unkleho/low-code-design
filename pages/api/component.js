@@ -22,7 +22,9 @@ export default ({ method, body }, res) => {
     columnNumber: parseInt(columnNumber),
   });
 
-  fs.writeFileSync(fileName, newFile);
+  if (file !== newFile) {
+    fs.writeFileSync(fileName, newFile);
+  }
 
   res.statusCode = 200;
   res.json({ code: JSON.stringify(newFile) });
