@@ -1,13 +1,17 @@
 import fs from 'fs';
-import path from 'path';
+// import path from 'path';
 // import { parse } from '@babel/parser';
 // import generate from '@babel/generator';
 // import traverse from '@babel/traverse';
 
 import updateClassName from '../../lib/update-class-name';
 
-export default ({ query }, res) => {
-  const { lineNumber, columnNumber, className, fileName } = query;
+export default ({ method, body }, res) => {
+  if (method !== 'POST') {
+    return null;
+  }
+
+  const { lineNumber, columnNumber, className, fileName } = body;
 
   const file = fs.readFileSync(fileName, 'utf8');
 
@@ -20,18 +24,13 @@ export default ({ query }, res) => {
 
   fs.writeFileSync(fileName, newFile);
 
-  // fs.writeFileSync(
-  //   getFullPathname('/components/Example.ast.json'),
-  //   JSON.stringify(ast)
-  // );
-
   res.statusCode = 200;
   res.json({ code: JSON.stringify(newFile) });
 };
 
-const getFullPathname = (fileName) => {
-  return path.join(process.cwd(), fileName);
-};
+// const getFullPathname = (fileName) => {
+//   return path.join(process.cwd(), fileName);
+// };
 
 // Not using this because Babel generate doesn't keep original formatting
 // const parseAst = (file, className, lineNumber) => {

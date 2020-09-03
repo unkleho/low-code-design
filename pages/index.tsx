@@ -7,10 +7,15 @@ export default function HomePage() {
   return (
     <Wrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="">
+        <div className=" pt-4 pr-4 pb-4 pl-4 w-40 ">
           <Example />
+
+          {['first', 'second'].map((d) => {
+            return <p className="uppercase">{d}</p>;
+          })}
+
           <div className="">
-            <h1 className="font-bold text-3xl">This is a title</h1>
+            <h1 className="text-5xl font-bold  mb-4">This is a title</h1>
             <p className="mb-4">Description text</p>
           </div>
           <div className="">

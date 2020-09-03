@@ -63,13 +63,11 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
     if (node) {
       node.stateNode.className = event.update.className;
 
-      const result = await axios.get('/api/component', {
-        params: {
-          lineNumber: node._debugSource.lineNumber,
-          columnNumber: node._debugSource.columnNumber,
-          className: node.stateNode.className,
-          fileName: node._debugSource.fileName,
-        },
+      const result = await axios.post('/api/component', {
+        lineNumber: node._debugSource.lineNumber,
+        columnNumber: node._debugSource.columnNumber,
+        className: node.stateNode.className,
+        fileName: node._debugSource.fileName,
       });
 
       console.log(result.data);
