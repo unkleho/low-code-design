@@ -17,3 +17,8 @@ export type FiberNode = FiberNodeBase & {
     fileName: string;
   };
 };
+
+export type TargetEvent = React.MouseEvent<HTMLDivElement, MouseEvent> & {
+  target: HTMLElement;
+  _targetInst: FiberNode;
+};

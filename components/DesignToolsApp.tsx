@@ -42,9 +42,9 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
 
   // TODO: Consider moving this into context
   const type = selectedNode?.type;
-  const lineNumber = selectedNode?._debugSource.lineNumber;
-  const columnNumber = selectedNode?._debugSource.columnNumber;
-  const fileName = selectedNode?._debugSource.fileName;
+  const lineNumber = selectedNode?._debugSource?.lineNumber;
+  const columnNumber = selectedNode?._debugSource?.columnNumber;
+  const fileName = selectedNode?._debugSource?.fileName;
   const className = selectedNode?.stateNode.className || '';
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
@@ -370,7 +370,7 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
   );
 };
 
-const DesignToolsAppWrapper = (props) => {
+const DesignToolsAppWrapper = (props: Props) => {
   return (
     <DesignToolsProvider>
       <DesignToolsApp {...props} />

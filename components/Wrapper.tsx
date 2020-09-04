@@ -2,7 +2,7 @@ import React from 'react';
 
 import DesignToolsAppPortal from './DesignToolsAppPortal';
 
-import { FiberNode } from '../types';
+import { TargetEvent } from '../types';
 
 const Wrapper = ({ children }) => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -12,12 +12,7 @@ const Wrapper = ({ children }) => {
     <>
       <div
         id="__codesign"
-        onClick={(
-          event: React.MouseEvent<HTMLDivElement, MouseEvent> & {
-            target: HTMLElement;
-            _targetInst: FiberNode;
-          }
-        ) => {
+        onClick={(event: TargetEvent) => {
           // console.log('Wrapper event');
 
           // Stop <a> links from navigating away
