@@ -2,7 +2,7 @@ import React from 'react';
 
 const Example = () => {
   return (
-    <div className="block lowercase text-xl">Example Component</div>
+    <div className="lowercase text-xl block">Example Component</div>
   );
 };
 

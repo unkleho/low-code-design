@@ -10,10 +10,10 @@ import {
 } from '../lib/contexts/design-tools-context';
 
 import { FiberNode } from '../types';
+import LayersPanel from './LayersPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
-  nodes: FiberNode[];
   onSubmit: Function;
 };
 
@@ -32,17 +32,12 @@ const config = {
   paddingLeft: 'pl',
 };
 
-const DesignToolsApp = ({
-  selectedNodes = [],
-  nodes = [],
-  onSubmit,
-}: Props) => {
+const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
   // const [widthInputValue, setWidthInputValue] = React.useState('');
   // const [minWidthInputValue, setMinWidthInputValue] = React.useState('');
   // const [heightInputValue, setHeightInputValue] = React.useState('');
 
-  const rootNode = nodes[0];
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
 
   // TODO: Consider moving this into context
@@ -370,15 +365,7 @@ const DesignToolsApp = ({
         </button>
       </form>
 
-      <Panel title="Layers">
-        <div className="py-1">
-          <NodeTree
-            parentID={rootNode?.return._debugID}
-            nodes={nodes}
-            selectedIDs={selectedIDs}
-          />
-        </div>
-      </Panel>
+      <LayersPanel selectedIDs={selectedIDs} />
     </aside>
   );
 };
@@ -418,7 +405,7 @@ export function processClassName(className, oldValue, newValue) {
   //   : // Otherwise append to className
   //     `${className}${newValue ? ` ${newValue}` : ''}`;
 
-  return newClassName;
+  return newClassName.trim();
 }
 
 export default DesignToolsAppWrapper;

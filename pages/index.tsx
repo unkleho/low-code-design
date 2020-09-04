@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <Wrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className=" pt-4 pr-4 pb-4 pl-4 w-40 ">
+        <div className="pt-4 pr-4 pb-4 pl-4">
           <Example />
 
           {['first', 'second'].map((d) => {
