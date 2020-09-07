@@ -87,10 +87,12 @@ const defaultFormValues = {
   className: '',
   position: '',
   display: '',
+  // Sizing
   width: '',
   minWidth: '',
   height: '',
   minHeight: '',
+  // Spacing
   marginTop: '',
   marginRight: '',
   marginBottom: '',
@@ -99,6 +101,10 @@ const defaultFormValues = {
   paddingRight: '',
   paddingBottom: '',
   paddingLeft: '',
+  // Typography
+  fontSize: '',
+  // Background
+  backgroundColor: '',
 };
 
 function buildFormValues(className) {
@@ -130,5 +136,7 @@ function buildFormValues(className) {
       getClassNameValue(className, 'pb-') || getClassNameValue(className, 'p-'),
     paddingLeft:
       getClassNameValue(className, 'pl-') || getClassNameValue(className, 'p-'),
+    fontSize: getClassNameValue(className, 'text-'),
+    backgroundColor: getClassNameValue(className, 'bg-'),
   };
 }

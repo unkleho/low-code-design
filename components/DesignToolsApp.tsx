@@ -30,13 +30,12 @@ const config = {
   paddingRight: 'pr',
   paddingBottom: 'pb',
   paddingLeft: 'pl',
+  fontSize: 'text',
+  backgroundColor: 'bg',
 };
 
 const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
-  // const [widthInputValue, setWidthInputValue] = React.useState('');
-  // const [minWidthInputValue, setMinWidthInputValue] = React.useState('');
-  // const [heightInputValue, setHeightInputValue] = React.useState('');
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
 
@@ -127,6 +126,28 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
         },
       ]);
     }
+  };
+
+  const TextInput = ({ field, width = 'w-full' }) => {
+    return (
+      <PanelRow label="Color">
+        <input
+          className={`${width} p-1 border`}
+          type="text"
+          value={state.form[field] || ''}
+          onFocus={() => updateCurrentField(field)}
+          onChange={(event) => {
+            const { value } = event.target;
+
+            dispatch({
+              type: types.UPDATE_FORM_VALUE,
+              key: field,
+              value,
+            });
+          }}
+        />
+      </PanelRow>
+    );
   };
 
   return (
@@ -283,7 +304,7 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
         <Panel title="Sizing">
           <div className="p-3">
             <div className="flex items-baseline mb-2">
-              <label className="w-12 mr-2 text-xs" htmlFor="element-width">
+              <label className="w-16 mr-2 text-xs" htmlFor="element-width">
                 Width
               </label>
               <input
@@ -320,7 +341,7 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
               />
             </div>
             <div className="flex items-baseline">
-              <label className="w-12 mr-2 text-xs" htmlFor="element-height">
+              <label className="w-16 mr-2 text-xs" htmlFor="element-height">
                 Height
               </label>
               <input
@@ -356,6 +377,50 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
                 }}
               />
             </div>
+          </div>
+        </Panel>
+
+        <Panel title="Typography">
+          <div className="p-3">
+            <PanelRow label="Font Size">
+              <input
+                className="w-12 p-1 border"
+                type="text"
+                value={state.form.fontSize || ''}
+                onFocus={() => updateCurrentField('fontSize')}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  dispatch({
+                    type: types.UPDATE_FORM_VALUE,
+                    key: 'fontSize',
+                    value,
+                  });
+                }}
+              />
+            </PanelRow>
+          </div>
+        </Panel>
+
+        <Panel title="Background">
+          <div className="p-3">
+            <PanelRow label="Color">
+              <input
+                className="w-full p-1 border"
+                type="text"
+                value={state.form.backgroundColor || ''}
+                onFocus={() => updateCurrentField('backgroundColor')}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  dispatch({
+                    type: types.UPDATE_FORM_VALUE,
+                    key: 'backgroundColor',
+                    value,
+                  });
+                }}
+              />
+            </PanelRow>
           </div>
         </Panel>
 
