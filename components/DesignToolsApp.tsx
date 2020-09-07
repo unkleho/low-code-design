@@ -128,25 +128,23 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
     }
   };
 
-  const TextInput = ({ field, width = 'w-full' }) => {
+  const renderTextInput = ({ field, width = 'w-full' }) => {
     return (
-      <PanelRow label="Color">
-        <input
-          className={`${width} p-1 border`}
-          type="text"
-          value={state.form[field] || ''}
-          onFocus={() => updateCurrentField(field)}
-          onChange={(event) => {
-            const { value } = event.target;
+      <input
+        className={`${width} p-1 border`}
+        type="text"
+        value={state.form[field] || ''}
+        onFocus={() => updateCurrentField(field)}
+        onChange={(event) => {
+          const { value } = event.target;
 
-            dispatch({
-              type: types.UPDATE_FORM_VALUE,
-              key: field,
-              value,
-            });
-          }}
-        />
-      </PanelRow>
+          dispatch({
+            type: types.UPDATE_FORM_VALUE,
+            key: field,
+            value,
+          });
+        }}
+      />
     );
   };
 
@@ -405,7 +403,10 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
         <Panel title="Background">
           <div className="p-3">
             <PanelRow label="Color">
-              <input
+              {renderTextInput({
+                field: 'backgroundColor',
+              })}
+              {/* <input
                 className="w-full p-1 border"
                 type="text"
                 value={state.form.backgroundColor || ''}
@@ -419,7 +420,7 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
                     value,
                   });
                 }}
-              />
+              /> */}
             </PanelRow>
           </div>
         </Panel>

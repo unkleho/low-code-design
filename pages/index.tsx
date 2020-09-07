@@ -15,7 +15,7 @@ export default function HomePage() {
           })}
 
           <div className="">
-            <h1 className="text-4xl font-bold mb-4 bg-gray-100">This is a title</h1>
+            <h1 className="text-4xl font-bold mb-4 bg-gray-200">This is a title</h1>
             <p className="mb-4">Description text</p>
           </div>
           <div className="">
