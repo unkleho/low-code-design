@@ -118,7 +118,8 @@ const backgroundColors = {
 const BackgroundPanel = () => {
   const { state } = useDesignTools();
 
-  const baseBgColor = state.form.backgroundColor?.split('-')[0];
+  // const baseBgColor = state.form.backgroundColor?.split('-')[0];
+  const baseBgColor = 'gray';
 
   return (
     <Panel title="Background">
@@ -129,7 +130,7 @@ const BackgroundPanel = () => {
         })} */}
 
           <div className="w-full">
-            <div className="flex items-end w-full">
+            {/* <div className="flex items-end w-full">
               {[
                 'bg-gray-500',
                 'bg-red-500',
@@ -158,7 +159,7 @@ const BackgroundPanel = () => {
                   ></button>
                 );
               })}
-            </div>
+            </div> */}
             <div className="flex w-full">
               {backgroundColors[baseBgColor]?.map((bg) => {
                 const isSelected =
@@ -168,10 +169,18 @@ const BackgroundPanel = () => {
                   <button
                     type="button"
                     className={[
-                      isSelected ? 'h-5' : 'h-4',
-                      'flex-1 border-t border-r border-gray-100',
+                      // isSelected ? 'shadow-outline' : '',
+                      'flex-1 h-4 mr-1 border border-gray-100 shadow-xs last:mr-0',
                       bg,
                     ].join(' ')}
+                    style={{
+                      ...(isSelected
+                        ? {
+                            outline:
+                              '1px solid rgba(160, 174, 192, var(--bg-opacity))',
+                          }
+                        : {}),
+                    }}
                   ></button>
                 );
               })}
