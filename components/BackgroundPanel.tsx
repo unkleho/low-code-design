@@ -1,6 +1,6 @@
 import Panel from './Panel';
 import PanelRow from './PanelRow';
-import { useDesignTools } from '../lib/contexts/design-tools-context';
+import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 
 const backgroundColors = {
   gray: [
@@ -115,8 +115,8 @@ const backgroundColors = {
   ],
 };
 
-const BackgroundPanel = () => {
-  const { state } = useDesignTools();
+const BackgroundPanel = ({ onColorClick }) => {
+  const { state, dispatch, updateCurrentField } = useDesignTools();
 
   // const baseBgColor = state.form.backgroundColor?.split('-')[0];
   const baseBgColor = 'gray';
@@ -180,6 +180,18 @@ const BackgroundPanel = () => {
                               '1px solid rgba(160, 174, 192, var(--bg-opacity))',
                           }
                         : {}),
+                    }}
+                    onFocus={() => {
+                      updateCurrentField('backgroundColor');
+                    }}
+                    onClick={() => {
+                      dispatch({
+                        type: types.UPDATE_FORM_VALUE,
+                        key: 'backgroundColor',
+                        value: bg.replace('bg-', ''),
+                      });
+
+                      onColorClick(bg);
                     }}
                   ></button>
                 );

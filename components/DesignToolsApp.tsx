@@ -403,7 +403,18 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
           </div>
         </Panel>
 
-        <BackgroundPanel />
+        <BackgroundPanel
+          onColorClick={(bg) => {
+            handleSubmit({
+              node: selectedNode,
+              newClassName: processClassName(
+                state.className,
+                `bg-${state.backgroundColor}`,
+                bg
+              ),
+            });
+          }}
+        />
 
         {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
         <button type="submit" className="hidden">
