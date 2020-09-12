@@ -12,7 +12,7 @@ type Props = {
 
 const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
   // Make updates to DOM and send API request
-  const handleSubmit = async (
+  const handleNodeChange = async (
     events: [
       {
         node: FiberNode;
@@ -42,7 +42,10 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
 
   if (canUseDOM()) {
     return ReactDOM.createPortal(
-      <DesignToolsApp selectedNodes={selectedNodes} onSubmit={handleSubmit} />,
+      <DesignToolsApp
+        selectedNodes={selectedNodes}
+        onNodeChange={handleNodeChange}
+      />,
       document.body
     );
   }

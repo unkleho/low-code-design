@@ -15,7 +15,7 @@ import BackgroundPanel from './BackgroundPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
-  onSubmit: Function;
+  onNodeChange: Function;
 };
 
 const config = {
@@ -35,7 +35,7 @@ const config = {
   backgroundColor: 'bg',
 };
 
-const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
+const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   const [classInputValue, setClassInputValue] = React.useState('');
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
@@ -106,7 +106,7 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
       className: newClassName,
     });
 
-    handleSubmit({
+    handleNodeChange({
       node: selectedNode,
       newClassName: newClassName,
     });
@@ -116,9 +116,9 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
     setClassInputValue(event.target.value);
   };
 
-  const handleSubmit = ({ node, newClassName }) => {
-    if (typeof onSubmit === 'function') {
-      onSubmit([
+  const handleNodeChange = ({ node, newClassName }) => {
+    if (typeof onNodeChange === 'function') {
+      onNodeChange([
         {
           node,
           update: {
@@ -188,18 +188,18 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  const newClassName = state.position
-                    ? // Replace with new value
-                      state.className.replace(state.position, value)
-                    : // Otherwise append to className
-                      `${state.className} ${value}`;
+                  const newClassName = processClassName(
+                    state.className,
+                    state.position,
+                    value
+                  );
 
                   dispatch({
                     type: types.UPDATE_CLASS_NAME,
                     className: newClassName,
                   });
 
-                  handleSubmit({
+                  handleNodeChange({
                     node: selectedNode,
                     newClassName,
                   });
@@ -234,7 +234,7 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
                     className: newClassName,
                   });
 
-                  handleSubmit({
+                  handleNodeChange({
                     node: selectedNode,
                     newClassName,
                   });
@@ -405,7 +405,7 @@ const DesignToolsApp = ({ selectedNodes = [], onSubmit }: Props) => {
 
         <BackgroundPanel
           onColorClick={(bg) => {
-            handleSubmit({
+            handleNodeChange({
               node: selectedNode,
               newClassName: processClassName(
                 state.className,
@@ -438,7 +438,11 @@ const DesignToolsAppWrapper = (props: Props) => {
 /**
  * Append or replace a newValue in a className string
  */
-export function processClassName(className, oldValue, newValue) {
+export function processClassName(
+  className: string,
+  oldValue: string,
+  newValue: string
+): string {
   let newClassName;
 
   if (oldValue) {
