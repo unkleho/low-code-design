@@ -2,17 +2,18 @@ import React from 'react';
 
 import Panel from './Panel';
 import PanelRow from './PanelRow';
+import LayersPanel from './LayersPanel';
+import BackgroundPanel from './BackgroundPanel';
+import ElementPanel from './ElementPanel';
 // import NodeTree from './NodeTree';
+
 import {
   DesignToolsProvider,
   useDesignTools,
   types,
 } from '../lib/contexts/design-tools-context';
-
+import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode } from '../types';
-import LayersPanel from './LayersPanel';
-import BackgroundPanel from './BackgroundPanel';
-import ElementPanel from './ElementPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -37,7 +38,12 @@ const config = {
 };
 
 const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
-  const { state, dispatch, updateCurrentField } = useDesignTools();
+  const {
+    state,
+    dispatch,
+    updateCurrentField,
+    updateClassNameValue,
+  } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
@@ -95,7 +101,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       const newValue = state.form[currentField];
       const prefix = config[currentField];
 
-      newClassName = processClassName(
+      newClassName = replaceClassNameValue(
         state.form.className,
         oldValue ? `${prefix}-${oldValue}` : '',
         newValue ? `${prefix}-${newValue}` : ''
@@ -155,16 +161,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  const newClassName = processClassName(
-                    state.className,
-                    state.position,
-                    value
-                  );
-
-                  dispatch({
-                    type: types.UPDATE_CLASS_NAME,
-                    className: newClassName,
-                  });
+                  updateClassNameValue(state.position, value);
                 }}
               >
                 <option label=" "></option>
@@ -185,16 +182,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                 onChange={(event) => {
                   const { value } = event.target;
 
-                  const newClassName = processClassName(
-                    state.className,
-                    state.display,
-                    value
-                  );
-
-                  dispatch({
-                    type: types.UPDATE_CLASS_NAME,
-                    className: newClassName,
-                  });
+                  updateClassNameValue(state.display, value);
                 }}
               >
                 <option label=" "></option>
@@ -364,7 +352,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           onColorClick={(bg) => {
             handleNodeChange({
               node: selectedNode,
-              newClassName: processClassName(
+              newClassName: replaceClassNameValue(
                 state.className,
                 state.backgroundColor ? `bg-${state.backgroundColor}` : '',
                 bg
@@ -392,38 +380,38 @@ const DesignToolsAppWrapper = (props: Props) => {
   );
 };
 
-/**
- * Append or replace a newValue in a className string
- */
-export function processClassName(
-  className: string,
-  oldValue: string,
-  newValue: string
-): string {
-  let newClassName;
+// /**
+//  * Append or replace a newValue in a className string
+//  */
+// export function replaceClassNameValue(
+//   className: string,
+//   oldValue: string,
+//   newValue: string
+// ): string {
+//   let newClassName;
 
-  if (oldValue) {
-    newClassName = className
-      .split(' ')
-      .map((c) => {
-        if (c === oldValue) {
-          return newValue;
-        }
+//   if (oldValue) {
+//     newClassName = className
+//       .split(' ')
+//       .map((c) => {
+//         if (c === oldValue) {
+//           return newValue;
+//         }
 
-        return c;
-      })
-      .join(' ');
-  } else {
-    newClassName = `${className}${newValue ? ` ${newValue}` : ''}`;
-  }
+//         return c;
+//       })
+//       .join(' ');
+//   } else {
+//     newClassName = `${className}${newValue ? ` ${newValue}` : ''}`;
+//   }
 
-  // const newClassName = oldValue
-  //   ? // Replace with new value
-  //     className.replace(oldValue, newValue)
-  //   : // Otherwise append to className
-  //     `${className}${newValue ? ` ${newValue}` : ''}`;
+//   // const newClassName = oldValue
+//   //   ? // Replace with new value
+//   //     className.replace(oldValue, newValue)
+//   //   : // Otherwise append to className
+//   //     `${className}${newValue ? ` ${newValue}` : ''}`;
 
-  return newClassName.trim();
-}
+//   return newClassName.trim();
+// }
 
 export default DesignToolsAppWrapper;

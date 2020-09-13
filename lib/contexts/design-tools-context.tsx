@@ -1,5 +1,7 @@
 import React from 'react';
 
+import replaceClassNameValue from '../replace-class-name-value';
+
 const DesignToolsContext = React.createContext([]);
 
 function getClassNameValue(className = '', prefix) {
@@ -83,13 +85,25 @@ export function useDesignTools() {
   }
 
   const [state, dispatch] = context;
+
   const updateCurrentField = (currentField) =>
     dispatch({ type: types.UPDATE_CURRENT_FIELD, currentField });
+
+  const updateClassNameValue = (oldValue, newValue) => {
+    const className = replaceClassNameValue(
+      state.className,
+      oldValue,
+      newValue
+    );
+
+    dispatch({ type: types.UPDATE_CLASS_NAME, className });
+  };
 
   return {
     state,
     dispatch,
     updateCurrentField,
+    updateClassNameValue,
   };
 }
 
