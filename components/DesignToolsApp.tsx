@@ -69,6 +69,14 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     setClassInputValue(state.className);
   }, [state.className]);
 
+  // TODO: Consider useEffect for selectedNode
+  React.useEffect(() => {
+    dispatch({
+      type: types.UPDATE_SELECTED_NODE,
+      selectedNode,
+    });
+  }, [selectedNode]);
+
   // --------------------------------------------------------------------------
   // Handlers
   // --------------------------------------------------------------------------
@@ -117,6 +125,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   };
 
   const handleNodeChange = ({ node, newClassName }) => {
+    console.log(newClassName);
+
     if (typeof onNodeChange === 'function') {
       onNodeChange([
         {
@@ -154,6 +164,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   return (
     <aside className="fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
       <form className="flex-1" onSubmit={handleFormSubmit}>
+        {/* TODO: Refactor this to own component */}
         <Panel title="Element">
           <div className="p-3">
             <PanelRow label="Type">
@@ -405,11 +416,13 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
         <BackgroundPanel
           onColorClick={(bg) => {
+            console.log(state.className, state.backgroundColor, bg);
+
             handleNodeChange({
               node: selectedNode,
               newClassName: processClassName(
                 state.className,
-                `bg-${state.backgroundColor}`,
+                state.backgroundColor ? `bg-${state.backgroundColor}` : '',
                 bg
               ),
             });

@@ -11,7 +11,7 @@ export default function HomePage() {
           <Example />
 
           {['first', 'second'].map((d) => {
-            return <p className="uppercase">{d}</p>;
+            return <p className="uppercase relative">{d}</p>;
           })}
 
           <div className="">

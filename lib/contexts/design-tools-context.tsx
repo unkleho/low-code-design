@@ -15,6 +15,7 @@ export const types = {
   UPDATE_CLASS_NAME: 'UPDATE_CLASS_NAME',
   UPDATE_CURRENT_FIELD: 'UPDATE_CURRENT_FIELD',
   UPDATE_FORM_VALUE: 'UPDATE_FORM_VALUE',
+  UPDATE_SELECTED_NODE: 'UPDATE_SELECTED_NODE',
 };
 
 function designToolsReducer(state, action) {
@@ -48,6 +49,14 @@ function designToolsReducer(state, action) {
         form: buildFormValues(action.className),
       };
     }
+
+    case types.UPDATE_SELECTED_NODE: {
+      return {
+        ...state,
+        selectedNode: action.selectedNode,
+      };
+    }
+
     default: {
       throw new Error(`Unsupported action type: ${action.type}`);
     }
@@ -57,6 +66,7 @@ function designToolsReducer(state, action) {
 export function DesignToolsProvider(props) {
   const [state, dispatch] = React.useReducer(designToolsReducer, {
     currentField: null,
+    selectedNode: null,
     ...defaultFormValues,
     form: defaultFormValues,
   });
