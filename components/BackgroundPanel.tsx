@@ -193,6 +193,8 @@ const BackgroundPanel = ({ onColorClick }) => {
                         value: bg.replace('bg-', ''),
                       });
 
+                      // Also dispatch UPDATE_CLASS_NAME?
+
                       onColorClick(bg);
                     }}
                   ></button>

@@ -40,27 +40,35 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   const { state, dispatch, updateCurrentField } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
-  const className = selectedNode?.stateNode.className || '';
+  const className = state?.className;
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
   // --------------------------------------------------------------------------
   // Effects
   // --------------------------------------------------------------------------
 
-  // Set initial className when there is a new selectedNode
-  React.useEffect(() => {
-    dispatch({
-      type: types.UPDATE_CLASS_NAME,
-      className,
-    });
-  }, [className]);
-
+  // Set selectedNode and initial className
   React.useEffect(() => {
     dispatch({
       type: types.UPDATE_SELECTED_NODE,
       selectedNode,
     });
+
+    const className = selectedNode?.stateNode.className || '';
+
+    dispatch({
+      type: types.UPDATE_CLASS_NAME,
+      className,
+    });
   }, [selectedNode]);
+
+  // Run callback whenever className changes
+  React.useEffect(() => {
+    handleNodeChange({
+      node: state.selectedNode,
+      newClassName: className,
+    });
+  }, [className]);
 
   // --------------------------------------------------------------------------
   // Handlers
@@ -97,11 +105,6 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     dispatch({
       type: types.UPDATE_CLASS_NAME,
       className: newClassName,
-    });
-
-    handleNodeChange({
-      node: selectedNode,
-      newClassName: newClassName,
     });
   };
 
@@ -162,11 +165,6 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                     type: types.UPDATE_CLASS_NAME,
                     className: newClassName,
                   });
-
-                  handleNodeChange({
-                    node: selectedNode,
-                    newClassName,
-                  });
                 }}
               >
                 <option label=" "></option>
@@ -196,11 +194,6 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                   dispatch({
                     type: types.UPDATE_CLASS_NAME,
                     className: newClassName,
-                  });
-
-                  handleNodeChange({
-                    node: selectedNode,
-                    newClassName,
                   });
                 }}
               >

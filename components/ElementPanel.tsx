@@ -14,7 +14,6 @@ const ElementPanel = () => {
   const lineNumber = selectedNode?._debugSource?.lineNumber;
   const columnNumber = selectedNode?._debugSource?.columnNumber;
   const fileName = selectedNode?._debugSource?.fileName;
-  // const className = selectedNode?.stateNode.className || '';
 
   // --------------------------------------------------------------------------
   // Effects

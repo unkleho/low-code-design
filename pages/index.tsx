@@ -7,11 +7,11 @@ export default function HomePage() {
   return (
     <Wrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="pt-4 pr-4 pb-4 pl-4">
+        <div className="block">
           <Example />
 
           {['first', 'second'].map((d) => {
-            return <p className="uppercase relative">{d}</p>;
+            return <p className="relative">{d}</p>;
           })}
 
           <div className="">
