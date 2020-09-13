@@ -12,6 +12,7 @@ import {
 import { FiberNode } from '../types';
 import LayersPanel from './LayersPanel';
 import BackgroundPanel from './BackgroundPanel';
+import ElementPanel from './ElementPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -36,19 +37,11 @@ const config = {
 };
 
 const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
-  const [classInputValue, setClassInputValue] = React.useState('');
+  const { state, dispatch, updateCurrentField } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
-
-  // TODO: Consider moving this into context
-  const type = selectedNode?.type;
-  const lineNumber = selectedNode?._debugSource?.lineNumber;
-  const columnNumber = selectedNode?._debugSource?.columnNumber;
-  const fileName = selectedNode?._debugSource?.fileName;
   const className = selectedNode?.stateNode.className || '';
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
-
-  const { state, dispatch, updateCurrentField } = useDesignTools();
 
   // --------------------------------------------------------------------------
   // Effects
@@ -56,20 +49,12 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
   // Set initial className when there is a new selectedNode
   React.useEffect(() => {
-    setClassInputValue(className);
-
     dispatch({
       type: types.UPDATE_CLASS_NAME,
       className,
     });
   }, [className]);
 
-  // Update className text field and send callback
-  React.useEffect(() => {
-    setClassInputValue(state.className);
-  }, [state.className]);
-
-  // TODO: Consider useEffect for selectedNode
   React.useEffect(() => {
     dispatch({
       type: types.UPDATE_SELECTED_NODE,
@@ -96,14 +81,14 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     // event.nativeEvent.stopImmediatePropagation();
 
     if (currentField === 'className') {
-      newClassName = classInputValue;
+      newClassName = state.form.className;
     } else {
       const oldValue = state[currentField];
       const newValue = state.form[currentField];
       const prefix = config[currentField];
 
       newClassName = processClassName(
-        classInputValue,
+        state.form.className,
         oldValue ? `${prefix}-${oldValue}` : '',
         newValue ? `${prefix}-${newValue}` : ''
       );
@@ -120,13 +105,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     });
   };
 
-  const handleClassInputChange = (event) => {
-    setClassInputValue(event.target.value);
-  };
-
   const handleNodeChange = ({ node, newClassName }) => {
-    console.log(newClassName);
-
     if (typeof onNodeChange === 'function') {
       onNodeChange([
         {
@@ -159,36 +138,10 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   //   );
   // };
 
-  // const baseBgColor = state.form.backgroundColor?.split('-')[0];
-
   return (
     <aside className="fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
       <form className="flex-1" onSubmit={handleFormSubmit}>
-        {/* TODO: Refactor this to own component */}
-        <Panel title="Element">
-          <div className="p-3">
-            <PanelRow label="Type">
-              {type && (
-                <span
-                  className="px-2 py-1 font-bold bg-gray-200"
-                  title={`Line ${lineNumber}, column ${columnNumber}, ${fileName}`}
-                >
-                  {type}
-                </span>
-              )}
-            </PanelRow>
-
-            <PanelRow label="Class">
-              <input
-                type="text"
-                value={classInputValue || ''}
-                className="p-1 flex-1 border border-blue"
-                onFocus={() => updateCurrentField('className')}
-                onChange={handleClassInputChange}
-              />
-            </PanelRow>
-          </div>
-        </Panel>
+        <ElementPanel />
 
         <Panel title="Layout">
           <div className="p-3">
@@ -416,8 +369,6 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
         <BackgroundPanel
           onColorClick={(bg) => {
-            console.log(state.className, state.backgroundColor, bg);
-
             handleNodeChange({
               node: selectedNode,
               newClassName: processClassName(

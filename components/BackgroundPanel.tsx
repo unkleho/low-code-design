@@ -182,7 +182,9 @@ const BackgroundPanel = ({ onColorClick }) => {
                         : {}),
                     }}
                     onFocus={() => {
-                      updateCurrentField('backgroundColor');
+                      if (state.currentField !== 'backgroundColor') {
+                        updateCurrentField('backgroundColor');
+                      }
                     }}
                     onClick={() => {
                       dispatch({
