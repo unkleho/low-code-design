@@ -13,6 +13,7 @@ import {
 } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode } from '../types';
+import classNameValues from '../lib/class-name-values';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -165,7 +166,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                 }}
               >
                 <option label=" "></option>
-                {['relative', 'absolute', 'sticky'].map((option) => {
+                {classNameValues.position.map((option) => {
                   return (
                     <option value={option} key={option}>
                       {option}
@@ -186,7 +187,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                 }}
               >
                 <option label=" "></option>
-                {['block', 'flex', 'grid'].map((option) => {
+                {classNameValues.display.map((option) => {
                   return (
                     <option value={option} key={option}>
                       {option}
@@ -389,15 +390,13 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                 }}
               >
                 <option label=" "></option>
-                {['uppercase', 'lowercase', 'capitalize', 'normal-case'].map(
-                  (option) => {
-                    return (
-                      <option value={option} key={option}>
-                        {option}
-                      </option>
-                    );
-                  }
-                )}
+                {classNameValues.textTransform.map((option) => {
+                  return (
+                    <option value={option} key={option}>
+                      {option}
+                    </option>
+                  );
+                })}
               </select>
             </PanelRow>
           </div>

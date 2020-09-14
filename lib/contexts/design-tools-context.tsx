@@ -1,6 +1,7 @@
 import React from 'react';
 
 import replaceClassNameValue from '../replace-class-name-value';
+import classNameValues from '../class-name-values';
 
 const DesignToolsContext = React.createContext([]);
 
@@ -137,10 +138,10 @@ function buildFormValues(className) {
   return {
     className,
     position: className.split(' ').find((value) => {
-      return ['relative', 'absolute', 'sticky'].includes(value);
+      return classNameValues.position.includes(value);
     }),
     display: className.split(' ').find((value) => {
-      return ['block', 'flex', 'grid'].includes(value);
+      return classNameValues.display.includes(value);
     }),
     width: getClassNameValue(className, 'w-'),
     minWidth: getClassNameValue(className, 'min-w-'),
@@ -165,9 +166,7 @@ function buildFormValues(className) {
     fontSize: getClassNameValue(className, 'text-'),
     fontWeight: getClassNameValue(className, 'font-'),
     textTransform: className.split(' ').find((value) => {
-      return ['uppercase', 'lowercase', 'capitalize', 'normal-case'].includes(
-        value
-      );
+      return classNameValues.textTransform.includes(value);
     }),
     backgroundColor: getClassNameValue(className, 'bg-'),
   };
