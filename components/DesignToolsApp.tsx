@@ -5,7 +5,6 @@ import PanelRow from './PanelRow';
 import LayersPanel from './LayersPanel';
 import BackgroundPanel from './BackgroundPanel';
 import ElementPanel from './ElementPanel';
-// import NodeTree from './NodeTree';
 
 import {
   DesignToolsProvider,
@@ -34,6 +33,7 @@ const config = {
   paddingBottom: 'pb',
   paddingLeft: 'pl',
   fontSize: 'text',
+  fontWeight: 'font',
   backgroundColor: 'bg',
 };
 
@@ -344,6 +344,61 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                   });
                 }}
               />
+            </PanelRow>
+            <PanelRow label="Weight">
+              <select
+                className="p-1 border"
+                value={state.fontWeight || ''}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  updateClassNameValue(
+                    state.fontWeight ? `font-${state.fontWeight}` : '',
+                    value ? `font-${value}` : ''
+                  );
+                }}
+              >
+                <option label=" "></option>
+                {[
+                  'hairline',
+                  'thin',
+                  'light',
+                  'normal',
+                  'medium',
+                  'semibold',
+                  'bold',
+                  'extrabold',
+                  'black',
+                ].map((option) => {
+                  return (
+                    <option value={option} key={option}>
+                      {option}
+                    </option>
+                  );
+                })}
+              </select>
+            </PanelRow>
+            <PanelRow label="Transform">
+              <select
+                className="p-1 border"
+                value={state.textTransform || ''}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  updateClassNameValue(state.textTransform, value);
+                }}
+              >
+                <option label=" "></option>
+                {['uppercase', 'lowercase', 'capitalize', 'normal-case'].map(
+                  (option) => {
+                    return (
+                      <option value={option} key={option}>
+                        {option}
+                      </option>
+                    );
+                  }
+                )}
+              </select>
             </PanelRow>
           </div>
         </Panel>

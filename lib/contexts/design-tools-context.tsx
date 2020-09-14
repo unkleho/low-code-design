@@ -127,6 +127,8 @@ const defaultFormValues = {
   paddingLeft: '',
   // Typography
   fontSize: '',
+  fontWeight: '',
+  textTransform: '',
   // Background
   backgroundColor: '',
 };
@@ -134,11 +136,11 @@ const defaultFormValues = {
 function buildFormValues(className) {
   return {
     className,
-    position: className.split(' ').find((c) => {
-      return ['relative', 'absolute', 'sticky'].includes(c);
+    position: className.split(' ').find((value) => {
+      return ['relative', 'absolute', 'sticky'].includes(value);
     }),
-    display: className.split(' ').find((c) => {
-      return ['block', 'flex', 'grid'].includes(c);
+    display: className.split(' ').find((value) => {
+      return ['block', 'flex', 'grid'].includes(value);
     }),
     width: getClassNameValue(className, 'w-'),
     minWidth: getClassNameValue(className, 'min-w-'),
@@ -161,6 +163,12 @@ function buildFormValues(className) {
     paddingLeft:
       getClassNameValue(className, 'pl-') || getClassNameValue(className, 'p-'),
     fontSize: getClassNameValue(className, 'text-'),
+    fontWeight: getClassNameValue(className, 'font-'),
+    textTransform: className.split(' ').find((value) => {
+      return ['uppercase', 'lowercase', 'capitalize', 'normal-case'].includes(
+        value
+      );
+    }),
     backgroundColor: getClassNameValue(className, 'bg-'),
   };
 }
