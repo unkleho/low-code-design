@@ -1,16 +1,29 @@
 import Icon from './Icon';
+import { useDesignTools } from '../lib/contexts/design-tools-context';
 
 type PanelProps = {
   title: string;
+  name: string;
   children: React.ReactNode;
 };
 
-const Panel = ({ title, children }: PanelProps) => {
+const Panel = ({ title, name, children }: PanelProps) => {
+  const { state, togglePanelStatus } = useDesignTools();
+  const panel = state.panels.find((panel) => panel.name === name);
+
   return (
     <div className="border-b">
       <div className="flex px-3 py-2 bg-gray-200 border-b">
         <h2 className="mr-auto font-bold text-xs">{title}</h2>
-        <Icon name="chevron-down" />
+
+        <button
+          onClick={() => {
+            togglePanelStatus(name);
+          }}
+          type="button"
+        >
+          <Icon name={`chevron-${panel?.status === 'open' ? 'down' : 'up'}`} />
+        </button>
       </div>
       <div>{children}</div>
     </div>

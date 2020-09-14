@@ -122,7 +122,7 @@ const BackgroundPanel = ({ onColorClick }) => {
   const baseBgColor = 'gray';
 
   return (
-    <Panel title="Background">
+    <Panel title="Background" name="background">
       <div className="p-3">
         <PanelRow label="Color">
           {/* {renderTextInput({
@@ -197,6 +197,7 @@ const BackgroundPanel = ({ onColorClick }) => {
 
                       onColorClick(bg);
                     }}
+                    key={bg}
                   ></button>
                 );
               })}

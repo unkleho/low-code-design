@@ -153,7 +153,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <ElementPanel />
 
-        <Panel title="Layout">
+        <Panel title="Layout" name="layout">
           <div className="p-3">
             <PanelRow label="Position">
               <select
@@ -199,7 +199,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           </div>
         </Panel>
 
-        <Panel title="Spacing">
+        <Panel title="Spacing" name="spacing">
           <div className="p-3">
             {['margin', 'padding'].map((spacing) => {
               return (
@@ -248,7 +248,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           </div>
         </Panel>
 
-        <Panel title="Sizing">
+        <Panel title="Sizing" name="sizing">
           <div className="p-3">
             <div className="flex items-baseline mb-2">
               <label className="w-16 mr-2 text-xs" htmlFor="element-width">
@@ -327,7 +327,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           </div>
         </Panel>
 
-        <Panel title="Typography">
+        <Panel title="Typography" name="typography">
           <div className="p-3">
             <PanelRow label="Font Size">
               <input

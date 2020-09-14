@@ -37,7 +37,7 @@ const ElementPanel = () => {
   };
 
   return (
-    <Panel title="Element">
+    <Panel title="Element" name="element">
       <div className="p-3">
         <PanelRow label="Type">
           {type && (

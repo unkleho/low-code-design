@@ -19,6 +19,7 @@ export const types = {
   UPDATE_CURRENT_FIELD: 'UPDATE_CURRENT_FIELD',
   UPDATE_FORM_VALUE: 'UPDATE_FORM_VALUE',
   UPDATE_SELECTED_NODE: 'UPDATE_SELECTED_NODE',
+  TOGGLE_PANEL_STATUS: 'TOGGLE_PANEL_STATUS',
 };
 
 function designToolsReducer(state, action) {
@@ -60,6 +61,22 @@ function designToolsReducer(state, action) {
       };
     }
 
+    case types.TOGGLE_PANEL_STATUS: {
+      return {
+        ...state,
+        panels: state.panels.map((panel) => {
+          if (panel.name === action.panelName) {
+            return {
+              ...panel,
+              status: panel.status === 'open' ? 'closed' : 'open',
+            };
+          }
+
+          return panel;
+        }),
+      };
+    }
+
     default: {
       throw new Error(`Unsupported action type: ${action.type}`);
     }
@@ -72,6 +89,36 @@ export function DesignToolsProvider(props) {
     selectedNode: null,
     ...defaultFormValues,
     form: defaultFormValues,
+    panels: [
+      {
+        name: 'element',
+        status: 'open',
+      },
+      {
+        name: 'layout',
+        status: 'open',
+      },
+      {
+        name: 'spacing',
+        status: 'open',
+      },
+      {
+        name: 'sizing',
+        status: 'open',
+      },
+      {
+        name: 'typography',
+        status: 'open',
+      },
+      {
+        name: 'background',
+        status: 'open',
+      },
+      {
+        name: 'layers',
+        status: 'open',
+      },
+    ],
   });
   const value = React.useMemo(() => [state, dispatch], [state]);
 
@@ -100,11 +147,19 @@ export function useDesignTools() {
     dispatch({ type: types.UPDATE_CLASS_NAME, className });
   };
 
+  const togglePanelStatus = (panelName) => {
+    dispatch({
+      type: types.TOGGLE_PANEL_STATUS,
+      panelName,
+    });
+  };
+
   return {
     state,
     dispatch,
     updateCurrentField,
     updateClassNameValue,
+    togglePanelStatus,
   };
 }
 

@@ -46,7 +46,7 @@ const LayersPanel = ({ selectedIDs }: Props) => {
   }, []);
 
   return (
-    <Panel title="Layers">
+    <Panel title="Layers" name="layers">
       <div className="py-1">
         <NodeTree
           parentID={rootNode?.return._debugID}
