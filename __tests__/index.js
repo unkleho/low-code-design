@@ -69,4 +69,27 @@ const Example = () => {
 
 export default Example;`);
   });
+
+  it('should add className to div with no className', () => {
+    const result = updateClassName({
+      lineNumber: 4,
+      columnNumber: 10,
+      className: 'p-4',
+      text: `import React from 'react';
+
+const Example = () => {
+  return <div></div>;
+};
+
+export default Example;`,
+    });
+
+    expect(result).toEqual(`import React from 'react';
+
+const Example = () => {
+  return <div className="p-4"></div>;
+};
+
+export default Example;`);
+  });
 });
