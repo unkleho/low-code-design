@@ -16,6 +16,7 @@ function getClassNameValue(className = '', prefix) {
 
 export const types = {
   UPDATE_CLASS_NAME: 'UPDATE_CLASS_NAME',
+  UPDATE_TEXT: 'UPDATE_TEXT',
   UPDATE_CURRENT_FIELD: 'UPDATE_CURRENT_FIELD',
   UPDATE_FORM_VALUE: 'UPDATE_FORM_VALUE',
   UPDATE_SELECTED_NODE: 'UPDATE_SELECTED_NODE',
@@ -51,6 +52,13 @@ function designToolsReducer(state, action) {
         // Will need to access it from handleSubmit, so might as well keep it handy
         // Could cause perf issues, but whatevs for now
         form: buildFormValues(action.className),
+      };
+    }
+
+    case types.UPDATE_TEXT: {
+      return {
+        ...state,
+        text: action.text,
       };
     }
 

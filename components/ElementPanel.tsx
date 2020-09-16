@@ -6,9 +6,10 @@ import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 
 const ElementPanel = () => {
   const [classInputValue, setClassInputValue] = React.useState('');
+  const [textInputValue, setTextInputValue] = React.useState('');
 
   const { state, updateCurrentField, dispatch } = useDesignTools();
-  const { className, selectedNode } = state;
+  const { className, text, selectedNode } = state;
 
   const type = selectedNode?.type;
   const lineNumber = selectedNode?._debugSource?.lineNumber;
@@ -26,6 +27,11 @@ const ElementPanel = () => {
     setClassInputValue(className);
   }, [className]);
 
+  // Set initial text when there is a new selectedNode
+  React.useEffect(() => {
+    setTextInputValue(text);
+  }, [text]);
+
   const handleClassInputChange = (event) => {
     const newValue = event.target.value;
 
@@ -34,6 +40,18 @@ const ElementPanel = () => {
     dispatch({
       type: types.UPDATE_FORM_VALUE,
       key: 'className',
+      value: newValue,
+    });
+  };
+
+  const handleTextInputChange = (event) => {
+    const newValue = event.target.value;
+
+    setTextInputValue(newValue);
+
+    dispatch({
+      type: types.UPDATE_FORM_VALUE,
+      key: 'text',
       value: newValue,
     });
   };
@@ -65,10 +83,10 @@ const ElementPanel = () => {
         <PanelRow label="Text">
           <input
             type="text"
-            value={state.text || ''}
+            value={textInputValue || ''}
             className="p-1 flex-1 border border-blue"
             onFocus={() => updateCurrentField('text')}
-            // onChange={handleClassInputChange}
+            onChange={handleTextInputChange}
           />
         </PanelRow>
       </div>

@@ -48,6 +48,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
+  const text = state?.text;
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
   // --------------------------------------------------------------------------
@@ -76,8 +77,9 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     handleNodeChange({
       node: state.selectedNode,
       newClassName: className,
+      newText: text,
     });
-  }, [className]);
+  }, [className, text]);
 
   // --------------------------------------------------------------------------
   // Handlers
@@ -97,33 +99,41 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     // event.nativeEvent.stopPropagation();
     // event.nativeEvent.stopImmediatePropagation();
 
-    if (currentField === 'className') {
-      newClassName = state.form.className;
+    if (currentField === 'text') {
+      dispatch({
+        type: types.UPDATE_TEXT,
+        text: state.form.text,
+      });
     } else {
-      const oldValue = state[currentField];
-      const newValue = state.form[currentField];
-      const prefix = config[currentField];
+      if (currentField === 'className') {
+        newClassName = state.form.className;
+      } else {
+        const oldValue = state[currentField];
+        const newValue = state.form[currentField];
+        const prefix = config[currentField];
 
-      newClassName = replaceClassNameValue(
-        state.form.className,
-        oldValue ? `${prefix}-${oldValue}` : '',
-        newValue ? `${prefix}-${newValue}` : ''
-      );
+        newClassName = replaceClassNameValue(
+          state.form.className,
+          oldValue ? `${prefix}-${oldValue}` : '',
+          newValue ? `${prefix}-${newValue}` : ''
+        );
+      }
+
+      dispatch({
+        type: types.UPDATE_CLASS_NAME,
+        className: newClassName,
+      });
     }
-
-    dispatch({
-      type: types.UPDATE_CLASS_NAME,
-      className: newClassName,
-    });
   };
 
-  const handleNodeChange = ({ node, newClassName }) => {
+  const handleNodeChange = ({ node, newClassName, newText }) => {
     if (typeof onNodeChange === 'function') {
       onNodeChange([
         {
           node,
           update: {
             className: newClassName,
+            text: newText,
           },
         },
       ]);
