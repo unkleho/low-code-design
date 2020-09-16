@@ -29,7 +29,10 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
     // Change DOM element className
     if (node) {
       node.stateNode.className = event.update.className;
-      node.stateNode.innerText = event.update.text;
+
+      if (event.update.text) {
+        node.stateNode.innerText = event.update.text;
+      }
 
       const result = await axios.post('/api/component', {
         lineNumber: node._debugSource.lineNumber,

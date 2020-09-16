@@ -126,6 +126,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     }
   };
 
+  // TODO: Reconsider params, taking into account potential for
+  // creating new elements
   const handleNodeChange = ({ node, newClassName, newText }) => {
     if (typeof onNodeChange === 'function') {
       onNodeChange([
