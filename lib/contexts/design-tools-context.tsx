@@ -55,9 +55,12 @@ function designToolsReducer(state, action) {
     }
 
     case types.UPDATE_SELECTED_NODE: {
+      const children = action.selectedNode?.pendingProps?.children;
+
       return {
         ...state,
         selectedNode: action.selectedNode,
+        text: typeof children === 'string' ? children : '',
       };
     }
 
@@ -87,6 +90,8 @@ export function DesignToolsProvider(props) {
   const [state, dispatch] = React.useReducer(designToolsReducer, {
     currentField: null,
     selectedNode: null,
+    // WIP
+    text: null,
     ...defaultFormValues,
     form: defaultFormValues,
     panels: [
@@ -165,6 +170,7 @@ export function useDesignTools() {
 
 const defaultFormValues = {
   className: '',
+  // Layout
   position: '',
   display: '',
   // Sizing

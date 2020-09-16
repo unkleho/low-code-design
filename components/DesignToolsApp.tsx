@@ -61,6 +61,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       selectedNode,
     });
 
+    // console.log(selectedNode.pendingProps.children);
+
     const className = selectedNode?.stateNode.className || '';
 
     dispatch({
@@ -433,39 +435,5 @@ const DesignToolsAppWrapper = (props: Props) => {
     </DesignToolsProvider>
   );
 };
-
-// /**
-//  * Append or replace a newValue in a className string
-//  */
-// export function replaceClassNameValue(
-//   className: string,
-//   oldValue: string,
-//   newValue: string
-// ): string {
-//   let newClassName;
-
-//   if (oldValue) {
-//     newClassName = className
-//       .split(' ')
-//       .map((c) => {
-//         if (c === oldValue) {
-//           return newValue;
-//         }
-
-//         return c;
-//       })
-//       .join(' ');
-//   } else {
-//     newClassName = `${className}${newValue ? ` ${newValue}` : ''}`;
-//   }
-
-//   // const newClassName = oldValue
-//   //   ? // Replace with new value
-//   //     className.replace(oldValue, newValue)
-//   //   : // Otherwise append to className
-//   //     `${className}${newValue ? ` ${newValue}` : ''}`;
-
-//   return newClassName.trim();
-// }
 
 export default DesignToolsAppWrapper;

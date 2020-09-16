@@ -15,6 +15,8 @@ const ElementPanel = () => {
   const columnNumber = selectedNode?._debugSource?.columnNumber;
   const fileName = selectedNode?._debugSource?.fileName;
 
+  // console.log(state.text);
+
   // --------------------------------------------------------------------------
   // Effects
   // --------------------------------------------------------------------------
@@ -57,6 +59,16 @@ const ElementPanel = () => {
             className="p-1 flex-1 border border-blue"
             onFocus={() => updateCurrentField('className')}
             onChange={handleClassInputChange}
+          />
+        </PanelRow>
+
+        <PanelRow label="Text">
+          <input
+            type="text"
+            value={state.text || ''}
+            className="p-1 flex-1 border border-blue"
+            onFocus={() => updateCurrentField('text')}
+            // onChange={handleClassInputChange}
           />
         </PanelRow>
       </div>
