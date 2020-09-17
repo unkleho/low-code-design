@@ -1,5 +1,6 @@
 import updateClassName from '../lib/update-class-name';
 import appendElement from '../lib/append-element';
+import updateElementText from '../lib/file/update-element-text';
 
 describe('Update ClassName', () => {
   it('should update small component', () => {
@@ -95,7 +96,7 @@ export default Example;`);
   });
 });
 
-describe('Element', () => {
+describe('Element Append', () => {
   it('should append div inside another div', () => {
     const result = appendElement({
       lineNumber: 4,
@@ -114,6 +115,31 @@ export default Example;`,
 
 const Example = () => {
   return <div><div></div></div>;
+};
+
+export default Example;`);
+  });
+});
+
+describe('Element Text', () => {
+  it('should update text inside p', () => {
+    const result = updateElementText({
+      lineNumber: 4,
+      columnNumber: 9,
+      text: 'Goodbye',
+      code: `import React from 'react';
+
+const Example = () => {
+  return <p>Hello</p>;
+};
+
+export default Example;`,
+    });
+
+    expect(result).toEqual(`import React from 'react';
+
+const Example = () => {
+  return <p>Goodbye</p>;
 };
 
 export default Example;`);

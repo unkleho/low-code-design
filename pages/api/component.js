@@ -1,4 +1,5 @@
 import fs from 'fs';
+import updateElementText from '../../lib/file/update-element-text';
 // import path from 'path';
 // import { parse } from '@babel/parser';
 // import generate from '@babel/generator';
@@ -11,16 +12,27 @@ export default ({ method, body }, res) => {
     return null;
   }
 
-  const { lineNumber, columnNumber, className, fileName } = body;
+  const { lineNumber, columnNumber, className, text, fileName } = body;
 
   const file = fs.readFileSync(fileName, 'utf8');
 
-  const newFile = updateClassName({
+  let newFile = updateClassName({
     text: file,
     className,
     lineNumber: parseInt(lineNumber),
     columnNumber: parseInt(columnNumber),
   });
+
+  if (text) {
+    // console.log(lineNumber, columnNumber, text, newFile);
+
+    newFile = updateElementText({
+      lineNumber: parseInt(lineNumber),
+      columnNumber: parseInt(columnNumber) - 1,
+      text,
+      code: newFile,
+    });
+  }
 
   if (file !== newFile) {
     fs.writeFileSync(fileName, newFile);

@@ -34,10 +34,12 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
         node.stateNode.innerText = event.update.text;
       }
 
+      // TODO: Consider separate API for className vs text updates
       const result = await axios.post('/api/component', {
         lineNumber: node._debugSource.lineNumber,
         columnNumber: node._debugSource.columnNumber,
         className: node.stateNode.className,
+        text: event.update.text,
         fileName: node._debugSource.fileName,
       });
 
