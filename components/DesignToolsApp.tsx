@@ -12,7 +12,7 @@ import {
   types,
 } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
-import { FiberNode } from '../types';
+import { FiberNode, NodeChangeEvent } from '../types';
 import classNameValues from '../lib/class-name-values';
 
 type Props = {
@@ -75,11 +75,11 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   // Run callback whenever className changes
   React.useEffect(() => {
     handleNodeChange({
+      type: 'UPDATE_FILE_CLASS_NAME',
       node: state.selectedNode,
-      newClassName: className,
-      newText: text,
+      className,
     });
-  }, [className, text]);
+  }, [className]);
 
   // --------------------------------------------------------------------------
   // Handlers
@@ -128,15 +128,13 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
   // TODO: Reconsider params, taking into account potential for
   // creating new elements
-  const handleNodeChange = ({ node, newClassName, newText }) => {
+  const handleNodeChange = ({ type, node, className }: NodeChangeEvent) => {
     if (typeof onNodeChange === 'function') {
       onNodeChange([
         {
+          type,
           node,
-          update: {
-            className: newClassName,
-            text: newText,
-          },
+          className,
         },
       ]);
     }
@@ -419,8 +417,9 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
         <BackgroundPanel
           onColorClick={(bg) => {
             handleNodeChange({
+              type: 'UPDATE_FILE_CLASS_NAME',
               node: selectedNode,
-              newClassName: replaceClassNameValue(
+              className: replaceClassNameValue(
                 state.className,
                 state.backgroundColor ? `bg-${state.backgroundColor}` : '',
                 bg

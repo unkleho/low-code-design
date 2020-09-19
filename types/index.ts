@@ -22,3 +22,10 @@ export type TargetEvent = React.MouseEvent<HTMLDivElement, MouseEvent> & {
   target: HTMLElement;
   _targetInst: FiberNode;
 };
+
+export type NodeChangeEvent = {
+  type: 'UPDATE_FILE_CLASS_NAME' | 'UPDATE_FILE_TEXT';
+  node: FiberNode;
+  className?: string;
+  text?: string;
+};

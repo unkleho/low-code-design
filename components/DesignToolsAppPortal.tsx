@@ -4,46 +4,43 @@ import axios from 'axios';
 
 import DesignToolsApp from './DesignToolsApp';
 
-import { FiberNode } from '../types';
+import { FiberNode, NodeChangeEvent } from '../types';
 
 type Props = {
   selectedNodes?: FiberNode[];
 };
 
+// type NodeChangeEvent = {
+//   type: 'UPDATE_FILE_CLASS_NAME' | 'UPDATE_FILE_TEXT';
+//   node: FiberNode;
+//   className?: string;
+//   text?: string;
+// };
+
 const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
   // Make updates to DOM and send API request
-  const handleNodeChange = async (
-    events: [
-      {
-        node: FiberNode;
-        update: {
-          className: string;
-          text: string;
-        };
-      }
-    ]
-  ) => {
+  const handleNodeChange = async (events: NodeChangeEvent[]) => {
     const event = events[0]; // Allow multiple node changes in future
     const { node } = event;
 
     // Change DOM element className
     if (node) {
-      node.stateNode.className = event.update.className;
+      if (event.type === 'UPDATE_FILE_CLASS_NAME') {
+        node.stateNode.className = event.className;
 
-      if (event.update.text) {
-        node.stateNode.innerText = event.update.text;
+        const result = await axios.post('/api/component/class-name', {
+          className: event.className,
+          lineNumber: node._debugSource.lineNumber,
+          columnNumber: node._debugSource.columnNumber,
+          fileName: node._debugSource.fileName,
+        });
+
+        console.log(event.type, result.data);
+      } else if (event.type === 'UPDATE_FILE_TEXT') {
+        if (event.text) {
+          node.stateNode.innerText = event.text;
+        }
       }
-
-      // TODO: Consider separate API for className vs text updates
-      const result = await axios.post('/api/component/class-name', {
-        lineNumber: node._debugSource.lineNumber,
-        columnNumber: node._debugSource.columnNumber,
-        className: node.stateNode.className,
-        // text: event.update.text,
-        fileName: node._debugSource.fileName,
-      });
-
-      console.log(result.data);
     }
   };
 
