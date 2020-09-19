@@ -74,12 +74,25 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
   // Run callback whenever className changes
   React.useEffect(() => {
-    handleNodeChange({
-      type: 'UPDATE_FILE_CLASS_NAME',
-      node: state.selectedNode,
-      className,
-    });
+    handleNodeChange([
+      {
+        type: 'UPDATE_FILE_CLASS_NAME',
+        node: state.selectedNode,
+        className,
+      },
+    ]);
   }, [className]);
+
+  // Run callback whenever className changes
+  React.useEffect(() => {
+    handleNodeChange([
+      {
+        type: 'UPDATE_FILE_TEXT',
+        node: state.selectedNode,
+        text,
+      },
+    ]);
+  }, [text]);
 
   // --------------------------------------------------------------------------
   // Handlers
@@ -128,15 +141,9 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
   // TODO: Reconsider params, taking into account potential for
   // creating new elements
-  const handleNodeChange = ({ type, node, className }: NodeChangeEvent) => {
+  const handleNodeChange = (events: NodeChangeEvent[]) => {
     if (typeof onNodeChange === 'function') {
-      onNodeChange([
-        {
-          type,
-          node,
-          className,
-        },
-      ]);
+      onNodeChange([events[0]]);
     }
   };
 
@@ -416,15 +423,17 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
         <BackgroundPanel
           onColorClick={(bg) => {
-            handleNodeChange({
-              type: 'UPDATE_FILE_CLASS_NAME',
-              node: selectedNode,
-              className: replaceClassNameValue(
-                state.className,
-                state.backgroundColor ? `bg-${state.backgroundColor}` : '',
-                bg
-              ),
-            });
+            handleNodeChange([
+              {
+                type: 'UPDATE_FILE_CLASS_NAME',
+                node: selectedNode,
+                className: replaceClassNameValue(
+                  state.className,
+                  state.backgroundColor ? `bg-${state.backgroundColor}` : '',
+                  bg
+                ),
+              },
+            ]);
           }}
         />
 

@@ -10,13 +10,6 @@ type Props = {
   selectedNodes?: FiberNode[];
 };
 
-// type NodeChangeEvent = {
-//   type: 'UPDATE_FILE_CLASS_NAME' | 'UPDATE_FILE_TEXT';
-//   node: FiberNode;
-//   className?: string;
-//   text?: string;
-// };
-
 const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
   // Make updates to DOM and send API request
   const handleNodeChange = async (events: NodeChangeEvent[]) => {
@@ -28,17 +21,26 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
       if (event.type === 'UPDATE_FILE_CLASS_NAME') {
         node.stateNode.className = event.className;
 
-        const result = await axios.post('/api/component/class-name', {
+        await axios.post('/api/component/class-name', {
           className: event.className,
+          fileName: node._debugSource.fileName,
           lineNumber: node._debugSource.lineNumber,
           columnNumber: node._debugSource.columnNumber,
-          fileName: node._debugSource.fileName,
         });
 
-        console.log(event.type, result.data);
+        console.log(event.type, event.className);
       } else if (event.type === 'UPDATE_FILE_TEXT') {
         if (event.text) {
           node.stateNode.innerText = event.text;
+
+          await axios.post('/api/component/text', {
+            text: event.text,
+            fileName: node._debugSource.fileName,
+            lineNumber: node._debugSource.lineNumber,
+            columnNumber: node._debugSource.columnNumber,
+          });
+
+          console.log(event.type, event.text);
         }
       }
     }

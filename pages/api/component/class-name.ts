@@ -19,6 +19,14 @@ const updateComponentClassName = ({ method, body }, res) => {
   });
 
   if (code !== newCode) {
+    console.log(
+      'update className',
+      className,
+      code,
+      newCode,
+      lineNumber,
+      columnNumber
+    );
     fs.writeFileSync(fileName, newCode);
   }
 
