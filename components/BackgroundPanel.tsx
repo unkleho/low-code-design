@@ -1,6 +1,7 @@
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
+import Select from './Select';
 
 const backgroundColors = {
   gray: [
@@ -160,6 +161,18 @@ const BackgroundPanel = ({ onColorClick }) => {
                 );
               })}
             </div> */}
+            <Select
+              items={[
+                {
+                  name: 'White',
+                  value: 'white',
+                },
+                {
+                  name: 'Black',
+                  value: 'black',
+                },
+              ]}
+            />
             <div className="flex w-full">
               {backgroundColors[baseBgColor]?.map((bg) => {
                 const isSelected =
