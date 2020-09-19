@@ -21,7 +21,7 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
       if (event.type === 'UPDATE_FILE_CLASS_NAME') {
         node.stateNode.className = event.className;
 
-        await axios.post('/api/component/class-name', {
+        await axios.post('/api/file/class-name', {
           className: event.className,
           fileName: node._debugSource.fileName,
           lineNumber: node._debugSource.lineNumber,
@@ -33,7 +33,7 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
         if (event.text) {
           node.stateNode.innerText = event.text;
 
-          await axios.post('/api/component/text', {
+          await axios.post('/api/file/text', {
             text: event.text,
             fileName: node._debugSource.fileName,
             lineNumber: node._debugSource.lineNumber,

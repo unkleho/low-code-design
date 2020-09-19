@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import updateClassName from '../../../lib/update-class-name';
+import updateClassName from '../../../lib/file/update-class-name';
 
 const updateComponentClassName = ({ method, body }, res) => {
   if (method !== 'POST') {
