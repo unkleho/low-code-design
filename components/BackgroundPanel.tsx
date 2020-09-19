@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
@@ -115,64 +117,58 @@ const backgroundColors = {
     'bg-pink-900',
   ],
 };
+const baseBgColors = Object.keys(backgroundColors);
 
 const BackgroundPanel = ({ onColorClick }) => {
+  const [baseBgColor, setBaseBgColor] = React.useState<React.ReactText>('gray');
   const { state, dispatch, updateCurrentField } = useDesignTools();
+  const { backgroundColor } = state.form;
+  const baseBgItems = baseBgColors.map((color) => {
+    return {
+      name: color.charAt(0).toUpperCase() + color.slice(1),
+      value: color,
+    };
+  });
 
-  // const baseBgColor = state.form.backgroundColor?.split('-')[0];
-  const baseBgColor = 'gray';
+  React.useEffect(() => {
+    const newBaseBgColor = backgroundColor?.split('-')[0];
+
+    setBaseBgColor(newBaseBgColor);
+  }, [backgroundColor]);
+
+  // console.log(baseBgColors);
 
   return (
     <Panel title="Background" name="background">
       <div className="p-3">
         <PanelRow label="Color">
-          {/* {renderTextInput({
-          field: 'backgroundColor',
-        })} */}
-
           <div className="w-full">
-            {/* <div className="flex items-end w-full">
-              {[
-                'bg-gray-500',
-                'bg-red-500',
-                'bg-orange-500',
-                'bg-yellow-500',
-                'bg-green-500',
-                'bg-teal-500',
-                'bg-blue-500',
-                'bg-indigo-500',
-                'bg-purple-500',
-                'bg-pink-500',
-              ].map((bg) => {
-                const isSelected =
-                  bg.replace('bg-', '').replace('-500', '') ===
-                  state.form.backgroundColor?.split('-')[0];
-
-                return (
-                  <button
-                    type="button"
-                    className={[
-                      isSelected ? 'h-5' : 'h-4',
-                      'flex-1',
-                      'border-r border-gray-100',
-                      bg,
-                    ].join(' ')}
-                  ></button>
-                );
-              })}
-            </div> */}
             <Select
-              items={[
-                {
-                  name: 'White',
-                  value: 'white',
-                },
-                {
-                  name: 'Black',
-                  value: 'black',
-                },
-              ]}
+              items={baseBgItems}
+              selectedItem={baseBgItems.find(
+                (item) => item.value === baseBgColor
+              )}
+              // TODO: Improve renderItem props
+              renderItem={(props, item, index, isHighlighted) => {
+                return (
+                  <li
+                    {...props}
+                    key={item.name}
+                    className={[
+                      'px-2 py-1',
+                      isHighlighted ? 'bg-gray-300' : '',
+                    ].join(' ')}
+                  >
+                    {item.name}
+                  </li>
+                );
+              }}
+              onChange={(event) => {
+                const { selectedItem } = event;
+                setBaseBgColor(selectedItem.value);
+              }}
             />
+
             <div className="flex w-full">
               {backgroundColors[baseBgColor]?.map((bg) => {
                 const isSelected =
