@@ -172,6 +172,20 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <ElementPanel />
 
+        <button
+          onClick={() => {
+            handleNodeChange([
+              {
+                type: 'CREATE_FILE_ELEMENT',
+                node: selectedNode,
+                elementType: 'div',
+              },
+            ]);
+          }}
+        >
+          Add Element Test
+        </button>
+
         <Panel title="Layout" name="layout">
           <div className="p-3">
             <PanelRow label="Position">

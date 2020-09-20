@@ -42,6 +42,17 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
 
           console.log(event.type, event.text);
         }
+      } else if (event.type === 'CREATE_FILE_ELEMENT') {
+        if (event.elementType) {
+          await axios.post('/api/file/element', {
+            elementType: event.elementType,
+            fileName: node._debugSource.fileName,
+            lineNumber: node._debugSource.lineNumber,
+            columnNumber: node._debugSource.columnNumber,
+          });
+
+          console.log(event.type, event.elementType);
+        }
       }
     }
   };
