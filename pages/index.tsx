@@ -17,7 +17,7 @@ export default function HomePage() {
           </div>
           <div className="">
             <h1 className="font-bold">This is another title</h1>
-            <p className="">Description text</p>
+            <p className="bg-gray-200">Description text</p>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
-import updateClassName from '../lib/update-class-name';
-import appendElement from '../lib/append-element';
+import updateClassName from '../lib/file/update-class-name';
+import createElement from '../lib/file/create-element';
 import updateElementText from '../lib/file/update-element-text';
 
 describe('Update ClassName', () => {
@@ -8,7 +8,7 @@ describe('Update ClassName', () => {
       lineNumber: 4,
       columnNumber: 10,
       className: 'lowercase p-4',
-      text: `import React from 'react';
+      code: `import React from 'react';
 
 const Example = () => {
   return <div className="uppercase p-4">Example Component</div>;
@@ -31,7 +31,7 @@ export default Example;`);
       lineNumber: 4,
       columnNumber: 10,
       className: 'p-6',
-      text: `import React from 'react';
+      code: `import React from 'react';
 
 const Example = () => {
   return <div className="p-4"><span className="p-2"></span></div>;
@@ -54,7 +54,7 @@ export default Example;`);
       lineNumber: 4,
       columnNumber: 31,
       className: 'p-4',
-      text: `import React from 'react';
+      code: `import React from 'react';
 
 const Example = () => {
   return <div className="p-4"><span className="p-2"></span></div>;
@@ -77,7 +77,7 @@ export default Example;`);
       lineNumber: 4,
       columnNumber: 10,
       className: 'p-4',
-      text: `import React from 'react';
+      code: `import React from 'react';
 
 const Example = () => {
   return <div></div>;
@@ -98,11 +98,11 @@ export default Example;`);
 
 describe('Element Append', () => {
   it('should append div inside another div', () => {
-    const result = appendElement({
+    const result = createElement({
       lineNumber: 4,
-      columnNumber: 10,
-      element: 'div',
-      text: `import React from 'react';
+      columnNumber: 9,
+      elementType: 'div',
+      code: `import React from 'react';
 
 const Example = () => {
   return <div></div>;
@@ -115,6 +115,29 @@ export default Example;`,
 
 const Example = () => {
   return <div><div></div></div>;
+};
+
+export default Example;`);
+  });
+
+  it('should append p after another p', () => {
+    const result = createElement({
+      lineNumber: 4,
+      columnNumber: 9,
+      elementType: 'p',
+      code: `import React from 'react';
+
+const Example = () => {
+  return <div><p>First</p></div>;
+};
+
+export default Example;`,
+    });
+
+    expect(result).toEqual(`import React from 'react';
+
+const Example = () => {
+  return <div><p>First</p><p></p></div>;
 };
 
 export default Example;`);

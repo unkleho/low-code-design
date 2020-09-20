@@ -136,8 +136,6 @@ const BackgroundPanel = ({ onColorClick }) => {
     setBaseBgColor(newBaseBgColor);
   }, [backgroundColor]);
 
-  // console.log(baseBgColors);
-
   return (
     <Panel title="Background" name="background">
       <div className="p-3">
