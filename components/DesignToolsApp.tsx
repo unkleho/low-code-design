@@ -172,7 +172,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <ElementPanel />
 
-        <button
+        {/* <button
           onClick={() => {
             handleNodeChange([
               {
@@ -184,7 +184,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           }}
         >
           Add Element Test
-        </button>
+        </button> */}
 
         <Panel title="Layout" name="layout">
           <div className="p-3">
