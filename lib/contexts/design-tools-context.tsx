@@ -21,6 +21,7 @@ export const types = {
   UPDATE_FORM_VALUE: 'UPDATE_FORM_VALUE',
   UPDATE_SELECTED_NODE: 'UPDATE_SELECTED_NODE',
   TOGGLE_PANEL_STATUS: 'TOGGLE_PANEL_STATUS',
+  REFRESH_LAYERS_PANEL: 'REFRESH_LAYERS_PANEL',
 };
 
 function designToolsReducer(state, action) {
@@ -88,6 +89,13 @@ function designToolsReducer(state, action) {
       };
     }
 
+    case types.REFRESH_LAYERS_PANEL: {
+      return {
+        ...state,
+        layersPanelKey: state.layersPanelKey + 1,
+      };
+    }
+
     default: {
       throw new Error(`Unsupported action type: ${action.type}`);
     }
@@ -98,6 +106,7 @@ export function DesignToolsProvider(props) {
   const [state, dispatch] = React.useReducer(designToolsReducer, {
     currentField: null,
     selectedNode: null,
+    layersPanelKey: 0,
     // WIP
     text: null,
     ...defaultFormValues,

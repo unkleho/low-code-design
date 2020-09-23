@@ -7,7 +7,7 @@ import BackgroundPanel from './BackgroundPanel';
 import ElementPanel from './ElementPanel';
 
 import {
-  DesignToolsProvider,
+  // DesignToolsProvider,
   useDesignTools,
   types,
 } from '../lib/contexts/design-tools-context';
@@ -172,7 +172,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <ElementPanel />
 
-        {/* <button
+        <button
           onClick={() => {
             handleNodeChange([
               {
@@ -184,7 +184,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           }}
         >
           Add Element Test
-        </button> */}
+        </button>
 
         <Panel title="Layout" name="layout">
           <div className="p-3">
@@ -457,17 +457,20 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
         </button>
       </form>
 
-      <LayersPanel selectedIDs={selectedIDs} />
+      {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
+      <LayersPanel selectedIDs={selectedIDs} key={state.layersPanelKey} />
     </aside>
   );
 };
 
-const DesignToolsAppWrapper = (props: Props) => {
-  return (
-    <DesignToolsProvider>
-      <DesignToolsApp {...props} />
-    </DesignToolsProvider>
-  );
-};
+// const DesignToolsAppWrapper = (props: Props) => {
+//   return (
+//     <DesignToolsProvider>
+//       <DesignToolsApp {...props} />
+//     </DesignToolsProvider>
+//   );
+// };
 
-export default DesignToolsAppWrapper;
+// export default DesignToolsAppWrapper;
+
+export default DesignToolsApp;

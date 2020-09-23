@@ -5,12 +5,18 @@ import axios from 'axios';
 import DesignToolsApp from './DesignToolsApp';
 
 import { FiberNode, NodeChangeEvent } from '../types';
+import {
+  DesignToolsProvider,
+  useDesignTools,
+} from '../lib/contexts/design-tools-context';
 
 type Props = {
   selectedNodes?: FiberNode[];
 };
 
 const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
+  const { dispatch } = useDesignTools();
+
   // Make updates to DOM and send API request
   const handleNodeChange = async (events: NodeChangeEvent[]) => {
     const event = events[0]; // Allow multiple node changes in future
@@ -52,6 +58,10 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
           });
 
           console.log(event.type, event.elementType);
+
+          dispatch({
+            type: 'REFRESH_LAYERS_PANEL',
+          });
         }
       }
     }
@@ -78,4 +88,14 @@ function canUseDOM() {
   );
 }
 
-export default DesignToolsAppPortal;
+const DesignToolsAppPortalWrapper = (props: Props) => {
+  return (
+    <DesignToolsProvider>
+      <DesignToolsAppPortal {...props} />
+    </DesignToolsProvider>
+  );
+};
+
+export default DesignToolsAppPortalWrapper;
+
+// export default DesignToolsAppPortal;
