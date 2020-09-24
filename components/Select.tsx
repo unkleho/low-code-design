@@ -6,11 +6,12 @@ type Props = {
     name: string;
     value: string | number;
   }[];
-  selectedItem?: {
+  defaultSelectedItem?: {
     name: string;
     value: string | number;
   };
   renderItem?: Function;
+  renderToggleButton?: Function;
   onChange?: (
     changes: UseSelectStateChange<{
       name: string;
@@ -21,33 +22,48 @@ type Props = {
 
 const Select = ({
   items = [],
-  selectedItem = {
+  defaultSelectedItem = {
     name: null,
     value: null,
   },
   renderItem,
+  renderToggleButton,
   onChange,
 }: Props) => {
   const {
     isOpen,
-    // selectedItem,
+    selectedItem,
     getToggleButtonProps,
     // getLabelProps,
     getMenuProps,
     highlightedIndex,
     getItemProps,
-  } = useSelect({ items, selectedItem, onSelectedItemChange: onChange });
+  } = useSelect({
+    items,
+    selectedItem: defaultSelectedItem,
+    onSelectedItemChange: onChange,
+  });
 
   return (
     <div className="relative">
       {/* <label {...getLabelProps()}>Choose an element:</label> */}
-      <button
-        type="button"
-        {...getToggleButtonProps()}
-        className="px-2 py-1 mb-2 border bg-white"
-      >
-        {selectedItem?.name || 'Choose'}
-      </button>
+      {typeof renderToggleButton === 'function' ? (
+        renderToggleButton(
+          {
+            ...getToggleButtonProps(),
+            className: 'px-2 py-1 mb-2 border bg-white',
+          },
+          selectedItem
+        )
+      ) : (
+        <button
+          type="button"
+          {...getToggleButtonProps()}
+          className="px-2 py-1 mb-2 border bg-white"
+        >
+          {selectedItem?.name || 'Choose'}
+        </button>
+      )}
 
       <ul {...getMenuProps()} className="absolute -mt-2 bg-white border">
         {isOpen &&
@@ -62,7 +78,8 @@ const Select = ({
                 },
                 item,
                 index,
-                isHighlighted
+                isHighlighted,
+                selectedItem
               );
             } else {
               return (

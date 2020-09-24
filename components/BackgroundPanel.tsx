@@ -4,6 +4,7 @@ import Panel from './Panel';
 import PanelRow from './PanelRow';
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import Select from './Select';
+import Icon from './Icon';
 
 const backgroundColors = {
   gray: [
@@ -143,20 +144,60 @@ const BackgroundPanel = ({ onColorClick }) => {
           <div className="w-full">
             <Select
               items={baseBgItems}
-              selectedItem={baseBgItems.find(
+              defaultSelectedItem={baseBgItems.find(
                 (item) => item.value === baseBgColor
               )}
+              renderToggleButton={(props, selectedItem) => {
+                const itemBgColor = selectedItem.value
+                  ? backgroundColors[selectedItem.value][4]
+                  : null;
+
+                return (
+                  <button
+                    {...props}
+                    className={[props.className, 'flex', 'items-center'].join(
+                      ' '
+                    )}
+                  >
+                    {selectedItem?.name ? (
+                      <>
+                        <div
+                          className={['w-4 h-4 mr-2', itemBgColor].join(' ')}
+                        ></div>{' '}
+                        {selectedItem.name}
+                        <Icon
+                          name={
+                            props['aria-expanded']
+                              ? 'chevron-up'
+                              : 'chevron-down'
+                          }
+                          className="ml-2"
+                        />
+                      </>
+                    ) : (
+                      'Choose color'
+                    )}
+                  </button>
+                );
+              }}
               // TODO: Improve renderItem props
-              renderItem={(props, item, index, isHighlighted) => {
+              renderItem={(props, item, index, isHighlighted, selectedItem) => {
+                const itemBgColor = backgroundColors[item.value][4];
+                const isSelected = selectedItem.value === item.value;
+
                 return (
                   <li
                     {...props}
                     key={item.name}
                     className={[
-                      'px-2 py-1',
+                      'flex items-center px-2 py-1',
+                      isSelected ? 'font-bold' : '',
                       isHighlighted ? 'bg-gray-300' : '',
                     ].join(' ')}
                   >
+                    <div
+                      className={['w-4 h-4 mr-2', itemBgColor].join(' ')}
+                    ></div>{' '}
                     {item.name}
                   </li>
                 );
