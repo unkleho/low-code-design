@@ -25,7 +25,7 @@ export const types = {
 };
 
 function designToolsReducer(state, action) {
-  // console.log(action);
+  console.log(action);
 
   switch (action.type) {
     case types.UPDATE_CURRENT_FIELD: {
