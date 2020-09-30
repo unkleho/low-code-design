@@ -2,17 +2,9 @@ import React from 'react';
 
 import replaceClassNameValue from '../replace-class-name-value';
 import classNameValues from '../class-name-values';
+import { textColors } from '../tailwind-config';
 
 const DesignToolsContext = React.createContext([]);
-
-function getClassNameValue(className = '', prefix) {
-  return className
-    .split(' ')
-    .filter((c) => {
-      return c.includes(prefix);
-    })[0]
-    ?.replace(prefix, '');
-}
 
 export const types = {
   UPDATE_CLASS_NAME: 'UPDATE_CLASS_NAME',
@@ -249,11 +241,37 @@ function buildFormValues(className) {
     fontSize: getClassNameValue(className, 'text-'),
     fontWeight: getClassNameValue(className, 'font-'),
     // WIP
-    textColor: '',
+    textColor: getTextColorValue(className),
     textTransform: className.split(' ').find((value) => {
       return classNameValues.textTransform.includes(value);
     }),
     // Background
     backgroundColor: getClassNameValue(className, 'bg-'),
   };
+}
+
+const baseColors = Object.keys(textColors).map((key) => key);
+
+function getTextColorValue(className = '') {
+  let textColorValue;
+
+  for (const baseColor of baseColors) {
+    const colorValue = getClassNameValue(className, `text-${baseColor}-`);
+
+    if (colorValue) {
+      textColorValue = `${baseColor}-${colorValue}`;
+      break;
+    }
+  }
+
+  return textColorValue;
+}
+
+function getClassNameValue(className = '', prefix) {
+  return className
+    .split(' ')
+    .filter((c) => {
+      return c.includes(prefix);
+    })[0]
+    ?.replace(prefix, '');
 }

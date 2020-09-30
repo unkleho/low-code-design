@@ -361,7 +361,21 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           </div>
         </Panel>
 
-        <TypographyPanel />
+        <TypographyPanel
+          onColorClick={(color) => {
+            handleNodeChange([
+              {
+                type: 'UPDATE_FILE_CLASS_NAME',
+                node: selectedNode,
+                className: replaceClassNameValue(
+                  state.className,
+                  state.textColor ? `text-${state.textColor}` : '',
+                  color
+                ),
+              },
+            ]);
+          }}
+        />
 
         <BackgroundPanel
           onColorClick={(bg) => {
