@@ -14,6 +14,7 @@ import {
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 import classNameValues from '../lib/class-name-values';
+import TypographyPanel from './TypographyPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -360,80 +361,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           </div>
         </Panel>
 
-        <Panel title="Typography" name="typography">
-          <div className="p-3">
-            <PanelRow label="Font Size">
-              <input
-                className="w-12 p-1 border"
-                type="text"
-                value={state.form.fontSize || ''}
-                onFocus={() => updateCurrentField('fontSize')}
-                onChange={(event) => {
-                  const { value } = event.target;
-
-                  dispatch({
-                    type: types.UPDATE_FORM_VALUE,
-                    key: 'fontSize',
-                    value,
-                  });
-                }}
-              />
-            </PanelRow>
-            <PanelRow label="Weight">
-              <select
-                className="p-1 border"
-                value={state.fontWeight || ''}
-                onChange={(event) => {
-                  const { value } = event.target;
-
-                  updateClassNameValue(
-                    state.fontWeight ? `font-${state.fontWeight}` : '',
-                    value ? `font-${value}` : ''
-                  );
-                }}
-              >
-                <option label=" "></option>
-                {[
-                  'hairline',
-                  'thin',
-                  'light',
-                  'normal',
-                  'medium',
-                  'semibold',
-                  'bold',
-                  'extrabold',
-                  'black',
-                ].map((option) => {
-                  return (
-                    <option value={option} key={option}>
-                      {option}
-                    </option>
-                  );
-                })}
-              </select>
-            </PanelRow>
-            <PanelRow label="Transform">
-              <select
-                className="p-1 border"
-                value={state.textTransform || ''}
-                onChange={(event) => {
-                  const { value } = event.target;
-
-                  updateClassNameValue(state.textTransform, value);
-                }}
-              >
-                <option label=" "></option>
-                {classNameValues.textTransform.map((option) => {
-                  return (
-                    <option value={option} key={option}>
-                      {option}
-                    </option>
-                  );
-                })}
-              </select>
-            </PanelRow>
-          </div>
-        </Panel>
+        <TypographyPanel />
 
         <BackgroundPanel
           onColorClick={(bg) => {

@@ -207,6 +207,7 @@ const defaultFormValues = {
   // Typography
   fontSize: '',
   fontWeight: '',
+  textColor: '',
   textTransform: '',
   // Background
   backgroundColor: '',
@@ -215,16 +216,19 @@ const defaultFormValues = {
 function buildFormValues(className) {
   return {
     className,
+    // Layout
     position: className.split(' ').find((value) => {
       return classNameValues.position.includes(value);
     }),
     display: className.split(' ').find((value) => {
       return classNameValues.display.includes(value);
     }),
+    // Sizing
     width: getClassNameValue(className, 'w-'),
     minWidth: getClassNameValue(className, 'min-w-'),
     height: getClassNameValue(className, 'h-'),
     minHeight: getClassNameValue(className, 'min-h-'),
+    // Spacing
     marginTop:
       getClassNameValue(className, 'mt-') || getClassNameValue(className, 'm-'),
     marginRight:
@@ -241,11 +245,14 @@ function buildFormValues(className) {
       getClassNameValue(className, 'pb-') || getClassNameValue(className, 'p-'),
     paddingLeft:
       getClassNameValue(className, 'pl-') || getClassNameValue(className, 'p-'),
+    // Typography
     fontSize: getClassNameValue(className, 'text-'),
     fontWeight: getClassNameValue(className, 'font-'),
+    textColor: '',
     textTransform: className.split(' ').find((value) => {
       return classNameValues.textTransform.includes(value);
     }),
+    // Background
     backgroundColor: getClassNameValue(className, 'bg-'),
   };
 }

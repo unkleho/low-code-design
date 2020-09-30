@@ -12,7 +12,7 @@ export default function HomePage() {
         })}
 
           <div className="">
-            <h1 className="text-6xl font-bold mb-4 bg-gray-400 pl-2">This is a title</h1>
+            <h1 className="text-6xl font-semibold mb-4 bg-gray-400 pl-2">This is a title</h1>
             <p className="mb-4">Description text</p>
           </div>
           <div className="">
