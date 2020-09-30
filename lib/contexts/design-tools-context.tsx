@@ -248,6 +248,7 @@ function buildFormValues(className) {
     // Typography
     fontSize: getClassNameValue(className, 'text-'),
     fontWeight: getClassNameValue(className, 'font-'),
+    // WIP
     textColor: '',
     textTransform: className.split(' ').find((value) => {
       return classNameValues.textTransform.includes(value);
