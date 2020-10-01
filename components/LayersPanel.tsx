@@ -8,9 +8,10 @@ import { FiberNode } from '../types';
 
 type Props = {
   selectedIDs: number[];
+  onNodeCreateClick?: Function;
 };
 
-const LayersPanel = ({ selectedIDs }: Props) => {
+const LayersPanel = ({ selectedIDs, onNodeCreateClick }: Props) => {
   const [nodes, setNodes] = React.useState<FiberNode[]>([]);
   const rootNode = nodes[0];
 
@@ -52,6 +53,7 @@ const LayersPanel = ({ selectedIDs }: Props) => {
           parentID={rootNode?.return._debugID}
           nodes={nodes}
           selectedIDs={selectedIDs}
+          onNodeCreateClick={onNodeCreateClick}
         />
       </div>
     </Panel>

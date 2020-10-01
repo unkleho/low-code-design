@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { FiberNode } from '../types';
+import Icon from './Icon';
 
 type NodeTreeProps = {
   parentID: number;
@@ -8,6 +9,7 @@ type NodeTreeProps = {
   selectedIDs: number[];
   level?: number;
   dataId?: string;
+  onNodeCreateClick?: Function;
 };
 
 const getChildNodes = (nodes, parentID) => {
@@ -22,12 +24,19 @@ const NodeTree = ({
   selectedIDs = [],
   level = 0,
   dataId = 'design-tools',
+  onNodeCreateClick,
 }: NodeTreeProps) => {
   const childNodes = getChildNodes(nodes, parentID);
 
   if (childNodes.length === 0) {
     return null;
   }
+
+  const handleNodeCreateClick = (node) => {
+    if (typeof onNodeCreateClick === 'function') {
+      onNodeCreateClick(node);
+    }
+  };
 
   return (
     <ul className="pl-0">
@@ -40,10 +49,10 @@ const NodeTree = ({
         const grandChildNodes = getChildNodes(nodes, node._debugID);
 
         return (
-          <li key={node._debugID} data-id={dataId}>
+          <li key={node._debugID} data-id={dataId} className="relative">
             <button
               className={[
-                'flex w-full py-1',
+                'flex w-full py-1 hover:bg-gray-200',
                 isSelected ? 'font-bold' : 'font-normal',
                 isSelected ? 'bg-gray-200' : '',
               ].join(' ')}
@@ -64,14 +73,26 @@ const NodeTree = ({
                 // <Icon name="chevron-down" />
                 <div className="pl-4" />
               )}
+
               {typeof node.type === 'function' ? node.type.name : node.type}
             </button>
+
+            {isSelected && (
+              <button
+                className="absolute top-0 right-0 px-3 py-1 text-gray-500 hover:text-gray-900"
+                onClick={() => handleNodeCreateClick(node)}
+              >
+                <Icon name="plus" />
+              </button>
+            )}
+
             {/* {node.memoizedProps.className} */}
             <NodeTree
               parentID={node._debugID}
               nodes={nodes}
               selectedIDs={selectedIDs}
               level={level + 1}
+              onNodeCreateClick={onNodeCreateClick}
             />
           </li>
         );

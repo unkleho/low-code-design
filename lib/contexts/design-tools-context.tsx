@@ -241,7 +241,7 @@ function buildFormValues(className) {
     fontSize: getClassNameValue(className, 'text-'),
     fontWeight: getClassNameValue(className, 'font-'),
     // WIP
-    textColor: getTextColorValue(className),
+    textColor: getPrefixColorValue(className, 'text-'),
     textTransform: className.split(' ').find((value) => {
       return classNameValues.textTransform.includes(value);
     }),
@@ -252,11 +252,11 @@ function buildFormValues(className) {
 
 const baseColors = Object.keys(textColors).map((key) => key);
 
-function getTextColorValue(className = '') {
+function getPrefixColorValue(className = '', prefix) {
   let textColorValue;
 
   for (const baseColor of baseColors) {
-    const colorValue = getClassNameValue(className, `text-${baseColor}-`);
+    const colorValue = getClassNameValue(className, `${prefix}${baseColor}-`);
 
     if (colorValue) {
       textColorValue = `${baseColor}-${colorValue}`;

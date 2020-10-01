@@ -173,7 +173,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <ElementPanel />
 
-        <button
+        {/* <button
           onClick={() => {
             handleNodeChange([
               {
@@ -185,7 +185,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           }}
         >
           Add Element Test
-        </button>
+        </button> */}
 
         <Panel title="Layout" name="layout">
           <div className="p-3">
@@ -400,7 +400,19 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       </form>
 
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
-      <LayersPanel selectedIDs={selectedIDs} key={state.layersPanelKey} />
+      <LayersPanel
+        selectedIDs={selectedIDs}
+        key={state.layersPanelKey}
+        onNodeCreateClick={(selectedNode) => {
+          handleNodeChange([
+            {
+              type: 'CREATE_FILE_ELEMENT',
+              node: selectedNode,
+              elementType: 'div',
+            },
+          ]);
+        }}
+      />
     </aside>
   );
 };
