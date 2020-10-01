@@ -24,6 +24,27 @@ const TypographyPanel = ({ onColorClick }: Props) => {
     <Panel title="Typography" name="typography">
       <div className="p-3">
         <PanelRow label="Font Size">
+          <select
+            className="p-1 border"
+            value={state.fontSize || ''}
+            onChange={(event) => {
+              const { value } = event.target;
+
+              updateClassNameValue(`text-${state.fontSize}`, `text-${value}`);
+            }}
+          >
+            <option label=" "></option>
+            {classNameValues.fontSize.map((option) => {
+              return (
+                <option value={option} key={option}>
+                  {option}
+                </option>
+              );
+            })}
+          </select>
+        </PanelRow>
+
+        {/* <PanelRow label="Font Size">
           <input
             className="w-12 p-1 border"
             type="text"
@@ -39,7 +60,8 @@ const TypographyPanel = ({ onColorClick }: Props) => {
               });
             }}
           />
-        </PanelRow>
+        </PanelRow> */}
+
         <PanelRow label="Weight">
           <select
             className="p-1 border"
