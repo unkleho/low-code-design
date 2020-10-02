@@ -44,7 +44,7 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
         const bgColors = backgroundColors[baseBgColor];
 
         return (
-          <div className="flex w-full last:border-b">
+          <div className="flex w-full last:border-b" key={baseBgColor}>
             {bgColors.map((bgColor) => {
               const color = bgColor.replace('bg-', '');
               const isSelected = color === selectedColor;

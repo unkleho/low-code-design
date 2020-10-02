@@ -15,11 +15,18 @@ import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 import classNameValues from '../lib/class-name-values';
 import TypographyPanel from './TypographyPanel';
+import Icon from './Icon';
 
 type Props = {
   selectedNodes: FiberNode[];
   onNodeChange: Function;
 };
+
+type ArrowNarrowDirection =
+  | 'arrow-narrow-right'
+  | 'arrow-narrow-down'
+  | 'arrow-narrow-left'
+  | 'arrow-narrow-up';
 
 const config = {
   width: 'w',
@@ -229,6 +236,22 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
                   );
                 })}
               </select>
+            </PanelRow>
+
+            <PanelRow label="Direction">
+              {['right', 'down', 'left', 'up'].map((direction) => {
+                const iconName = `arrow-narrow-${direction}` as ArrowNarrowDirection;
+
+                return (
+                  <button
+                    className={['p-1 border mr-2 bg-white text-gray-400'].join(
+                      ' '
+                    )}
+                  >
+                    <Icon name={iconName} />
+                  </button>
+                );
+              })}
             </PanelRow>
           </div>
         </Panel>
