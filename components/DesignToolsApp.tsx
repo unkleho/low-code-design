@@ -5,6 +5,7 @@ import PanelRow from './PanelRow';
 import LayersPanel from './LayersPanel';
 import BackgroundPanel from './BackgroundPanel';
 import ElementPanel from './ElementPanel';
+import TypographyPanel from './TypographyPanel';
 
 import {
   // DesignToolsProvider,
@@ -13,20 +14,12 @@ import {
 } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
-import classNameValues from '../lib/class-name-values';
-import TypographyPanel from './TypographyPanel';
-import Icon from './Icon';
+import LayoutPanel from './LayoutPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
   onNodeChange: Function;
 };
-
-type ArrowNarrowDirection =
-  | 'arrow-narrow-right'
-  | 'arrow-narrow-down'
-  | 'arrow-narrow-left'
-  | 'arrow-narrow-up';
 
 const config = {
   width: 'w',
@@ -180,81 +173,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <ElementPanel />
 
-        {/* <button
-          onClick={() => {
-            handleNodeChange([
-              {
-                type: 'CREATE_FILE_ELEMENT',
-                node: selectedNode,
-                elementType: 'div',
-              },
-            ]);
-          }}
-        >
-          Add Element Test
-        </button> */}
-
-        <Panel title="Layout" name="layout">
-          <div className="p-3">
-            <PanelRow label="Position">
-              <select
-                className="p-1 border"
-                value={state.position || ''}
-                onChange={(event) => {
-                  const { value } = event.target;
-
-                  updateClassNameValue(state.position, value);
-                }}
-              >
-                <option label=" "></option>
-                {classNameValues.position.map((option) => {
-                  return (
-                    <option value={option} key={option}>
-                      {option}
-                    </option>
-                  );
-                })}
-              </select>
-            </PanelRow>
-
-            <PanelRow label="Display">
-              <select
-                className="p-1 border"
-                value={state.display || ''}
-                onChange={(event) => {
-                  const { value } = event.target;
-
-                  updateClassNameValue(state.display, value);
-                }}
-              >
-                <option label=" "></option>
-                {classNameValues.display.map((option) => {
-                  return (
-                    <option value={option} key={option}>
-                      {option}
-                    </option>
-                  );
-                })}
-              </select>
-            </PanelRow>
-
-            <PanelRow label="Direction">
-              {['right', 'down', 'left', 'up'].map((direction) => {
-                const iconName = `arrow-narrow-${direction}` as ArrowNarrowDirection;
-
-                return (
-                  <button
-                    className={['p-1 border mr-2 bg-white text-gray-400'].join(
-                      ' '
-                    )}
-                  >
-                    <Icon name={iconName} />
-                  </button>
-                );
-              })}
-            </PanelRow>
-          </div>
-        </Panel>
+        <LayoutPanel />
 
         <Panel title="Spacing" name="spacing">
           <div className="p-3">
