@@ -13,10 +13,13 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
   const buttons = React.useRef({});
 
   React.useEffect(() => {
-    buttons.current[selectedColor]?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-    });
+    const currentButton = buttons.current[selectedColor];
+
+    if (currentButton) {
+      // Scroll currentButton container so it is visible
+      currentButton.parentNode.parentNode.scrollTop =
+        currentButton.offsetTop - 20;
+    }
   }, [selectedColor]);
 
   const handleColorClick = (event, color) => {
@@ -30,7 +33,7 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
   return (
     <div
       className={[
-        'w-full h-16 overflow-scroll border bg-white',
+        'relative w-full h-16 overflow-scroll border bg-white',
         className,
       ].join(' ')}
       style={{
@@ -41,7 +44,7 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
         const bgColors = backgroundColors[baseBgColor];
 
         return (
-          <div className="relative flex w-full last:border-b">
+          <div className="flex w-full last:border-b">
             {bgColors.map((bgColor) => {
               const color = bgColor.replace('bg-', '');
               const isSelected = color === selectedColor;
