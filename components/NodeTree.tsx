@@ -41,7 +41,7 @@ const NodeTree = ({
   return (
     <ul className="pl-0">
       {childNodes.map((node) => {
-        if (!node.elementType) {
+        if (!node.elementType || typeof node.elementType === 'object') {
           return null;
         }
 

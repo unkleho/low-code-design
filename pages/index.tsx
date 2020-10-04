@@ -1,9 +1,18 @@
 import React from 'react';
 import Wrapper from '../components/Wrapper';
 import Example from '../components/Example';
+import { Instrument, Song, Track } from 'reactronica';
 export default function HomePage() {
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [counter, setCounter] = React.useState(0);
+
+  const handlePlayClick = () => {
+    setIsPlaying(!isPlaying);
+  };
+
   return <Wrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
+        <button className="" onClick={handlePlayClick}>Play</button>
         <div className="block">
           <Example />
 
@@ -12,14 +21,24 @@ export default function HomePage() {
         })}
 
           <div className="">
-            <h1 className="text-4xl text-gray-500 font-semibold mb-4 bg-gray-400 pl-2">This is a title<div className=""></div></h1>
-            <p className="mb-4">Description text</p>
+            <h1 className="text-4xl text-orange-400 font-semibold mb-4 bg-red-200 pl-2">
+              This is a title<div className=""></div>
+            </h1>
+            <p className="mb-4">Description text {counter}</p>
           </div>
           <div className="">
             <h1 className="font-bold">This is another title</h1>
             <p className="bg-gray-200">Description text</p>
           </div>
         </div>
+
+        <Song isPlaying={isPlaying}>
+          <Track steps={['D3', null, 'G3', null, 'A3', 'E3']} onStepPlay={() => {
+          setCounter(counter => counter + 1);
+        }}>
+            <Instrument type="synth" />
+          </Track>
+        </Song>
       </div>
     </Wrapper>;
 }
