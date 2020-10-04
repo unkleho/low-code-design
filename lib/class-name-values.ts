@@ -1,6 +1,7 @@
 const classNameValues = {
   position: ['relative', 'absolute', 'sticky'],
   display: ['block', 'flex', 'grid'],
+  flexDirection: ['row', 'row-reverse', 'col', 'col-reverse'],
   // Sizing
   // width: '',
   // minWidth: '',

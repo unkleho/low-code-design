@@ -3,7 +3,7 @@ import PanelRow from './PanelRow';
 
 import Icon from './Icon';
 
-import { useDesignTools } from '../lib/contexts/design-tools-context';
+import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import classNameValues from '../lib/class-name-values';
 
 type ArrowNarrowDirection =
@@ -13,7 +13,7 @@ type ArrowNarrowDirection =
   | 'arrow-narrow-up';
 
 const LayoutPanel = () => {
-  const { updateClassNameValue, state } = useDesignTools();
+  const { updateClassNameValue, state, dispatch } = useDesignTools();
 
   return (
     <Panel title="Layout" name="layout">
@@ -61,12 +61,25 @@ const LayoutPanel = () => {
         </PanelRow>
 
         <PanelRow label="Direction">
-          {['right', 'down', 'left', 'up'].map((direction) => {
-            const iconName = `arrow-narrow-${direction}` as ArrowNarrowDirection;
+          {['row', 'col', 'row-reverse', 'col-reverse'].map((flexDirection) => {
+            const arrowDirection = flexDirectionArrows[flexDirection];
+            const iconName = `arrow-narrow-${arrowDirection}` as ArrowNarrowDirection;
+            const isSelected = flexDirection === state.flexDirection;
 
             return (
               <button
-                className={['p-1 border mr-2 bg-white text-gray-400'].join(' ')}
+                className={[
+                  'p-1 border mr-2 bg-white',
+                  isSelected
+                    ? 'text-gray-700 border-gray-500'
+                    : 'text-gray-400',
+                ].join(' ')}
+                onClick={() => {
+                  updateClassNameValue(
+                    `flex-${state.flexDirection}`,
+                    `flex-${flexDirection}`
+                  );
+                }}
               >
                 <Icon name={iconName} />
               </button>
@@ -76,6 +89,13 @@ const LayoutPanel = () => {
       </div>
     </Panel>
   );
+};
+
+const flexDirectionArrows = {
+  row: 'right',
+  'row-reverse': 'left',
+  col: 'down',
+  'col-reverse': 'up',
 };
 
 export default LayoutPanel;

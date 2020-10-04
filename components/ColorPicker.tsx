@@ -23,8 +23,6 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
   }, [selectedColor]);
 
   const handleColorClick = (event, color) => {
-    console.log(color);
-
     if (typeof onColorClick === 'function') {
       onColorClick(color);
     }

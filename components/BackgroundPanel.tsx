@@ -18,6 +18,7 @@ const BackgroundPanel = ({ onColorClick }) => {
           <ColorPicker
             selectedColor={backgroundColor}
             onColorClick={(color) => {
+              // TODO: Consider updateClassNameValue. Update Form value could be bypassed.
               dispatch({
                 type: types.UPDATE_FORM_VALUE,
                 key: 'backgroundColor',

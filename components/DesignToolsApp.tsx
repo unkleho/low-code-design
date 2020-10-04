@@ -44,7 +44,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     state,
     dispatch,
     updateCurrentField,
-    updateClassNameValue,
+    // updateClassNameValue,
   } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future

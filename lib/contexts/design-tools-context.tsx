@@ -182,6 +182,7 @@ const defaultFormValues = {
   // Layout
   position: '',
   display: '',
+  flexDirection: '',
   // Sizing
   width: '',
   minWidth: '',
@@ -215,6 +216,7 @@ function buildFormValues(className) {
     display: className.split(' ').find((value) => {
       return classNameValues.display.includes(value);
     }),
+    flexDirection: getClassNameValue(className, 'flex-'),
     // Sizing
     width: getClassNameValue(className, 'w-'),
     minWidth: getClassNameValue(className, 'min-w-'),
