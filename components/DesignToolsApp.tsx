@@ -47,6 +47,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     // updateClassNameValue,
   } = useDesignTools();
 
+  console.log(state.form);
+
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
   const text = state?.text;
@@ -109,6 +111,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     const { currentField } = state;
     let newClassName;
 
+    console.log('handleFormSubmit', currentField);
     // Not working
     // event.nativeEvent.stopPropagation();
     // event.nativeEvent.stopImmediatePropagation();
@@ -131,6 +134,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           oldValue ? `${prefix}-${oldValue}` : '',
           newValue ? `${prefix}-${newValue}` : ''
         );
+
+        console.log(oldValue, newValue, prefix, state.form);
       }
 
       dispatch({

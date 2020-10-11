@@ -17,7 +17,7 @@ export default function HomePage() {
           Play
         </button>
         <div className="block">
-          <img src="/images/beach-scenes-hood.jpg" className="relative" />
+          <img src="/images/beach-scenes-hood.jpg" className="relative w-64" />
 
           <Example />
 
@@ -26,7 +26,7 @@ export default function HomePage() {
           })}
 
           <div className="">
-            <h1 className="text-4xl text-green-300 font-semibold mb-4 bg-red-100 pl-2">
+            <h1 className="text-4xl text-green-300 font-semibold mb-4 bg-red-100 pl-2 w-12">
               This is a title<div className=""></div>
             </h1>
             <p className="mb-4">Description text {counter}</p>

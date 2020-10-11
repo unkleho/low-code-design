@@ -68,6 +68,7 @@ const LayoutPanel = () => {
 
             return (
               <button
+                type="button"
                 className={[
                   'p-1 border mr-2 bg-white',
                   isSelected

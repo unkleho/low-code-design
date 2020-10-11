@@ -51,6 +51,7 @@ const NodeTree = ({
         return (
           <li key={node._debugID} data-id={dataId} className="relative">
             <button
+              type="button"
               className={[
                 'flex w-full py-1 hover:bg-gray-200',
                 isSelected ? 'font-bold' : 'font-normal',
@@ -79,6 +80,7 @@ const NodeTree = ({
 
             {isSelected && (
               <button
+                type="button"
                 className="absolute top-0 right-0 px-3 py-1 text-gray-500 hover:text-gray-900"
                 onClick={() => handleNodeCreateClick(node)}
               >
