@@ -202,6 +202,7 @@ const defaultFormValues = {
   fontWeight: '',
   textColor: '',
   textTransform: '',
+  leading: '',
   // Background
   backgroundColor: '',
 };
@@ -242,11 +243,11 @@ function buildFormValues(className) {
     // Typography
     fontSize: getClassNameValue(className, 'text-'),
     fontWeight: getClassNameValue(className, 'font-'),
-    // WIP
     textColor: getPrefixColorValue(className, 'text-'),
     textTransform: className.split(' ').find((value) => {
       return classNameValues.textTransform.includes(value);
     }),
+    leading: getClassNameValue(className, 'leading-'),
     // Background
     backgroundColor: getClassNameValue(className, 'bg-'),
   };

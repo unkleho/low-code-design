@@ -116,6 +116,29 @@ const TypographyPanel = () => {
             })}
           </select>
         </PanelRow>
+        <PanelRow label="Leading">
+          <select
+            className="p-1 border"
+            value={state.leading || ''}
+            onChange={(event) => {
+              const { value } = event.target;
+
+              updateClassNameValue(
+                state.leading ? `leading-${state.leading}` : '',
+                `leading-${value}`
+              );
+            }}
+          >
+            <option label=" "></option>
+            {classNameValues.leading.map((option) => {
+              return (
+                <option value={option} key={option}>
+                  {option}
+                </option>
+              );
+            })}
+          </select>
+        </PanelRow>
       </div>
     </Panel>
   );

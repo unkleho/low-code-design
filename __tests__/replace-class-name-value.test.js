@@ -16,4 +16,11 @@ describe('Process Class Name', () => {
 
     expect(newClassName).toEqual('min-w-8 flex w-8');
   });
+
+  // TODO:
+  // it('should append -mt-2', () => {
+  //   const newClassName = replaceClassNameValue('min-w-8 flex', '', '-mt-2');
+
+  //   expect(newClassName).toEqual('min-w-8 flex w-8 -mt-2');
+  // });
 });

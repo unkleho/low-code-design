@@ -16,10 +16,13 @@ const classNameValues = {
   // paddingRight: '',
   // paddingBottom: '',
   // paddingLeft: '',
+  // --------------------------------------------------------------------------
   // Typography
+  // --------------------------------------------------------------------------
   fontSize: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl'],
   // fontWeight: '',
   textTransform: ['uppercase', 'lowercase', 'capitalize', 'normal-case'],
+  leading: ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose'],
   // Background
   // backgroundColor: '',
 };
