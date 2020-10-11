@@ -3,7 +3,7 @@ import PanelRow from './PanelRow';
 
 import Icon from './Icon';
 
-import { useDesignTools, types } from '../lib/contexts/design-tools-context';
+import { useDesignTools } from '../lib/contexts/design-tools-context';
 import classNameValues from '../lib/class-name-values';
 
 type ArrowNarrowDirection =
@@ -13,7 +13,7 @@ type ArrowNarrowDirection =
   | 'arrow-narrow-up';
 
 const LayoutPanel = () => {
-  const { updateClassNameValue, state, dispatch } = useDesignTools();
+  const { updateClassNameValue, state } = useDesignTools();
 
   return (
     <Panel title="Layout" name="layout">

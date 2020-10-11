@@ -303,37 +303,9 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           </div>
         </Panel>
 
-        <TypographyPanel
-          onColorClick={(color) => {
-            handleNodeChange([
-              {
-                type: 'UPDATE_FILE_CLASS_NAME',
-                node: selectedNode,
-                className: replaceClassNameValue(
-                  state.className,
-                  state.textColor ? `text-${state.textColor}` : '',
-                  color
-                ),
-              },
-            ]);
-          }}
-        />
+        <TypographyPanel />
 
-        <BackgroundPanel
-          onColorClick={(bg) => {
-            handleNodeChange([
-              {
-                type: 'UPDATE_FILE_CLASS_NAME',
-                node: selectedNode,
-                className: replaceClassNameValue(
-                  state.className,
-                  state.backgroundColor ? `bg-${state.backgroundColor}` : '',
-                  bg
-                ),
-              },
-            ]);
-          }}
-        />
+        <BackgroundPanel />
 
         {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
         <button type="submit" className="hidden">

@@ -21,7 +21,7 @@ export default function HomePage() {
         })}
 
           <div className="">
-            <h1 className="text-4xl text-orange-400 font-semibold mb-4 bg-red-200 pl-2">
+            <h1 className="text-4xl text-green-300 font-semibold mb-4 bg-red-100 pl-2">
               This is a title<div className=""></div>
             </h1>
             <p className="mb-4">Description text {counter}</p>

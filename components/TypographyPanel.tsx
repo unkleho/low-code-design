@@ -7,17 +7,8 @@ import PanelRow from './PanelRow';
 import classNameValues from '../lib/class-name-values';
 import ColorPicker from './ColorPicker';
 
-type Props = {
-  onColorClick?: Function;
-};
-
-const TypographyPanel = ({ onColorClick }: Props) => {
-  const {
-    state,
-    updateCurrentField,
-    updateClassNameValue,
-    dispatch,
-  } = useDesignTools();
+const TypographyPanel = () => {
+  const { state, updateClassNameValue, dispatch } = useDesignTools();
   const { textColor } = state.form;
 
   return (
@@ -100,13 +91,7 @@ const TypographyPanel = ({ onColorClick }: Props) => {
           <ColorPicker
             selectedColor={textColor}
             onColorClick={(color) => {
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'textColor',
-                value: color,
-              });
-
-              onColorClick(`text-${color}`);
+              updateClassNameValue(`text-${textColor}`, `text-${color}`);
             }}
           />
         </PanelRow>

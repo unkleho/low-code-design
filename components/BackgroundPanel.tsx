@@ -5,10 +5,10 @@ import PanelRow from './PanelRow';
 import ColorPicker from './ColorPicker';
 // import ColorPickerSelect from './ColorPickerSelect';
 
-import { useDesignTools, types } from '../lib/contexts/design-tools-context';
+import { useDesignTools } from '../lib/contexts/design-tools-context';
 
-const BackgroundPanel = ({ onColorClick }) => {
-  const { state, dispatch } = useDesignTools();
+const BackgroundPanel = () => {
+  const { state, updateClassNameValue } = useDesignTools();
   const { backgroundColor } = state.form;
 
   return (
@@ -18,14 +18,7 @@ const BackgroundPanel = ({ onColorClick }) => {
           <ColorPicker
             selectedColor={backgroundColor}
             onColorClick={(color) => {
-              // TODO: Consider updateClassNameValue. Update Form value could be bypassed.
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'backgroundColor',
-                value: color,
-              });
-
-              onColorClick(`bg-${color}`);
+              updateClassNameValue(`bg-${backgroundColor}`, `bg-${color}`);
             }}
           />
         </PanelRow>
@@ -35,13 +28,7 @@ const BackgroundPanel = ({ onColorClick }) => {
           <ColorPickerSelect
             selectedColor={backgroundColor}
             onColorClick={(color) => {
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'backgroundColor',
-                value: color,
-              });
-
-              onColorClick(`bg-${color}`);
+              updateClassNameValue(`bg-${backgroundColor}`, `bg-${color}`);
             }}
           />
         </PanelRow> */}
