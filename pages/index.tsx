@@ -10,15 +10,20 @@ export default function HomePage() {
     setIsPlaying(!isPlaying);
   };
 
-  return <Wrapper>
+  return (
+    <Wrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <button className="" onClick={handlePlayClick}>Play</button>
+        <button className="" onClick={handlePlayClick}>
+          Play
+        </button>
         <div className="block">
+          <img src="/images/beach-scenes-hood.jpg" className="relative" />
+
           <Example />
 
-          {['first', 'second'].map(d => {
-          return <p className="relative">{d}</p>;
-        })}
+          {['first', 'second'].map((d) => {
+            return <p className="relative">{d}</p>;
+          })}
 
           <div className="">
             <h1 className="text-4xl text-green-300 font-semibold mb-4 bg-red-100 pl-2">
@@ -33,12 +38,16 @@ export default function HomePage() {
         </div>
 
         <Song isPlaying={isPlaying}>
-          <Track steps={['D3', null, 'G3', null, 'A3', 'E3']} onStepPlay={() => {
-          setCounter(counter => counter + 1);
-        }}>
+          <Track
+            steps={['D3', null, 'G3', null, 'A3', 'E3']}
+            onStepPlay={() => {
+              setCounter((counter) => counter + 1);
+            }}
+          >
             <Instrument type="synth" />
           </Track>
         </Song>
       </div>
-    </Wrapper>;
+    </Wrapper>
+  );
 }

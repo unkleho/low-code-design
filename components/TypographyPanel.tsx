@@ -8,7 +8,7 @@ import classNameValues from '../lib/class-name-values';
 import ColorPicker from './ColorPicker';
 
 const TypographyPanel = () => {
-  const { state, updateClassNameValue, dispatch } = useDesignTools();
+  const { state, updateClassNameValue } = useDesignTools();
   const { textColor } = state.form;
 
   return (
