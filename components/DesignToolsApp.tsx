@@ -110,12 +110,12 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     event.preventDefault();
 
     const { currentField } = state;
-    let newClassName;
 
-    console.log('handleFormSubmit', currentField);
     // Not working
     // event.nativeEvent.stopPropagation();
     // event.nativeEvent.stopImmediatePropagation();
+
+    // console.log('-- handleFormSubmit');
 
     if (currentField === 'text') {
       dispatch({
@@ -123,6 +123,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
         text: state.form.text,
       });
     } else {
+      let newClassName;
+
       if (currentField === 'className') {
         newClassName = state.form.className;
       } else {
@@ -130,13 +132,24 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
         const newValue = state.form[currentField];
         const prefix = config[currentField];
 
+        // console.log(oldValue, newValue, prefix);
+        console.log(state.form);
+
+        // Sorry, need to check for negative values, so a bit messy right now.
+        // TODO: Consider moving this funky logic to reducer
         newClassName = replaceClassNameValue(
           state.form.className,
-          oldValue ? `${prefix}-${oldValue}` : '',
-          newValue ? `${prefix}-${newValue}` : ''
+          oldValue
+            ? `${oldValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
+                oldValue.charAt(0) === '-' ? oldValue.substring(1) : oldValue
+              }`
+            : '',
+          newValue
+            ? `${newValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
+                newValue.charAt(0) === '-' ? newValue.substring(1) : newValue
+              }`
+            : ''
         );
-
-        console.log(oldValue, newValue, prefix, state.form);
       }
 
       dispatch({
