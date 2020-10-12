@@ -1,6 +1,6 @@
 import replaceClassNameValue from '../lib/replace-class-name-value';
 
-describe('Process Class Name', () => {
+describe('Replace Class Name Value', () => {
   it('should replace w-8 only', () => {
     const newClassName = replaceClassNameValue(
       'min-w-8 w-8 flex',
@@ -17,10 +17,19 @@ describe('Process Class Name', () => {
     expect(newClassName).toEqual('min-w-8 flex w-8');
   });
 
-  // TODO:
-  // it('should append -mt-2', () => {
-  //   const newClassName = replaceClassNameValue('min-w-8 flex', '', '-mt-2');
+  it('should append -mt-2', () => {
+    const newClassName = replaceClassNameValue('min-w-8 flex', '', '-mt-2');
 
-  //   expect(newClassName).toEqual('min-w-8 flex w-8 -mt-2');
+    expect(newClassName).toEqual('min-w-8 flex -mt-2');
+  });
+
+  // it('should update mt-2 with -mt-2', () => {
+  //   const newClassName = replaceClassNameValue(
+  //     'min-w-8 flex mt-2',
+  //     '',
+  //     '-mt-2'
+  //   );
+
+  //   expect(newClassName).toEqual('min-w-8 flex -mt-2');
   // });
 });

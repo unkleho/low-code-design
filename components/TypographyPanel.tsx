@@ -67,17 +67,7 @@ const TypographyPanel = () => {
             }}
           >
             <option label=" "></option>
-            {[
-              'hairline',
-              'thin',
-              'light',
-              'normal',
-              'medium',
-              'semibold',
-              'bold',
-              'extrabold',
-              'black',
-            ].map((option) => {
+            {classNameValues.fontWeight.map((option) => {
               return (
                 <option value={option} key={option}>
                   {option}

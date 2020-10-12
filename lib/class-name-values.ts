@@ -20,7 +20,17 @@ const classNameValues = {
   // Typography
   // --------------------------------------------------------------------------
   fontSize: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl'],
-  // fontWeight: '',
+  fontWeight: [
+    'hairline',
+    'thin',
+    'light',
+    'normal',
+    'medium',
+    'semibold',
+    'bold',
+    'extrabold',
+    'black',
+  ],
   textTransform: ['uppercase', 'lowercase', 'capitalize', 'normal-case'],
   leading: ['none', 'tight', 'snug', 'normal', 'relaxed', 'loose'],
   // Background
