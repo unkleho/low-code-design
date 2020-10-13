@@ -10,39 +10,44 @@ export default function HomePage() {
     setIsPlaying(!isPlaying);
   };
 
-  return <Wrapper>
+  return (
+    <Wrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <button className="" onClick={handlePlayClick}>
+        {/* <button className="" onClick={handlePlayClick}>
           Play
-        </button>
+        </button> */}
         <div className="block">
           <img src="/images/beach-scenes-hood.jpg" className="relative w-64" />
 
-          <Example />
+          {/* <Example /> */}
 
-          {['first', 'second'].map(d => {
-          return <p className="relative bg-orange-300">{d}</p>;
-        })}
+          {/* {['first', 'second'].map((d) => {
+            return <p className="relative bg-orange-300">{d}</p>;
+          })} */}
 
           <div className="">
-            <h1 className="font-semibold mb-4 bg-red-200 pl-2">
+            <h1 className="font-medium text-4xl">
               This is a title<div className=""></div>
             </h1>
-            <p className="mb-4">Description text {counter}</p>
+            <p className="mb-4">Description text</p>
           </div>
-          <div className="">
+          {/* <div className="">
             <h1 className="font-bold">This is another title</h1>
             <p className="bg-gray-200 uppercase leading-">Description text</p>
-          </div>
+          </div> */}
         </div>
 
         <Song isPlaying={isPlaying}>
-          <Track steps={['D3', null, 'G3', null, 'A3', 'E3']} onStepPlay={() => {
-          setCounter(counter => counter + 1);
-        }}>
+          <Track
+            steps={['D3', null, 'G3', null, 'A3', 'E3']}
+            onStepPlay={() => {
+              setCounter((counter) => counter + 1);
+            }}
+          >
             <Instrument type="synth" />
           </Track>
         </Song>
       </div>
-    </Wrapper>;
+    </Wrapper>
+  );
 }

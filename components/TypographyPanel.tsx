@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDesignTools, types } from '../lib/contexts/design-tools-context';
+import { useDesignTools } from '../lib/contexts/design-tools-context';
 
 import Panel from './Panel';
 import PanelRow from './PanelRow';
@@ -21,7 +21,10 @@ const TypographyPanel = () => {
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(`text-${state.fontSize}`, `text-${value}`);
+              updateClassNameValue(
+                state.fontSize ? `text-${state.fontSize}` : '',
+                value ? `text-${value}` : ''
+              );
             }}
           >
             <option label=" "></option>
@@ -119,7 +122,7 @@ const TypographyPanel = () => {
 
               updateClassNameValue(
                 state.leading ? `leading-${state.leading}` : '',
-                `leading-${value}`
+                value ? `leading-${value}` : ''
               );
             }}
           >

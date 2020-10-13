@@ -16,8 +16,6 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
     }
   };
 
-  console.log(selectedColor);
-
   return (
     <div
       className={[
