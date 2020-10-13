@@ -18,7 +18,10 @@ const BackgroundPanel = () => {
           <ColorPicker
             selectedColor={backgroundColor}
             onColorClick={(color) => {
-              updateClassNameValue(`bg-${backgroundColor}`, `bg-${color}`);
+              updateClassNameValue(
+                backgroundColor ? `bg-${backgroundColor}` : '',
+                color ? `bg-${color}` : ''
+              );
             }}
           />
         </PanelRow>

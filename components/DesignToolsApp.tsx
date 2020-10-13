@@ -133,7 +133,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
         const prefix = config[currentField];
 
         // console.log(oldValue, newValue, prefix);
-        console.log(state.form);
+        // console.log(state.form);
 
         // Sorry, need to check for negative values, so a bit messy right now.
         // TODO: Consider moving this funky logic to reducer

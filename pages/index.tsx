@@ -21,11 +21,11 @@ export default function HomePage() {
           <Example />
 
           {['first', 'second'].map(d => {
-          return <p className="relative">{d}</p>;
+          return <p className="relative bg-orange-300">{d}</p>;
         })}
 
           <div className="">
-            <h1 className="text-4xl text-blue-500 font-semibold mb-4 bg-red-100 pl-2">
+            <h1 className="font-semibold mb-4 bg-red-200 pl-2">
               This is a title<div className=""></div>
             </h1>
             <p className="mb-4">Description text {counter}</p>

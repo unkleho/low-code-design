@@ -81,7 +81,11 @@ const TypographyPanel = () => {
           <ColorPicker
             selectedColor={textColor}
             onColorClick={(color) => {
-              updateClassNameValue(`text-${textColor}`, `text-${color}`);
+              // TODO: Consider wrapping function to handle ternaries
+              updateClassNameValue(
+                textColor ? `text-${textColor}` : '',
+                color ? `text-${color}` : ''
+              );
             }}
           />
         </PanelRow>
