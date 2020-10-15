@@ -259,11 +259,26 @@ function getPrefixColorValue(className = '', prefix) {
   let textColorValue;
 
   for (const baseColor of baseColors) {
-    const colorValue = getClassNameValue(className, `${prefix}${baseColor}-`);
+    const hasShades = Boolean(
+      textColors[baseColor] && textColors[baseColor].length > 0
+    );
 
-    if (colorValue) {
-      textColorValue = `${baseColor}-${colorValue}`;
-      break;
+    if (hasShades) {
+      const colorValue = getClassNameValue(
+        className,
+        `${prefix}${baseColor}${hasShades ? '-' : ''}`
+      );
+
+      if (colorValue) {
+        textColorValue = `${baseColor}-${colorValue}`;
+        break;
+      }
+    } else {
+      const hasColorValue = className.includes(`${prefix}${baseColor}`);
+
+      if (hasColorValue) {
+        textColorValue = baseColor;
+      }
     }
   }
 

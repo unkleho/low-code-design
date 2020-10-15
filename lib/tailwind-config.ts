@@ -112,6 +112,8 @@ export const backgroundColors = {
 };
 
 export const textColors = {
+  white: null,
+  black: null,
   gray: [
     'text-gray-100',
     'text-gray-200',
