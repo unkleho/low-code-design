@@ -15,7 +15,7 @@ const updateComponentClassName = ({ method, body }, res) => {
     code,
     className,
     lineNumber: parseInt(lineNumber),
-    columnNumber: parseInt(columnNumber),
+    columnNumber: parseInt(columnNumber) - 1,
   });
 
   if (code !== newCode) {

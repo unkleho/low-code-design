@@ -4,12 +4,9 @@ export default function HomePage() {
   return (
     <Wrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="block">
-          <div className="">
-            <img
-              src="/images/beach-scenes-hood.jpg"
-              className="font-bold text-4xl text-gray-700 w-64"
-            />
+        <div className="relative">
+          <div className="relative">
+            <img src="/images/beach-scenes-hood.jpg" className="w-64" />
             <div></div>
           </div>
 
