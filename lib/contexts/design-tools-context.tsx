@@ -84,7 +84,7 @@ function designToolsReducer(state, action) {
     case types.REFRESH_LAYERS_PANEL: {
       return {
         ...state,
-        layersPanelKey: state.layersPanelKey + 1,
+        layersPanelRefreshCounter: state.layersPanelRefreshCounter + 1,
       };
     }
 

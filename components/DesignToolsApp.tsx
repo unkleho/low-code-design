@@ -48,7 +48,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     // updateClassNameValue,
   } = useDesignTools();
 
-  console.log(state.form);
+  // console.log(state.layersPanelRefreshCounter);
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
@@ -288,7 +288,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
         selectedIDs={selectedIDs}
-        key={state.layersPanelKey}
+        refreshCounter={state.layersPanelRefreshCounter}
         onNodeCreateClick={(selectedNode) => {
           handleNodeChange([
             {

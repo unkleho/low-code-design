@@ -81,6 +81,7 @@ const LayoutPanel = () => {
                     `flex-${flexDirection}`
                   );
                 }}
+                key={flexDirection}
               >
                 <Icon name={iconName} />
               </button>

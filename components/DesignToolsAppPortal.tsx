@@ -59,9 +59,12 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
 
           console.log(event.type, event.elementType);
 
-          dispatch({
-            type: 'REFRESH_LAYERS_PANEL',
-          });
+          // Delay refresh otherwise layers panel can't pick up new dom nodes in time
+          setTimeout(() => {
+            dispatch({
+              type: 'REFRESH_LAYERS_PANEL',
+            });
+          }, 500);
         }
       }
     }

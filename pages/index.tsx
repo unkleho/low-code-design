@@ -7,7 +7,6 @@ export default function HomePage() {
         <div className="relative">
           <div className="relative">
             <img src="/images/beach-scenes-hood.jpg" className="w-64" />
-            <div></div>
           </div>
 
           <div className="">
