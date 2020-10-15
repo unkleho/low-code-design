@@ -23,7 +23,7 @@ const Panel = ({ title, name, children }: PanelProps) => {
           type="button"
         >
           <Icon
-            name={panel?.status === 'open' ? 'chevron-up' : 'chevron-down'}
+            name={panel?.status === 'open' ? 'chevron-down' : 'chevron-up'}
           />
         </button>
       </div>

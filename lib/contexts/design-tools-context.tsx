@@ -259,6 +259,9 @@ function getPrefixColorValue(className = '', prefix) {
   let textColorValue;
 
   for (const baseColor of baseColors) {
+    // Most colors have shades, eg. grey-100, grey-200.
+    // However black and white do not, so there needs to be different logic to
+    // handle these cases.
     const hasShades = Boolean(
       textColors[baseColor] && textColors[baseColor].length > 0
     );
@@ -274,6 +277,7 @@ function getPrefixColorValue(className = '', prefix) {
         break;
       }
     } else {
+      // white and black don't have shades, so color value is same as baseColor
       const hasColorValue = className.includes(`${prefix}${baseColor}`);
 
       if (hasColorValue) {

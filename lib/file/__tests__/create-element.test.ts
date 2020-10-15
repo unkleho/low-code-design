@@ -18,10 +18,15 @@ export default Example;`,
     expect(result).toEqual(`import React from 'react';
 
 const Example = () => {
-  return <div><div></div></div>;
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
 };
 
-export default Example;`);
+export default Example;
+`);
   });
 
   it('should append p after another p', () => {
@@ -41,9 +46,15 @@ export default Example;`,
     expect(result).toEqual(`import React from 'react';
 
 const Example = () => {
-  return <div><p>First</p><p></p></div>;
+  return (
+    <div>
+      <p>First</p>
+      <p></p>
+    </div>
+  );
 };
 
-export default Example;`);
+export default Example;
+`);
   });
 });

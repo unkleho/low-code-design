@@ -3,6 +3,8 @@ import traverse from '@babel/traverse';
 import generate from '@babel/generator';
 import * as types from '@babel/types';
 
+import prettier from '../prettier';
+
 // HIGHLY experimental code to investigate babel jsx
 
 const createElement = ({ code, elementType, lineNumber, columnNumber }) => {
@@ -33,7 +35,10 @@ const createElement = ({ code, elementType, lineNumber, columnNumber }) => {
     },
   });
 
-  return generate(ast).code;
+  const newCode = generate(ast).code;
+  const prettierCode = prettier.format(newCode)
+
+  return prettierCode;
 };
 
 export default createElement;

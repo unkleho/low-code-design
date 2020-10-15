@@ -10,8 +10,6 @@ type Props = {
 const baseBgColors = Object.keys(backgroundColors);
 
 const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
-  console.log(selectedColor);
-
   const handleColorClick = (event, color) => {
     if (typeof onColorClick === 'function') {
       onColorClick(color);
@@ -65,6 +63,7 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
                   bgColor={bgColor}
                   isSelected={isSelected}
                   onColorClick={handleColorClick}
+                  key={bgColor}
                 />
               );
             })}
