@@ -17,7 +17,7 @@ export const types = {
 };
 
 function designToolsReducer(state, action) {
-  console.log(action);
+  // console.log(action);
 
   switch (action.type) {
     case types.UPDATE_CURRENT_FIELD: {
@@ -129,6 +129,10 @@ export function DesignToolsProvider(props) {
         status: 'open',
       },
       {
+        name: 'effect',
+        status: 'open',
+      },
+      {
         name: 'layers',
         status: 'open',
       },
@@ -205,6 +209,8 @@ const defaultFormValues = {
   leading: '',
   // Background
   backgroundColor: '',
+  // Effect
+  opacity: '',
 };
 
 function buildFormValues(className) {
@@ -250,6 +256,8 @@ function buildFormValues(className) {
     leading: getClassNameValue(className, 'leading-'),
     // Background
     backgroundColor: getClassNameValue(className, 'bg-'),
+    // Effect
+    opacity: getClassNameValue(className, 'opacity-'),
   };
 }
 

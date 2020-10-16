@@ -1,11 +1,14 @@
 import React from 'react';
 
 import Panel from './Panel';
-import PanelRow from './PanelRow';
+// import PanelRow from './PanelRow';
 import LayersPanel from './LayersPanel';
 import BackgroundPanel from './BackgroundPanel';
 import ElementPanel from './ElementPanel';
 import TypographyPanel from './TypographyPanel';
+import LayoutPanel from './LayoutPanel';
+import SpacingPanel from './SpacingPanel';
+// import ControlPanel from './ControlPanel';
 
 import {
   // DesignToolsProvider,
@@ -14,8 +17,7 @@ import {
 } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
-import LayoutPanel from './LayoutPanel';
-import SpacingPanel from './SpacingPanel';
+import EffectPanel from './EffectPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -182,6 +184,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
   return (
     <aside className="fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
+      {/* <ControlPanel /> */}
+
       <form className="flex-1" onSubmit={handleFormSubmit}>
         <ElementPanel />
 
@@ -271,6 +275,8 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
         <TypographyPanel />
 
         <BackgroundPanel />
+
+        <EffectPanel />
 
         {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
         <button type="submit" className="hidden">
