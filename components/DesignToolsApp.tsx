@@ -41,14 +41,7 @@ const config = {
 };
 
 const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
-  const {
-    state,
-    dispatch,
-    updateCurrentField,
-    // updateClassNameValue,
-  } = useDesignTools();
-
-  // console.log(state.layersPanelRefreshCounter);
+  const { state, dispatch, updateCurrentField } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;

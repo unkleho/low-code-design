@@ -70,11 +70,13 @@ const ElementPanel = () => {
           )}
         </PanelRow>
 
+        {/* TODO: Apply to all buttons and inputs: focus:outline-none focus:border-blue-500 */}
+
         <PanelRow label="Class">
           <input
             type="text"
             value={classInputValue || ''}
-            className="p-1 flex-1 border border-blue"
+            className="w-full p-1 flex-1 border border-blue"
             onFocus={() => updateCurrentField('className')}
             onChange={handleClassInputChange}
           />
@@ -84,7 +86,7 @@ const ElementPanel = () => {
           <input
             type="text"
             value={textInputValue || ''}
-            className="p-1 flex-1 border border-blue"
+            className="w-full p-1 flex-1 border border-blue"
             onFocus={() => updateCurrentField('text')}
             onChange={handleTextInputChange}
           />
