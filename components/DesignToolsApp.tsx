@@ -8,7 +8,7 @@ import ElementPanel from './ElementPanel';
 import TypographyPanel from './TypographyPanel';
 import LayoutPanel from './LayoutPanel';
 import SpacingPanel from './SpacingPanel';
-// import ControlPanel from './ControlPanel';
+import ControlPanel from './ControlPanel';
 
 import {
   // DesignToolsProvider,
@@ -18,6 +18,7 @@ import {
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 import EffectPanel from './EffectPanel';
+import Icon from './Icon';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -48,6 +49,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
   const text = state?.text;
+  const designToolsStatus = state?.designToolsStatus;
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
   // --------------------------------------------------------------------------
@@ -162,143 +164,145 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     }
   };
 
-  // const renderTextInput = ({ field, width = 'w-full' }) => {
-  //   return (
-  //     <input
-  //       className={`${width} p-1 border`}
-  //       type="text"
-  //       value={state.form[field] || ''}
-  //       onFocus={() => updateCurrentField(field)}
-  //       onChange={(event) => {
-  //         const { value } = event.target;
-
-  //         dispatch({
-  //           type: types.UPDATE_FORM_VALUE,
-  //           key: field,
-  //           value,
-  //         });
-  //       }}
-  //     />
-  //   );
-  // };
-
   return (
-    <aside className="fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800">
-      {/* <ControlPanel /> */}
+    <>
+      {designToolsStatus === 'closed' && (
+        <div className="fixed top-0 p-2">
+          <button
+            className="p-1 bg-gray-400 rounded-lg"
+            onClick={() => {
+              dispatch({
+                type: types.TOGGLE_DESIGN_TOOLS,
+              });
+            }}
+          >
+            <Icon name="chevron-right" />
+          </button>
+        </div>
+      )}
 
-      <form className="flex-1" onSubmit={handleFormSubmit}>
-        <ElementPanel />
+      <aside
+        className={[
+          'fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800 transition-all duration-300',
+          designToolsStatus === 'closed' ? '-ml-64' : '',
+        ].join(' ')}
+      >
+        <ControlPanel />
 
-        <LayoutPanel />
+        <form className="flex-1" onSubmit={handleFormSubmit}>
+          <ElementPanel />
 
-        <SpacingPanel />
+          <LayoutPanel />
 
-        <Panel title="Sizing" name="sizing">
-          <div className="p-3">
-            <div className="flex items-baseline mb-2">
-              <label className="w-16 mr-2 text-xs" htmlFor="element-width">
-                Width
-              </label>
-              <input
-                type="text"
-                id="element-width"
-                className="flex-1 w-full p-1 mr-4 border"
-                value={state.form.width || ''}
-                onFocus={() => updateCurrentField('width')}
-                onChange={(event) => {
-                  const { value } = event.target;
+          <SpacingPanel />
 
-                  dispatch({
-                    type: types.UPDATE_FORM_VALUE,
-                    key: 'width',
-                    value,
-                  });
-                }}
-              />
-              <label className="text-xs mr-2">Min-Width</label>
-              <input
-                type="text"
-                className="flex-1 w-full p-1 border"
-                value={state.form.minWidth || ''}
-                onFocus={() => updateCurrentField('minWidth')}
-                onChange={(event) => {
-                  const { value } = event.target;
+          <Panel title="Sizing" name="sizing">
+            <div className="p-3">
+              <div className="flex items-baseline mb-2">
+                <label className="w-16 mr-2 text-xs" htmlFor="element-width">
+                  Width
+                </label>
+                <input
+                  type="text"
+                  id="element-width"
+                  className="flex-1 w-full p-1 mr-4 border"
+                  value={state.form.width || ''}
+                  onFocus={() => updateCurrentField('width')}
+                  onChange={(event) => {
+                    const { value } = event.target;
 
-                  dispatch({
-                    type: types.UPDATE_FORM_VALUE,
-                    key: 'minWidth',
-                    value,
-                  });
-                }}
-              />
+                    dispatch({
+                      type: types.UPDATE_FORM_VALUE,
+                      key: 'width',
+                      value,
+                    });
+                  }}
+                />
+                <label className="text-xs mr-2">Min-Width</label>
+                <input
+                  type="text"
+                  className="flex-1 w-full p-1 border"
+                  value={state.form.minWidth || ''}
+                  onFocus={() => updateCurrentField('minWidth')}
+                  onChange={(event) => {
+                    const { value } = event.target;
+
+                    dispatch({
+                      type: types.UPDATE_FORM_VALUE,
+                      key: 'minWidth',
+                      value,
+                    });
+                  }}
+                />
+              </div>
+              <div className="flex items-baseline">
+                <label className="w-16 mr-2 text-xs" htmlFor="element-height">
+                  Height
+                </label>
+                <input
+                  type="text"
+                  id="element-height"
+                  className="flex-1 w-full p-1 mr-4 border"
+                  value={state.form.height || ''}
+                  onFocus={() => updateCurrentField('height')}
+                  onChange={(event) => {
+                    const { value } = event.target;
+
+                    dispatch({
+                      type: types.UPDATE_FORM_VALUE,
+                      key: 'height',
+                      value,
+                    });
+                  }}
+                />
+                <label className="text-xs mr-2">Min-Height</label>
+                <input
+                  type="text"
+                  className="flex-1 w-full p-1 border"
+                  value={state.form.minHeight || ''}
+                  onFocus={() => updateCurrentField('minHeight')}
+                  onChange={(event) => {
+                    const { value } = event.target;
+
+                    dispatch({
+                      type: types.UPDATE_FORM_VALUE,
+                      key: 'minHeight',
+                      value,
+                    });
+                  }}
+                />
+              </div>
             </div>
-            <div className="flex items-baseline">
-              <label className="w-16 mr-2 text-xs" htmlFor="element-height">
-                Height
-              </label>
-              <input
-                type="text"
-                id="element-height"
-                className="flex-1 w-full p-1 mr-4 border"
-                value={state.form.height || ''}
-                onFocus={() => updateCurrentField('height')}
-                onChange={(event) => {
-                  const { value } = event.target;
+          </Panel>
 
-                  dispatch({
-                    type: types.UPDATE_FORM_VALUE,
-                    key: 'height',
-                    value,
-                  });
-                }}
-              />
-              <label className="text-xs mr-2">Min-Height</label>
-              <input
-                type="text"
-                className="flex-1 w-full p-1 border"
-                value={state.form.minHeight || ''}
-                onFocus={() => updateCurrentField('minHeight')}
-                onChange={(event) => {
-                  const { value } = event.target;
+          <TypographyPanel />
 
-                  dispatch({
-                    type: types.UPDATE_FORM_VALUE,
-                    key: 'minHeight',
-                    value,
-                  });
-                }}
-              />
-            </div>
-          </div>
-        </Panel>
+          <BackgroundPanel />
 
-        <TypographyPanel />
+          <EffectPanel />
 
-        <BackgroundPanel />
+          {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
+          <button type="submit" className="hidden">
+            Submit
+          </button>
+        </form>
 
-        <EffectPanel />
-
-        {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
-        <button type="submit" className="hidden">
-          Submit
-        </button>
-      </form>
-
-      {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
-      <LayersPanel
-        selectedIDs={selectedIDs}
-        refreshCounter={state.layersPanelRefreshCounter}
-        onNodeCreateClick={(selectedNode) => {
-          handleNodeChange([
-            {
-              type: 'CREATE_FILE_ELEMENT',
-              node: selectedNode,
-              elementType: 'div',
-            },
-          ]);
-        }}
-      />
-    </aside>
+        {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
+        <LayersPanel
+          selectedIDs={selectedIDs}
+          refreshCounter={state.layersPanelRefreshCounter}
+          onNodeCreateClick={(selectedNode) => {
+            handleNodeChange([
+              {
+                type: 'CREATE_FILE_ELEMENT',
+                node: selectedNode,
+                elementType: 'div',
+              },
+            ]);
+          }}
+        />
+      </aside>
+    </>
   );
 };
 
