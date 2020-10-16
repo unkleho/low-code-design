@@ -70,7 +70,7 @@ const LayoutPanel = () => {
               <button
                 type="button"
                 className={[
-                  'p-1 border mr-2 bg-white',
+                  'p-1 border mr-2 bg-white rounded-md',
                   isSelected
                     ? 'text-gray-700 border-gray-500'
                     : 'text-gray-400',

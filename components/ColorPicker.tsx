@@ -19,7 +19,7 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
   return (
     <div
       className={[
-        'relative w-full h-16 overflow-scroll border bg-white',
+        'relative w-full h-16 overflow-scroll border bg-white rounded-md',
         className,
       ].join(' ')}
       style={{

@@ -9,6 +9,8 @@ import TypographyPanel from './TypographyPanel';
 import LayoutPanel from './LayoutPanel';
 import SpacingPanel from './SpacingPanel';
 import ControlPanel from './ControlPanel';
+import EffectPanel from './EffectPanel';
+import Icon from './Icon';
 
 import {
   // DesignToolsProvider,
@@ -17,8 +19,8 @@ import {
 } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
-import EffectPanel from './EffectPanel';
-import Icon from './Icon';
+
+import css from './DesignToolsApp.module.css';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -183,6 +185,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
       <aside
         className={[
+          css.designToolsApp,
           'fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800 transition-all duration-300',
           designToolsStatus === 'closed' ? '-ml-64' : '',
         ].join(' ')}

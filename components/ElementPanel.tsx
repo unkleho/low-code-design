@@ -62,7 +62,7 @@ const ElementPanel = () => {
         <PanelRow label="Type">
           {type && (
             <span
-              className="px-2 py-1 font-bold bg-gray-200"
+              className="px-2 py-1 font-bold bg-gray-200 rounded-md"
               title={`Line ${lineNumber}, column ${columnNumber}, ${fileName}`}
             >
               {type}

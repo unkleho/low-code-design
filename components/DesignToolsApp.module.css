@@ -1,0 +1,7 @@
+.designToolsApp input[type='text'] {
+  @apply text-xs rounded-md;
+}
+
+.designToolsApp select {
+  @apply rounded-md;
+}
