@@ -1,0 +1,21 @@
+const DemoCard = ({ imageUrl, year, title, description }) => {
+  return (
+    <div className="relative block w-64 mr-8">
+      <div className="relative">
+        <img src={imageUrl} className="w-64 opacity-50" />
+      </div>
+
+      <div className="relative -mt-10">
+        <p className="text-xs text-pink-200 ml-4 font-normal">{year}</p>
+        <h1 className="font-bold text-4xl text-yellow-200 leading-tight mb-8 ml-4">
+          {title}
+        </h1>
+        <p className="mb-4 text-sm text-gray-100 ml-12 opacity-75">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default DemoCard;

@@ -36,5 +36,12 @@ module.exports = {
     margin: ['responsive', 'first', 'last'],
     borderWidth: ['responsive', 'first', 'last'],
   },
+  theme: {
+    extend: {
+      lineHeight: {
+        tight: '1.1',
+      },
+    },
+  },
   plugins: [],
 };

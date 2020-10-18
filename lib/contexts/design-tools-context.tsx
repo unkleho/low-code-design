@@ -112,7 +112,7 @@ export function DesignToolsProvider(props) {
     text: null,
     ...defaultFormValues,
     form: defaultFormValues,
-    designToolsStatus: 'open',
+    designToolsStatus: 'closed',
     panels: [
       {
         name: 'element',
@@ -132,15 +132,15 @@ export function DesignToolsProvider(props) {
       },
       {
         name: 'typography',
-        status: 'open',
+        status: 'closed',
       },
       {
         name: 'background',
-        status: 'open',
+        status: 'closed',
       },
       {
         name: 'effect',
-        status: 'open',
+        status: 'closed',
       },
       {
         name: 'layers',

@@ -202,7 +202,13 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
           <Panel title="Sizing" name="sizing">
             <div className="p-3">
               <div className="flex items-baseline mb-2">
-                <label className="w-16 mr-2 text-xs" htmlFor="element-width">
+                <label
+                  className="w-16 mr-2 text-xs"
+                  htmlFor="element-width"
+                  // onClick={(event) =>
+                  //   console.log(event._targetInst._debugSource)
+                  // }
+                >
                   Width
                 </label>
                 <input
@@ -299,7 +305,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
               {
                 type: 'CREATE_FILE_ELEMENT',
                 node: selectedNode,
-                elementType: 'div',
+                elementType: 'p',
               },
             ]);
           }}

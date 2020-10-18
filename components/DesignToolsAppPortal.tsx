@@ -64,7 +64,7 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
             dispatch({
               type: 'REFRESH_LAYERS_PANEL',
             });
-          }, 500);
+          }, 1000);
         }
       }
     }

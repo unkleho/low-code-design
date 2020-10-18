@@ -26,12 +26,15 @@ const updateElementText = ({ lineNumber, columnNumber, text, code }) => {
         path.isJSXElement() &&
         nodeLineNumber === lineNumber &&
         nodeColumnNumber === columnNumber
-      ) {
+      ) {              
         const child = path.node.children[0];
 
         // Only update simple text for now
         if (path.node.children.length === 1 && t.isJSXText(child)) {
           path.node.children[0] = t.jsxText(text);
+        } else if (path.node.children.length === 0) {
+          // If no children
+          path.node.children.push(t.jsxText(text))
         }
       }
     },
