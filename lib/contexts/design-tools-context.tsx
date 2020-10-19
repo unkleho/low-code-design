@@ -132,11 +132,11 @@ export function DesignToolsProvider(props) {
       },
       {
         name: 'typography',
-        status: 'closed',
+        status: 'open',
       },
       {
         name: 'background',
-        status: 'closed',
+        status: 'open',
       },
       {
         name: 'effect',

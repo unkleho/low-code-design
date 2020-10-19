@@ -4,7 +4,7 @@ import Wrapper from '../components/Wrapper';
 export default function HomePage() {
   return (
     <Wrapper>
-      <div className="flex items-center justify-center min-h-screen bg-pink-600">
+      <div className="flex items-center justify-center min-h-screen bg-pink-600 text-black">
         <div className="w-64"></div>
         <div className="flex">
           {[
