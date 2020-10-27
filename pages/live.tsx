@@ -1,7 +1,7 @@
 import React from 'react';
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
-import { parse } from '@babel/parser';
-import traverse from '@babel/traverse';
+// import { parse } from '@babel/parser';
+// import traverse from '@babel/traverse';
 
 import DesignToolsApp from '../components/DesignToolsApp';
 import { TargetEvent } from '../types';
