@@ -4,6 +4,7 @@ import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
 // import traverse from '@babel/traverse';
 
 import DesignToolsApp from '../components/DesignToolsApp';
+import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 import { TargetEvent } from '../types';
 
 const defaultCode = '<strong className="uppercase">Hello World!</strong>';
@@ -34,59 +35,64 @@ const LivePage = () => {
   };
 
   return (
-    <div>
-      <div
-        className="flex justify-center items-center flex-col"
-        onClick={(event: TargetEvent) => {
-          console.log(event._targetInst);
-          setSelectedNodes([event._targetInst]);
-        }}
-      >
-        <LiveProvider
-          code={code}
-          transformCode={(code2) => {
-            // Find starting tag and add data attribute
-            // [^/] = not forward slash (/), as we don't want end tag (</sometag>)
-            // \w = any alphanumeric character
-            const newCode = code2.replace(/(<[^/]\w*)/i, '$1 data-id="1234" ');
-            console.log(newCode);
-
-            // const ast = parse(code2, {
-            //   plugins: ['jsx'],
-            // });
-
-            // traverse(ast, {
-            //   enter(path) {
-            //     if (path.container.type === 'JSXOpeningElement') {
-            //       console.log(path);
-            //       path.container.attributes.push({
-            //         name: {
-            //           name: 'test',
-            //           type: 'JSXIdentifier',
-            //         },
-            //       });
-            //     }
-            //   },
-            // });
-
-            // console.log(test);
-            // return code.replace('data', '');
-            return newCode;
+    <DesignToolsProvider>
+      <div>
+        <div
+          className="flex justify-center items-center flex-col"
+          onClick={(event: TargetEvent) => {
+            console.log(event._targetInst);
+            setSelectedNodes([event._targetInst]);
           }}
         >
-          <LiveEditor />
-          <LiveError />
-          <LivePreview />
-        </LiveProvider>
+          <LiveProvider
+            code={code}
+            transformCode={(code2) => {
+              // Find starting tag and add data attribute
+              // [^/] = not forward slash (/), as we don't want end tag (</sometag>)
+              // \w = any alphanumeric character
+              const newCode = code2.replace(
+                /(<[^/]\w*)/i,
+                '$1 data-id="1234" '
+              );
+              console.log(newCode);
 
-        <div className="">Test</div>
+              // const ast = parse(code2, {
+              //   plugins: ['jsx'],
+              // });
+
+              // traverse(ast, {
+              //   enter(path) {
+              //     if (path.container.type === 'JSXOpeningElement') {
+              //       console.log(path);
+              //       path.container.attributes.push({
+              //         name: {
+              //           name: 'test',
+              //           type: 'JSXIdentifier',
+              //         },
+              //       });
+              //     }
+              //   },
+              // });
+
+              // console.log(test);
+              // return code.replace('data', '');
+              return newCode;
+            }}
+          >
+            <LiveEditor />
+            <LiveError />
+            <LivePreview />
+          </LiveProvider>
+
+          <div className="">Test</div>
+        </div>
+
+        <DesignToolsApp
+          selectedNodes={selectedNodes}
+          onNodeChange={handleDesignToolsSubmit}
+        />
       </div>
-
-      <DesignToolsApp
-        selectedNodes={selectedNodes}
-        onSubmit={handleDesignToolsSubmit}
-      />
-    </div>
+    </DesignToolsProvider>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Panel from './Panel';
+// import Panel from './Panel';
 // import PanelRow from './PanelRow';
 import LayersPanel from './LayersPanel';
 import BackgroundPanel from './BackgroundPanel';
@@ -47,7 +47,7 @@ const config = {
 };
 
 const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
-  const { state, dispatch, updateCurrentField } = useDesignTools();
+  const { state, dispatch } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
