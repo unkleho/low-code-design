@@ -7,7 +7,7 @@ export default function HomePage() {
         <div className="w-64"></div>
 
         <div className="w-64">
-          <img src="/images/trumpet-piano.jpg" className="w-64" />
+          <img src="/images/trumpet-piano.jpg" className="w-56" />
 
           <h1 className="text-3xl font-bold leading-tight text-white mt-4">
             Trumpet and Piano Man

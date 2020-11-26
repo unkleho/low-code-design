@@ -21,6 +21,7 @@ import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 
 import css from './DesignToolsApp.module.css';
+import SizingPanel from './SizingPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -114,8 +115,6 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     // event.nativeEvent.stopPropagation();
     // event.nativeEvent.stopImmediatePropagation();
 
-    // console.log('-- handleFormSubmit');
-
     if (currentField === 'text') {
       dispatch({
         type: types.UPDATE_TEXT,
@@ -130,9 +129,6 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
         const oldValue = state[currentField];
         const newValue = state.form[currentField];
         const prefix = config[currentField];
-
-        // console.log(oldValue, newValue, prefix);
-        // console.log(state.form);
 
         // Sorry, need to check for negative values, so a bit messy right now.
         // TODO: Consider moving this funky logic to reducer
@@ -199,90 +195,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
 
           <SpacingPanel />
 
-          <Panel title="Sizing" name="sizing">
-            <div className="p-3">
-              <div className="flex items-baseline mb-2">
-                <label
-                  className="w-16 mr-2 text-xs"
-                  htmlFor="element-width"
-                  // onClick={(event) =>
-                  //   console.log(event._targetInst._debugSource)
-                  // }
-                >
-                  Width
-                </label>
-                <input
-                  type="text"
-                  id="element-width"
-                  className="flex-1 w-full p-1 mr-4 border"
-                  value={state.form.width || ''}
-                  onFocus={() => updateCurrentField('width')}
-                  onChange={(event) => {
-                    const { value } = event.target;
-
-                    dispatch({
-                      type: types.UPDATE_FORM_VALUE,
-                      key: 'width',
-                      value,
-                    });
-                  }}
-                />
-                <label className="text-xs mr-2">Min-Width</label>
-                <input
-                  type="text"
-                  className="flex-1 w-full p-1 border"
-                  value={state.form.minWidth || ''}
-                  onFocus={() => updateCurrentField('minWidth')}
-                  onChange={(event) => {
-                    const { value } = event.target;
-
-                    dispatch({
-                      type: types.UPDATE_FORM_VALUE,
-                      key: 'minWidth',
-                      value,
-                    });
-                  }}
-                />
-              </div>
-              <div className="flex items-baseline">
-                <label className="w-16 mr-2 text-xs" htmlFor="element-height">
-                  Height
-                </label>
-                <input
-                  type="text"
-                  id="element-height"
-                  className="flex-1 w-full p-1 mr-4 border"
-                  value={state.form.height || ''}
-                  onFocus={() => updateCurrentField('height')}
-                  onChange={(event) => {
-                    const { value } = event.target;
-
-                    dispatch({
-                      type: types.UPDATE_FORM_VALUE,
-                      key: 'height',
-                      value,
-                    });
-                  }}
-                />
-                <label className="text-xs mr-2">Min-Height</label>
-                <input
-                  type="text"
-                  className="flex-1 w-full p-1 border"
-                  value={state.form.minHeight || ''}
-                  onFocus={() => updateCurrentField('minHeight')}
-                  onChange={(event) => {
-                    const { value } = event.target;
-
-                    dispatch({
-                      type: types.UPDATE_FORM_VALUE,
-                      key: 'minHeight',
-                      value,
-                    });
-                  }}
-                />
-              </div>
-            </div>
-          </Panel>
+          <SizingPanel />
 
           <TypographyPanel />
 
