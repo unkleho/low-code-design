@@ -7,7 +7,8 @@ import DesignToolsApp from '../components/DesignToolsApp';
 import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 import { TargetEvent } from '../types';
 
-const defaultCode = '<strong className="uppercase">Hello World!</strong>';
+const defaultCode =
+  '<div><strong className="uppercase">Hello World!</strong><p>Some text</p></div>';
 
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -17,33 +18,17 @@ const LivePage = () => {
     const event = events[0]; // Allow multiple node changes in future
     const { node, update } = event;
 
-    console.log(node.stateNode, update);
-
     // Change DOM element className
-    if (node) {
+    if (node && update) {
+      console.log(node.stateNode, update);
       node.stateNode.className = event.update.className;
-
-      // const result = await axios.post('/api/component', {
-      //   lineNumber: node._debugSource.lineNumber,
-      //   columnNumber: node._debugSource.columnNumber,
-      //   className: node.stateNode.className,
-      //   fileName: node._debugSource.fileName,
-      // });
-
-      // console.log(result.data);
     }
   };
 
   return (
     <DesignToolsProvider>
       <div>
-        <div
-          className="flex justify-center items-center flex-col"
-          onClick={(event: TargetEvent) => {
-            console.log(event._targetInst);
-            setSelectedNodes([event._targetInst]);
-          }}
-        >
+        <div className="flex justify-center items-center flex-col">
           <LiveProvider
             code={code}
             transformCode={(code2) => {
@@ -81,10 +66,16 @@ const LivePage = () => {
           >
             <LiveEditor />
             <LiveError />
-            <LivePreview />
-          </LiveProvider>
 
-          <div className="">Test</div>
+            <div
+              onClick={(event: TargetEvent) => {
+                console.log(event._targetInst);
+                setSelectedNodes([event._targetInst]);
+              }}
+            >
+              <LivePreview />
+            </div>
+          </LiveProvider>
         </div>
 
         <DesignToolsApp

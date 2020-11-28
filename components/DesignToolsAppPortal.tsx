@@ -100,5 +100,3 @@ const DesignToolsAppPortalWrapper = (props: Props) => {
 };
 
 export default DesignToolsAppPortalWrapper;
-
-// export default DesignToolsAppPortal;

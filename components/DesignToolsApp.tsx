@@ -1,7 +1,5 @@
 import React from 'react';
 
-// import Panel from './Panel';
-// import PanelRow from './PanelRow';
 import LayersPanel from './LayersPanel';
 import BackgroundPanel from './BackgroundPanel';
 import ElementPanel from './ElementPanel';
@@ -10,18 +8,14 @@ import LayoutPanel from './LayoutPanel';
 import SpacingPanel from './SpacingPanel';
 import ControlPanel from './ControlPanel';
 import EffectPanel from './EffectPanel';
+import SizingPanel from './SizingPanel';
 import Icon from './Icon';
 
-import {
-  // DesignToolsProvider,
-  useDesignTools,
-  types,
-} from '../lib/contexts/design-tools-context';
+import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 
 import css from './DesignToolsApp.module.css';
-import SizingPanel from './SizingPanel';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -227,15 +221,5 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
     </>
   );
 };
-
-// const DesignToolsAppWrapper = (props: Props) => {
-//   return (
-//     <DesignToolsProvider>
-//       <DesignToolsApp {...props} />
-//     </DesignToolsProvider>
-//   );
-// };
-
-// export default DesignToolsAppWrapper;
 
 export default DesignToolsApp;
