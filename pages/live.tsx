@@ -22,6 +22,15 @@ const LivePage = () => {
     if (node && update) {
       console.log(node.stateNode, update);
       node.stateNode.className = event.update.className;
+
+      // TODO: Update code with new className
+      // OPTION:
+      // 1. Store node location in dom tree in state, set by onClick div wrapper over LivePreview
+      // 2. Location could look like tree[0][1] ie first child, second grandchild
+      // 3. Parse code and get AST
+      // 4. Use tree state to look up AST
+      // 5. Update className
+      // 6. Unparse and get code back from AST
     }
   };
 
