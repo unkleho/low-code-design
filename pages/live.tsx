@@ -1,75 +1,76 @@
-import React from 'react';
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
-// import { parse } from '@babel/parser';
-// import traverse from '@babel/traverse';
+import React from "react";
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import * as t from "@babel/types";
+import generate from "@babel/generator";
 
-import DesignToolsApp from '../components/DesignToolsApp';
-import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
-import { TargetEvent } from '../types';
+import DesignToolsApp from "../components/DesignToolsApp";
+import { DesignToolsProvider } from "../lib/contexts/design-tools-context";
+import { TargetEvent } from "../types";
 
-const defaultCode =
-  '<div><strong className="uppercase">Hello World!</strong><p>Some text</p></div>';
+const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!</strong><p>Some text</p>
+  <div><p>Deep text</p></div>
+  </div>`;
 
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [code, setCode] = React.useState(defaultCode);
+  const [highlightStyle, setHighlightStyle] = React.useState<
+    React.CSSProperties
+  >();
+  const [selectedIndex, setSelectedIndex] = React.useState<number>();
 
   const handleDesignToolsSubmit = (events) => {
     const event = events[0]; // Allow multiple node changes in future
-    const { node, update } = event;
+    const { node, type, className } = event;
 
-    // Change DOM element className
-    if (node && update) {
-      console.log(node.stateNode, update);
-      node.stateNode.className = event.update.className;
+    // Change node className
+    if (node && type === "UPDATE_FILE_CLASS_NAME") {
+      // Parse code and turn it into an AST
+      const ast = parse(code, {
+        plugins: ["jsx"],
+      });
 
-      // TODO: Update code with new className
-      // OPTION:
-      // 1. Store node location in dom tree in state, set by onClick div wrapper over LivePreview
-      // 2. Location could look like tree[0][1] ie first child, second grandchild
-      // 3. Parse code and get AST
-      // 4. Use tree state to look up AST
-      // 5. Update className
-      // 6. Unparse and get code back from AST
+      // Find root node
+      const rootNode = getRootNode(ast);
+
+      // Get selected node
+      // TODO: Only one level deep, enable deeper node levels
+      const selected = rootNode.children[selectedIndex];
+
+      // Get classNameAttribute
+      const attributes = selected.openingElement.attributes;
+      const classNameAttribute = attributes.find((attribute) => {
+        return attribute.name.name === "className";
+      });
+
+      // Update className or add it to JSX element
+      if (classNameAttribute) {
+        classNameAttribute.value.value = className;
+      } else {
+        attributes.push(
+          t.jsxAttribute(
+            t.jsxIdentifier("className"),
+            t.stringLiteral(className)
+          )
+        );
+      }
+
+      // Convert AST to code
+      const newCode = generate(ast).code;
+      setCode(newCode);
     }
   };
 
   return (
     <DesignToolsProvider>
       <div>
+        <div className="fixed" style={highlightStyle}></div>
         <div className="flex justify-center items-center flex-col">
           <LiveProvider
             code={code}
-            transformCode={(code2) => {
-              // Find starting tag and add data attribute
-              // [^/] = not forward slash (/), as we don't want end tag (</sometag>)
-              // \w = any alphanumeric character
-              const newCode = code2.replace(
-                /(<[^/]\w*)/i,
-                '$1 data-id="1234" '
-              );
-              console.log(newCode);
-
-              // const ast = parse(code2, {
-              //   plugins: ['jsx'],
-              // });
-
-              // traverse(ast, {
-              //   enter(path) {
-              //     if (path.container.type === 'JSXOpeningElement') {
-              //       console.log(path);
-              //       path.container.attributes.push({
-              //         name: {
-              //           name: 'test',
-              //           type: 'JSXIdentifier',
-              //         },
-              //       });
-              //     }
-              //   },
-              // });
-
-              // console.log(test);
-              // return code.replace('data', '');
+            transformCode={(newCode) => {
               return newCode;
             }}
           >
@@ -78,7 +79,38 @@ const LivePage = () => {
 
             <div
               onClick={(event: TargetEvent) => {
-                console.log(event._targetInst);
+                // Stop <a> links from navigating away
+                event.preventDefault();
+
+                const { target } = event;
+
+                // Get dimensions of selected node
+                const {
+                  width,
+                  height,
+                  top,
+                  left,
+                } = target.getBoundingClientRect();
+
+                // Transfer dimensions to highlight overlay div
+                // TODO: Update this whenever code or screen changes
+                setHighlightStyle({
+                  outline: "1px solid cyan",
+                  width,
+                  height,
+                  top,
+                  left,
+                });
+
+                // Get and set index
+                // https://stackoverflow.com/questions/13656921/fastest-way-to-find-the-index-of-a-child-node-in-parent
+                const index = [].indexOf.call(
+                  target.parentNode.children,
+                  target
+                );
+                setSelectedIndex(index);
+
+                // Set selected nodes for DesignToolsApp
                 setSelectedNodes([event._targetInst]);
               }}
             >
@@ -94,6 +126,21 @@ const LivePage = () => {
       </div>
     </DesignToolsProvider>
   );
+};
+
+const getRootNode = (ast: t.File): t.JSXElement => {
+  let rootNode;
+
+  traverse(ast, {
+    JSXElement: (path) => {
+      // If root node
+      if (path.key === "expression") {
+        rootNode = path.node;
+      }
+    },
+  });
+
+  return rootNode;
 };
 
 export default LivePage;
