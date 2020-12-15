@@ -8,6 +8,11 @@ import generate from "@babel/generator";
 import DesignToolsApp from "../components/DesignToolsApp";
 import { DesignToolsProvider } from "../lib/contexts/design-tools-context";
 import { TargetEvent } from "../types";
+import {
+  getAncestorsIndexes,
+  getRootNode,
+  getSelectedNode,
+} from "../lib/babel-utils";
 
 const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!</strong><p>Some text</p>
   <div><p>Deep text</p></div>
@@ -20,6 +25,8 @@ const LivePage = () => {
     React.CSSProperties
   >();
   const [selectedIndex, setSelectedIndex] = React.useState<number>();
+  const [ancestorIndexes, setAncestorIndexes] = React.useState<number[]>();
+  console.log(ancestorIndexes);
 
   const handleDesignToolsSubmit = (events) => {
     const event = events[0]; // Allow multiple node changes in future
@@ -37,7 +44,8 @@ const LivePage = () => {
 
       // Get selected node
       // TODO: Only one level deep, enable deeper node levels
-      const selected = rootNode.children[selectedIndex];
+      // const selected = rootNode.children[selectedIndex];
+      const selected = getSelectedNode(rootNode, ancestorIndexes);
 
       // Get classNameAttribute
       const attributes = selected.openingElement.attributes;
@@ -77,12 +85,16 @@ const LivePage = () => {
             <LiveEditor />
             <LiveError />
 
-            <div
+            <LivePreview
+              id="preview"
               onClick={(event: TargetEvent) => {
                 // Stop <a> links from navigating away
                 event.preventDefault();
 
-                const { target } = event;
+                const { target, currentTarget } = event;
+                console.log(currentTarget);
+                const indexes = getAncestorsIndexes(target, currentTarget);
+                setAncestorIndexes(indexes);
 
                 // Get dimensions of selected node
                 const {
@@ -114,8 +126,8 @@ const LivePage = () => {
                 setSelectedNodes([event._targetInst]);
               }}
             >
-              <LivePreview />
-            </div>
+              {/* <LivePreview /> */}
+            </LivePreview>
           </LiveProvider>
         </div>
 
@@ -128,19 +140,19 @@ const LivePage = () => {
   );
 };
 
-const getRootNode = (ast: t.File): t.JSXElement => {
-  let rootNode;
+// export const getRootNode = (ast: t.File): t.JSXElement => {
+//   let rootNode;
 
-  traverse(ast, {
-    JSXElement: (path) => {
-      // If root node
-      if (path.key === "expression") {
-        rootNode = path.node;
-      }
-    },
-  });
+//   traverse(ast, {
+//     JSXElement: (path) => {
+//       // If root node
+//       if (path.key === "expression") {
+//         rootNode = path.node;
+//       }
+//     },
+//   });
 
-  return rootNode;
-};
+//   return rootNode;
+// };
 
 export default LivePage;
