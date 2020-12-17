@@ -2,13 +2,17 @@ let { useState, useEffect, useMemo } = require("react");
 
 const defaultCallback = (mutationList) => mutationList;
 
-function useMutationObserver(targetNode, config, callback = defaultCallback) {
+function useMutationObserver(
+  targetNode: Node,
+  config: MutationObserverInit,
+  callback = defaultCallback
+) {
   if (typeof window === "undefined") {
     return null;
   }
 
   const [value, setValue] = useState(undefined);
-  const observer = useMemo(
+  const observer: MutationObserver = useMemo(
     () =>
       new MutationObserver((mutationList, observer) => {
         const result = callback(mutationList, observer);
@@ -16,6 +20,7 @@ function useMutationObserver(targetNode, config, callback = defaultCallback) {
       }),
     [callback]
   );
+
   useEffect(() => {
     if (targetNode) {
       observer.observe(targetNode, config);

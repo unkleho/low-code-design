@@ -1,20 +1,20 @@
-import React from "react";
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from "react-live";
-import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import * as t from "@babel/types";
-import generate from "@babel/generator";
+import React from 'react';
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
+import { parse } from '@babel/parser';
+import traverse from '@babel/traverse';
+import * as t from '@babel/types';
+import generate from '@babel/generator';
 
-import DesignToolsApp from "../components/DesignToolsApp";
-import { DesignToolsProvider } from "../lib/contexts/design-tools-context";
-import { TargetEvent } from "../types";
+import DesignToolsApp from '../components/DesignToolsApp';
+import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
+import { TargetEvent } from '../types';
 import {
   getAncestorsIndexes,
   getRootNode,
   getSelectedElement,
   getSelectedNode,
-} from "../lib/babel-dom-utils";
-import useMutationObserver from "../lib/hooks/use-mutation-observer";
+} from '../lib/babel-dom-utils';
+import useMutationObserver from '../lib/hooks/use-mutation-observer';
 
 const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!</strong><p>Some text</p>
   <div><p>Deep text</p></div>
@@ -23,14 +23,12 @@ const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!<
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [code, setCode] = React.useState(defaultCode);
-
-  const highlightStyleRef = React.useRef<React.CSSProperties>();
-  const highlightElement = React.useRef<HTMLElement>();
-
   const [ancestorIndexes, setAncestorIndexes] = React.useState<number[]>();
 
+  const highlightElement = React.useRef<HTMLDivElement>();
+
   const observeElement =
-    typeof window === "undefined" ? null : document.getElementById("preview");
+    typeof window === 'undefined' ? null : document.getElementById('preview');
 
   // TODO: May not need observer anymore, but this runs after code is updated and LivePreview remounts
   useMutationObserver(
@@ -46,7 +44,8 @@ const LivePage = () => {
       highlightElement.current.style.left = `${left}px`;
       highlightElement.current.style.width = `${width}px`;
       highlightElement.current.style.height = `${height}px`;
-    }
+      highlightElement.current.style.pointerEvents = `none`;
+    },
   );
 
   // TODO: Type events
@@ -55,24 +54,22 @@ const LivePage = () => {
     const { node, type, className } = event;
 
     // Change node className
-    if (node && type === "UPDATE_FILE_CLASS_NAME") {
+    if (node && type === 'UPDATE_FILE_CLASS_NAME') {
       // Parse code and turn it into an AST
       const ast = parse(code, {
-        plugins: ["jsx"],
+        plugins: ['jsx'],
       });
 
       // Find root node
       const rootNode = getRootNode(ast);
 
       // Get selected node
-      // TODO: Only one level deep, enable deeper node levels
-      // const selected = rootNode.children[selectedIndex];
       const selected = getSelectedNode(rootNode, ancestorIndexes);
 
       // Get classNameAttribute
       const attributes = selected.openingElement.attributes;
       const classNameAttribute = attributes.find((attribute) => {
-        return attribute.name.name === "className";
+        return attribute.name.name === 'className';
       });
 
       // Update className or add it to JSX element
@@ -81,9 +78,9 @@ const LivePage = () => {
       } else {
         attributes.push(
           t.jsxAttribute(
-            t.jsxIdentifier("className"),
-            t.stringLiteral(className)
-          )
+            t.jsxIdentifier('className'),
+            t.stringLiteral(className),
+          ),
         );
       }
 
@@ -118,12 +115,12 @@ const LivePage = () => {
                 setAncestorIndexes(indexes);
 
                 // Get dimensions of selected node
-                const {
-                  width,
-                  height,
-                  top,
-                  left,
-                } = target.getBoundingClientRect();
+                // const {
+                //   width,
+                //   height,
+                //   top,
+                //   left,
+                // } = target.getBoundingClientRect();
 
                 // Set selected nodes for DesignToolsApp
                 setSelectedNodes([event._targetInst]);

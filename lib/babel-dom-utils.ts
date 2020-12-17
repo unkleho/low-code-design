@@ -68,7 +68,7 @@ export function getAncestorsIndexes(
 
 export function getSelectedElement(
   rootElement: HTMLElement,
-  ancestorIndexes: number[]
+  ancestorIndexes: number[] = []
 ) {
   const result = ancestorIndexes.reduce((prev, index) => {
     return prev.children[index];

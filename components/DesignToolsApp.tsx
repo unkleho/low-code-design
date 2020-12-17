@@ -137,7 +137,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
             ? `${newValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
                 newValue.charAt(0) === '-' ? newValue.substring(1) : newValue
               }`
-            : ''
+            : '',
         );
       }
 
