@@ -6,7 +6,8 @@ import {
   getRootNode,
   getSelectedNode,
   getAncestorsIndexes,
-} from "../../lib/babel-utils";
+  getSelectedElement,
+} from "../babel-dom-utils";
 
 // Create mock HTML elements
 const p0: HTMLElement = document.createElement("p");
@@ -33,25 +34,25 @@ const code = `<div>
   <section>
     <div>
       <p></p>
-      <p>Hello</p>
+      <p id="selected">Hello</p>
     </div>
   </section>
 </div>`;
+const ancestorIndexes = [0, 1, 0, 1];
 
-describe("Traverse element", () => {
-  it("should return element", () => {
+describe("Babel Utilities", () => {
+  it("should return an index array describing path to DOM element", () => {
     const result = getAncestorsIndexes(p1, rootDiv);
-    expect(result).toEqual([0, 1, 0, 1]);
+    expect(result).toEqual(ancestorIndexes);
   });
 
-  it("should parse ast", () => {
+  it("should return selected babel node from index array", () => {
     const ast = parse(code, {
       plugins: ["jsx"],
     });
 
     // Find root node
     const rootNode = getRootNode(ast);
-    const ancestorIndexes = [0, 1, 0, 1];
 
     // Drill down and get selected node
     const selectedNode = getSelectedNode(rootNode, ancestorIndexes);
@@ -59,5 +60,10 @@ describe("Traverse element", () => {
     // Test for text value
     const textNode = selectedNode.children[0] as t.JSXText;
     expect(textNode.value).toEqual("Hello");
+  });
+
+  it("should return DOM element from index array", () => {
+    const selectedElement = getSelectedElement(rootDiv, ancestorIndexes);
+    console.log(selectedElement.id);
   });
 });

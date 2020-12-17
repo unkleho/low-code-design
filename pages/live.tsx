@@ -11,8 +11,10 @@ import { TargetEvent } from "../types";
 import {
   getAncestorsIndexes,
   getRootNode,
+  getSelectedElement,
   getSelectedNode,
-} from "../lib/babel-utils";
+} from "../lib/babel-dom-utils";
+import useMutationObserver from "../lib/hooks/use-mutation-observer";
 
 const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!</strong><p>Some text</p>
   <div><p>Deep text</p></div>
@@ -21,13 +23,33 @@ const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!<
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [code, setCode] = React.useState(defaultCode);
-  const [highlightStyle, setHighlightStyle] = React.useState<
-    React.CSSProperties
-  >();
-  const [selectedIndex, setSelectedIndex] = React.useState<number>();
-  const [ancestorIndexes, setAncestorIndexes] = React.useState<number[]>();
-  console.log(ancestorIndexes);
 
+  const highlightStyleRef = React.useRef<React.CSSProperties>();
+  const highlightElement = React.useRef<HTMLElement>();
+
+  const [ancestorIndexes, setAncestorIndexes] = React.useState<number[]>();
+
+  const observeElement =
+    typeof window === "undefined" ? null : document.getElementById("preview");
+
+  // TODO: May not need observer anymore, but this runs after code is updated and LivePreview remounts
+  useMutationObserver(
+    observeElement,
+    { attributes: true, childList: true, subtree: true },
+    () => {
+      const element = getSelectedElement(observeElement, ancestorIndexes);
+      const { top, left, width, height } = element.getBoundingClientRect();
+
+      // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
+      highlightElement.current.style.outline = `1px solid cyan`;
+      highlightElement.current.style.top = `${top}px`;
+      highlightElement.current.style.left = `${left}px`;
+      highlightElement.current.style.width = `${width}px`;
+      highlightElement.current.style.height = `${height}px`;
+    }
+  );
+
+  // TODO: Type events
   const handleDesignToolsSubmit = (events) => {
     const event = events[0]; // Allow multiple node changes in future
     const { node, type, className } = event;
@@ -74,7 +96,7 @@ const LivePage = () => {
   return (
     <DesignToolsProvider>
       <div>
-        <div className="fixed" style={highlightStyle}></div>
+        <div className="fixed" ref={highlightElement}></div>
         <div className="flex justify-center items-center flex-col">
           <LiveProvider
             code={code}
@@ -92,7 +114,6 @@ const LivePage = () => {
                 event.preventDefault();
 
                 const { target, currentTarget } = event;
-                console.log(currentTarget);
                 const indexes = getAncestorsIndexes(target, currentTarget);
                 setAncestorIndexes(indexes);
 
@@ -104,30 +125,10 @@ const LivePage = () => {
                   left,
                 } = target.getBoundingClientRect();
 
-                // Transfer dimensions to highlight overlay div
-                // TODO: Update this whenever code or screen changes
-                setHighlightStyle({
-                  outline: "1px solid cyan",
-                  width,
-                  height,
-                  top,
-                  left,
-                });
-
-                // Get and set index
-                // https://stackoverflow.com/questions/13656921/fastest-way-to-find-the-index-of-a-child-node-in-parent
-                const index = [].indexOf.call(
-                  target.parentNode.children,
-                  target
-                );
-                setSelectedIndex(index);
-
                 // Set selected nodes for DesignToolsApp
                 setSelectedNodes([event._targetInst]);
               }}
-            >
-              {/* <LivePreview /> */}
-            </LivePreview>
+            ></LivePreview>
           </LiveProvider>
         </div>
 
@@ -139,20 +140,5 @@ const LivePage = () => {
     </DesignToolsProvider>
   );
 };
-
-// export const getRootNode = (ast: t.File): t.JSXElement => {
-//   let rootNode;
-
-//   traverse(ast, {
-//     JSXElement: (path) => {
-//       // If root node
-//       if (path.key === "expression") {
-//         rootNode = path.node;
-//       }
-//     },
-//   });
-
-//   return rootNode;
-// };
 
 export default LivePage;

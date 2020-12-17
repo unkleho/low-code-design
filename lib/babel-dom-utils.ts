@@ -44,7 +44,7 @@ export function getSelectedNode(
 }
 
 /**
- * Recursive function to get array of numbers indicating path to element
+ * Recursive function to get index array indicating path to element
  * TODO: Move to dom-utils?
  * TODO: Returned order is root -> element, so ancestors isn't quite accurate, rename?
  * @param element Element to start
@@ -62,6 +62,17 @@ export function getAncestorsIndexes(
   if (element.parentNode !== rootElement) {
     return getAncestorsIndexes(element.parentNode, rootElement, result);
   }
+
+  return result;
+}
+
+export function getSelectedElement(
+  rootElement: HTMLElement,
+  ancestorIndexes: number[]
+) {
+  const result = ancestorIndexes.reduce((prev, index) => {
+    return prev.children[index];
+  }, rootElement);
 
   return result;
 }
