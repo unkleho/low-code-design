@@ -76,7 +76,7 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
         selectedNodes={selectedNodes}
         onNodeChange={handleNodeChange}
       />,
-      document.body
+      document.body,
     );
   }
 
@@ -92,6 +92,8 @@ function canUseDOM() {
 }
 
 const DesignToolsAppPortalWrapper = (props: Props) => {
+  // const { dispatch } = useDesignTools();
+
   return (
     <DesignToolsProvider>
       <DesignToolsAppPortal {...props} />

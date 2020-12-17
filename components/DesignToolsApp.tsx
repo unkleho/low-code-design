@@ -19,6 +19,7 @@ import css from './DesignToolsApp.module.css';
 
 type Props = {
   selectedNodes: FiberNode[];
+  className?: string;
   onNodeChange: Function;
 };
 
@@ -40,7 +41,11 @@ const config = {
   backgroundColor: 'bg',
 };
 
-const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
+const DesignToolsApp = ({
+  selectedNodes = [],
+  className: appClassName,
+  onNodeChange,
+}: Props) => {
   const { state, dispatch } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
@@ -159,7 +164,7 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
   return (
     <>
       {designToolsStatus === 'closed' && (
-        <div className="fixed top-0 p-2">
+        <div className="absolute top-0 p-2">
           <button
             className="p-1 bg-gray-400 rounded-lg"
             onClick={() => {
@@ -176,8 +181,9 @@ const DesignToolsApp = ({ selectedNodes = [], onNodeChange }: Props) => {
       <aside
         className={[
           css.designToolsApp,
-          'fixed flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800 transition-all duration-300',
+          'absolute flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800 transition-all duration-300',
           designToolsStatus === 'closed' ? '-ml-64' : '',
+          appClassName || '',
         ].join(' ')}
       >
         <ControlPanel />

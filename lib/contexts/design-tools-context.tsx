@@ -112,7 +112,7 @@ export function DesignToolsProvider(props) {
     text: null,
     ...defaultFormValues,
     form: defaultFormValues,
-    designToolsStatus: 'closed',
+    designToolsStatus: 'open',
     panels: [
       {
         name: 'element',
@@ -169,7 +169,7 @@ export function useDesignTools() {
     const className = replaceClassNameValue(
       state.className,
       oldValue,
-      newValue
+      newValue,
     );
 
     dispatch({ type: types.UPDATE_CLASS_NAME, className });
@@ -281,13 +281,13 @@ function getPrefixColorValue(className = '', prefix) {
     // However black and white do not, so there needs to be different logic to
     // handle these cases.
     const hasShades = Boolean(
-      textColors[baseColor] && textColors[baseColor].length > 0
+      textColors[baseColor] && textColors[baseColor].length > 0,
     );
 
     if (hasShades) {
       const colorValue = getClassNameValue(
         className,
-        `${prefix}${baseColor}${hasShades ? '-' : ''}`
+        `${prefix}${baseColor}${hasShades ? '-' : ''}`,
       );
 
       if (colorValue) {

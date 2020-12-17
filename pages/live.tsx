@@ -92,20 +92,20 @@ const LivePage = () => {
 
   return (
     <DesignToolsProvider>
-      <div>
+      <div className="flex">
         <div className="fixed" ref={highlightElement}></div>
-        <div className="flex justify-center items-center flex-col">
+        <div className="flex justify-center items-center flex-col h-screen">
           <LiveProvider
             code={code}
             transformCode={(newCode) => {
               return newCode;
             }}
           >
-            <LiveEditor />
             <LiveError />
 
             <LivePreview
               id="preview"
+              className="flex-1"
               onClick={(event: TargetEvent) => {
                 // Stop <a> links from navigating away
                 event.preventDefault();
@@ -125,7 +125,9 @@ const LivePage = () => {
                 // Set selected nodes for DesignToolsApp
                 setSelectedNodes([event._targetInst]);
               }}
-            ></LivePreview>
+            />
+
+            <LiveEditor className="flex-1" />
           </LiveProvider>
         </div>
 
