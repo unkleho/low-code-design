@@ -6,10 +6,8 @@ import ElementPanel from './ElementPanel';
 import TypographyPanel from './TypographyPanel';
 import LayoutPanel from './LayoutPanel';
 import SpacingPanel from './SpacingPanel';
-import ControlPanel from './ControlPanel';
 import EffectPanel from './EffectPanel';
 import SizingPanel from './SizingPanel';
-import Icon from './Icon';
 
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
@@ -51,7 +49,6 @@ const DesignToolsApp = ({
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
   const text = state?.text;
-  const designToolsStatus = state?.designToolsStatus;
   const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
   // --------------------------------------------------------------------------
@@ -162,69 +159,49 @@ const DesignToolsApp = ({
   };
 
   return (
-    <>
-      {designToolsStatus === 'closed' && (
-        <div className="absolute top-0 p-2">
-          <button
-            className="p-1 bg-gray-400 rounded-lg"
-            onClick={() => {
-              dispatch({
-                type: types.TOGGLE_DESIGN_TOOLS,
-              });
-            }}
-          >
-            <Icon name="chevron-right" />
-          </button>
-        </div>
-      )}
+    <div
+      className={[
+        css.designToolsApp,
+        'flex-col w-64 bg-gray-100 text-sm text-gray-800',
+        appClassName || '',
+      ].join(' ')}
+    >
+      <form className="flex-1" onSubmit={handleFormSubmit}>
+        <ElementPanel />
 
-      <aside
-        className={[
-          css.designToolsApp,
-          'absolute flex-col overflow-auto top-0 w-64 max-h-full bg-gray-100 border-r text-sm text-gray-800 transition-all duration-300',
-          designToolsStatus === 'closed' ? '-ml-64' : '',
-          appClassName || '',
-        ].join(' ')}
-      >
-        <ControlPanel />
+        <LayoutPanel />
 
-        <form className="flex-1" onSubmit={handleFormSubmit}>
-          <ElementPanel />
+        <SpacingPanel />
 
-          <LayoutPanel />
+        <SizingPanel />
 
-          <SpacingPanel />
+        <TypographyPanel />
 
-          <SizingPanel />
+        <BackgroundPanel />
 
-          <TypographyPanel />
+        <EffectPanel />
 
-          <BackgroundPanel />
+        {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
+        <button type="submit" className="hidden">
+          Submit
+        </button>
+      </form>
 
-          <EffectPanel />
-
-          {/* Form submit button required, otherwise 'enter' key doesn't work properly */}
-          <button type="submit" className="hidden">
-            Submit
-          </button>
-        </form>
-
-        {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
-        <LayersPanel
-          selectedIDs={selectedIDs}
-          refreshCounter={state.layersPanelRefreshCounter}
-          onNodeCreateClick={(selectedNode) => {
-            handleNodeChange([
-              {
-                type: 'CREATE_FILE_ELEMENT',
-                node: selectedNode,
-                elementType: 'p',
-              },
-            ]);
-          }}
-        />
-      </aside>
-    </>
+      {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
+      <LayersPanel
+        selectedIDs={selectedIDs}
+        refreshCounter={state.layersPanelRefreshCounter}
+        onNodeCreateClick={(selectedNode) => {
+          handleNodeChange([
+            {
+              type: 'CREATE_FILE_ELEMENT',
+              node: selectedNode,
+              elementType: 'p',
+            },
+          ]);
+        }}
+      />
+    </div>
   );
 };
 

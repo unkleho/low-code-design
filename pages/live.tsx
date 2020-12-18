@@ -94,7 +94,7 @@ const LivePage = () => {
     <DesignToolsProvider>
       <div className="flex">
         <div className="fixed" ref={highlightElement}></div>
-        <div className="flex justify-center items-center flex-col h-screen">
+        <div className="flex flex-1 justify-center items-center flex-col h-screen">
           <LiveProvider
             code={code}
             transformCode={(newCode) => {
@@ -133,6 +133,7 @@ const LivePage = () => {
 
         <DesignToolsApp
           selectedNodes={selectedNodes}
+          className={['max-h-full h-screen overflow-auto'].join(' ')}
           onNodeChange={handleDesignToolsSubmit}
         />
       </div>

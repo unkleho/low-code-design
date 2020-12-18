@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 import DesignToolsApp from './DesignToolsApp';
+import Icon from './Icon';
+import ControlPanel from './ControlPanel';
 
 import { FiberNode, NodeChangeEvent } from '../types';
 import {
@@ -16,6 +18,7 @@ type Props = {
 
 const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
   const { dispatch } = useDesignTools();
+  const [isActive, setIsActive] = React.useState(false);
 
   // Make updates to DOM and send API request
   const handleNodeChange = async (events: NodeChangeEvent[]) => {
@@ -72,10 +75,38 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
 
   if (canUseDOM()) {
     return ReactDOM.createPortal(
-      <DesignToolsApp
-        selectedNodes={selectedNodes}
-        onNodeChange={handleNodeChange}
-      />,
+      <>
+        {!isActive && (
+          <div className="absolute top-0 p-2">
+            <button
+              className="p-1 bg-gray-400 rounded-lg"
+              onClick={() => {
+                setIsActive(true);
+              }}
+            >
+              <Icon name="chevron-right" />
+            </button>
+          </div>
+        )}
+
+        <aside
+          className={[
+            'absolute top-0 overflow-auto max-h-full transition-all duration-300',
+            isActive ? '' : '-ml-64',
+          ].join(' ')}
+        >
+          <ControlPanel
+            onClick={() => {
+              setIsActive(false);
+            }}
+          />
+
+          <DesignToolsApp
+            selectedNodes={selectedNodes}
+            onNodeChange={handleNodeChange}
+          />
+        </aside>
+      </>,
       document.body,
     );
   }
@@ -92,8 +123,6 @@ function canUseDOM() {
 }
 
 const DesignToolsAppPortalWrapper = (props: Props) => {
-  // const { dispatch } = useDesignTools();
-
   return (
     <DesignToolsProvider>
       <DesignToolsAppPortal {...props} />

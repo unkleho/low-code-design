@@ -13,7 +13,6 @@ export const types = {
   UPDATE_FORM_VALUE: 'UPDATE_FORM_VALUE',
   UPDATE_SELECTED_NODE: 'UPDATE_SELECTED_NODE',
   TOGGLE_PANEL_STATUS: 'TOGGLE_PANEL_STATUS',
-  TOGGLE_DESIGN_TOOLS: 'TOGGLE_DESIGN_TOOLS',
   REFRESH_LAYERS_PANEL: 'REFRESH_LAYERS_PANEL',
 };
 
@@ -82,14 +81,6 @@ function designToolsReducer(state, action) {
       };
     }
 
-    case types.TOGGLE_DESIGN_TOOLS: {
-      return {
-        ...state,
-        designToolsStatus:
-          state.designToolsStatus === 'open' ? 'closed' : 'open',
-      };
-    }
-
     case types.REFRESH_LAYERS_PANEL: {
       return {
         ...state,
@@ -112,7 +103,6 @@ export function DesignToolsProvider(props) {
     text: null,
     ...defaultFormValues,
     form: defaultFormValues,
-    designToolsStatus: 'open',
     panels: [
       {
         name: 'element',
