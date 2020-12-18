@@ -1,7 +1,7 @@
 import React from 'react';
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
 import { parse } from '@babel/parser';
-import traverse from '@babel/traverse';
+// import traverse from '@babel/traverse';
 import * as t from '@babel/types';
 import generate from '@babel/generator';
 
@@ -15,6 +15,7 @@ import {
   getSelectedNode,
 } from '../lib/babel-dom-utils';
 import useMutationObserver from '../lib/hooks/use-mutation-observer';
+import useWindowSize from '../lib/hooks/use-window-size';
 
 const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!</strong><p>Some text</p>
   <div><p>Deep text</p></div>
@@ -23,10 +24,12 @@ const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!<
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [code, setCode] = React.useState(defaultCode);
+
   const [ancestorIndexes, setAncestorIndexes] = React.useState<number[]>();
 
   const highlightElement = React.useRef<HTMLDivElement>();
 
+  // Top level element to observe using MutationObserver
   const observeElement =
     typeof window === 'undefined' ? null : document.getElementById('preview');
 
@@ -38,15 +41,42 @@ const LivePage = () => {
       const element = getSelectedElement(observeElement, ancestorIndexes);
       const { top, left, width, height } = element.getBoundingClientRect();
 
+      updateHighlightElement(highlightElement.current, {
+        top,
+        left,
+        width,
+        height,
+      });
+
       // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
-      highlightElement.current.style.outline = `1px solid cyan`;
-      highlightElement.current.style.top = `${top}px`;
-      highlightElement.current.style.left = `${left}px`;
-      highlightElement.current.style.width = `${width}px`;
-      highlightElement.current.style.height = `${height}px`;
-      highlightElement.current.style.pointerEvents = `none`;
+      // highlightElement.current.style.outline = `1px solid cyan`;
+      // highlightElement.current.style.top = `${top}px`;
+      // highlightElement.current.style.left = `${left}px`;
+      // highlightElement.current.style.width = `${width}px`;
+      // highlightElement.current.style.height = `${height}px`;
+      // highlightElement.current.style.pointerEvents = `none`;
     },
   );
+
+  useWindowSize(() => {
+    const element = getSelectedElement(observeElement, ancestorIndexes);
+    const { top, left, width, height } = element.getBoundingClientRect();
+
+    updateHighlightElement(highlightElement.current, {
+      top,
+      left,
+      width,
+      height,
+    });
+
+    // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
+    // highlightElement.current.style.outline = `1px solid cyan`;
+    // highlightElement.current.style.top = `${top}px`;
+    // highlightElement.current.style.left = `${left}px`;
+    // highlightElement.current.style.width = `${width}px`;
+    // highlightElement.current.style.height = `${height}px`;
+    // highlightElement.current.style.pointerEvents = `none`;
+  });
 
   // TODO: Type events
   const handleDesignToolsSubmit = (events) => {
@@ -140,5 +170,15 @@ const LivePage = () => {
     </DesignToolsProvider>
   );
 };
+
+function updateHighlightElement(element, { top, left, width, height }) {
+  // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
+  element.style.outline = `1px solid cyan`;
+  element.style.top = `${top}px`;
+  element.style.left = `${left}px`;
+  element.style.width = `${width}px`;
+  element.style.height = `${height}px`;
+  element.style.pointerEvents = `none`;
+}
 
 export default LivePage;
