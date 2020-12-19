@@ -1,8 +1,3 @@
-// TODO: Remove react-children-utilities
-// const withTM = require('next-transpile-modules')(['react-children-utilities']); // pass the modules you would like to see transpiled
-
-// module.exports = withTM();
-
 module.exports = {
   webpack: function (config) {
     const originalEntry = config.entry;
@@ -19,21 +14,6 @@ module.exports = {
 
       return entries;
     };
-
-    const rule = config.module.rules
-      .find((rule) => rule.oneOf)
-      .oneOf.find(
-        (r) =>
-          // Find the global CSS loader
-          r.issuer && r.issuer.include && r.issuer.include.includes('_app'),
-      );
-    if (rule) {
-      rule.issuer.include = [
-        rule.issuer.include,
-        // Allow `monaco-editor` to import global CSS:
-        /[\\/]node_modules[\\/]monaco-editor[\\/]/,
-      ];
-    }
 
     return config;
   },

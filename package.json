@@ -25,7 +25,8 @@
     "react-live": "^2.2.2",
     "react-monaco-editor": "^0.41.1",
     "react-render-hook": "^2.0.0",
-    "reactronica": "^0.4.5"
+    "reactronica": "^0.4.5",
+    "rehype": "^11.0.0"
   },
   "devDependencies": {
     "@babel/types": "^7.11.5",
