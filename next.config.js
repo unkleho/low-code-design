@@ -1,11 +1,12 @@
-const withTM = require('next-transpile-modules')(['react-children-utilities']); // pass the modules you would like to see transpiled
+// TODO: Remove react-children-utilities
+// const withTM = require('next-transpile-modules')(['react-children-utilities']); // pass the modules you would like to see transpiled
 
 // module.exports = withTM();
 
-module.exports = withTM({
-  webpack: function (cfg) {
-    const originalEntry = cfg.entry;
-    cfg.entry = async () => {
+module.exports = {
+  webpack: function (config) {
+    const originalEntry = config.entry;
+    config.entry = async () => {
       const entries = await originalEntry();
 
       // This breaks fast-refresh for some reason
@@ -19,6 +20,21 @@ module.exports = withTM({
       return entries;
     };
 
-    return cfg;
+    const rule = config.module.rules
+      .find((rule) => rule.oneOf)
+      .oneOf.find(
+        (r) =>
+          // Find the global CSS loader
+          r.issuer && r.issuer.include && r.issuer.include.includes('_app'),
+      );
+    if (rule) {
+      rule.issuer.include = [
+        rule.issuer.include,
+        // Allow `monaco-editor` to import global CSS:
+        /[\\/]node_modules[\\/]monaco-editor[\\/]/,
+      ];
+    }
+
+    return config;
   },
-});
+};
