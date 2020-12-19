@@ -1,6 +1,6 @@
 // import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import * as t from "@babel/types";
+import traverse from '@babel/traverse';
+import * as t from '@babel/types';
 // import generate from "@babel/generator";
 
 export const getRootNode = (ast: t.File): t.JSXElement => {
@@ -9,7 +9,7 @@ export const getRootNode = (ast: t.File): t.JSXElement => {
   traverse(ast, {
     JSXElement: (path) => {
       // If root node
-      if (path.key === "expression") {
+      if (path.key === 'expression') {
         rootNode = path.node;
       }
     },
@@ -25,7 +25,7 @@ export const getRootNode = (ast: t.File): t.JSXElement => {
  */
 export function getSelectedNode(
   rootNode: t.JSXElement,
-  indexes: number[] = []
+  indexes: number[] = [],
 ): t.JSXElement {
   // Disregard first index for now. It should always be 0 due to JSX constraints
   const newIndexes = indexes.slice(1);
@@ -34,7 +34,7 @@ export function getSelectedNode(
   const selectedNode = newIndexes.reduce((acc, index) => {
     // Filter out children that are not JSXElements, eg. JSXText (line breaks show up as text!)
     const children = acc.children.filter(
-      (child) => child.type === "JSXElement"
+      (child) => child.type === 'JSXElement',
     );
 
     return children[index];
@@ -54,7 +54,7 @@ export function getSelectedNode(
 export function getAncestorsIndexes(
   element: HTMLElement,
   rootElement: HTMLElement,
-  acc: number[] = []
+  acc: number[] = [],
 ): number[] {
   const index = [].indexOf.call(element.parentNode.children, element);
   const result = [index, ...acc];
@@ -68,7 +68,7 @@ export function getAncestorsIndexes(
 
 export function getSelectedElement(
   rootElement: HTMLElement,
-  ancestorIndexes: number[] = []
+  ancestorIndexes: number[] = [],
 ) {
   const result = ancestorIndexes.reduce((prev, index) => {
     return prev.children[index];

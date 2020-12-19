@@ -1,25 +1,55 @@
 import React from 'react';
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
-import { parse } from '@babel/parser';
-// import traverse from '@babel/traverse';
-import * as t from '@babel/types';
-import generate from '@babel/generator';
+// import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
+// import { parse } from '@babel/parser';
+// import * as t from '@babel/types';
+// import generate from '@babel/generator';
 
 import DesignToolsApp from '../components/DesignToolsApp';
 import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 import { TargetEvent } from '../types';
 import {
   getAncestorsIndexes,
-  getRootNode,
+  // getRootNode,
   getSelectedElement,
-  getSelectedNode,
+  // getSelectedNode,
 } from '../lib/babel-dom-utils';
-import useMutationObserver from '../lib/hooks/use-mutation-observer';
+// import useMutationObserver from '../lib/hooks/use-mutation-observer';
 import useWindowSize from '../lib/hooks/use-window-size';
+import { ControlledEditor } from '@monaco-editor/react';
+import { parseCode, updateNodeClass } from '../lib/rehype-utils';
 
-const defaultCode = `<div id="hello"><strong className="uppercase">Hello World!</strong><p>Some text</p>
+const defaultCode = `<div id="hello"><strong class="uppercase">Hello World!</strong><p>Some text</p>
   <div><p>Deep text</p></div>
   </div>`;
+
+const RehypeComponent = ({ tagName, properties, children }) => {
+  return React.createElement(
+    tagName,
+    {
+      ...properties,
+      ...(properties.className
+        ? { className: properties.className.join(' ') }
+        : {}),
+    },
+    ...children.map((child, i) => {
+      // TODO: Deal with fragments and other children types!
+      if (child.type === 'text') {
+        return child.value;
+      }
+
+      if (child.type === 'element') {
+        return (
+          <RehypeComponent
+            tagName={child.tagName}
+            properties={child.properties}
+            children={child.children}
+            key={i}
+          />
+        );
+      }
+    }),
+  );
+};
 
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -29,37 +59,14 @@ const LivePage = () => {
 
   const highlightElement = React.useRef<HTMLDivElement>();
 
-  // Top level element to observe using MutationObserver
-  const observeElement =
+  // Top level preview element
+  const previewElement =
     typeof window === 'undefined' ? null : document.getElementById('preview');
 
-  // TODO: May not need observer anymore, but this runs after code is updated and LivePreview remounts
-  useMutationObserver(
-    observeElement,
-    { attributes: true, childList: true, subtree: true },
-    () => {
-      const element = getSelectedElement(observeElement, ancestorIndexes);
-      const { top, left, width, height } = element.getBoundingClientRect();
+  const ast = parseCode(code);
 
-      updateHighlightElement(highlightElement.current, {
-        top,
-        left,
-        width,
-        height,
-      });
-
-      // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
-      // highlightElement.current.style.outline = `1px solid cyan`;
-      // highlightElement.current.style.top = `${top}px`;
-      // highlightElement.current.style.left = `${left}px`;
-      // highlightElement.current.style.width = `${width}px`;
-      // highlightElement.current.style.height = `${height}px`;
-      // highlightElement.current.style.pointerEvents = `none`;
-    },
-  );
-
-  useWindowSize(() => {
-    const element = getSelectedElement(observeElement, ancestorIndexes);
+  React.useEffect(() => {
+    const element = getSelectedElement(previewElement, ancestorIndexes);
     const { top, left, width, height } = element.getBoundingClientRect();
 
     updateHighlightElement(highlightElement.current, {
@@ -68,14 +75,19 @@ const LivePage = () => {
       width,
       height,
     });
+  }, [ast]);
+  // console.log(ast);
 
-    // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
-    // highlightElement.current.style.outline = `1px solid cyan`;
-    // highlightElement.current.style.top = `${top}px`;
-    // highlightElement.current.style.left = `${left}px`;
-    // highlightElement.current.style.width = `${width}px`;
-    // highlightElement.current.style.height = `${height}px`;
-    // highlightElement.current.style.pointerEvents = `none`;
+  useWindowSize(() => {
+    const element = getSelectedElement(previewElement, ancestorIndexes);
+    const { top, left, width, height } = element.getBoundingClientRect();
+
+    updateHighlightElement(highlightElement.current, {
+      top,
+      left,
+      width,
+      height,
+    });
   });
 
   // TODO: Type events
@@ -86,46 +98,126 @@ const LivePage = () => {
     // Change node className
     if (node && type === 'UPDATE_FILE_CLASS_NAME') {
       // Parse code and turn it into an AST
-      const ast = parse(code, {
-        plugins: ['jsx'],
-      });
+      const newCode = updateNodeClass(code, ancestorIndexes, className);
 
-      // Find root node
-      const rootNode = getRootNode(ast);
+      // const ast = parse(code, {
+      //   plugins: ['jsx'],
+      // });
 
-      // Get selected node
-      const selected = getSelectedNode(rootNode, ancestorIndexes);
+      // // Find root node
+      // const rootNode = getRootNode(ast);
 
-      // Get classNameAttribute
-      const attributes = selected.openingElement.attributes;
-      const classNameAttribute = attributes.find((attribute) => {
-        return attribute.name.name === 'className';
-      });
+      // // Get selected node
+      // const selected = getSelectedNode(rootNode, ancestorIndexes);
 
-      // Update className or add it to JSX element
-      if (classNameAttribute) {
-        classNameAttribute.value.value = className;
-      } else {
-        attributes.push(
-          t.jsxAttribute(
-            t.jsxIdentifier('className'),
-            t.stringLiteral(className),
-          ),
-        );
-      }
+      // // Get classNameAttribute
+      // const attributes = selected.openingElement.attributes;
+      // const classNameAttribute = attributes.find((attribute) => {
+      //   return attribute.name.name === 'className';
+      // });
 
-      // Convert AST to code
-      const newCode = generate(ast).code;
+      // // Update className or add it to JSX element
+      // if (classNameAttribute) {
+      //   classNameAttribute.value.value = className;
+      // } else {
+      //   attributes.push(
+      //     t.jsxAttribute(
+      //       t.jsxIdentifier('className'),
+      //       t.stringLiteral(className),
+      //     ),
+      //   );
+      // }
+
+      // // Convert AST to code
+      // const newCode = generate(ast).code;
       setCode(newCode);
     }
   };
+
+  // console.log(ancestorIndexes);
 
   return (
     <DesignToolsProvider>
       <div className="flex">
         <div className="fixed" ref={highlightElement}></div>
         <div className="flex flex-1 justify-center items-center flex-col h-screen">
-          <LiveProvider
+          {/* <div> */}
+          <div
+            // dangerouslySetInnerHTML={{
+            //   __html: code,
+            // }}
+            id="preview"
+            className="flex-1 w-full"
+            onClick={(event: TargetEvent) => {
+              // Stop <a> links from navigating away
+              event.preventDefault();
+
+              const { target, currentTarget } = event;
+              const element = target;
+              const indexes = getAncestorsIndexes(target, currentTarget);
+              setAncestorIndexes(indexes);
+
+              // console.log({ target, currentTarget });
+              // console.log(event._targetInst);
+
+              const {
+                top,
+                left,
+                width,
+                height,
+              } = element.getBoundingClientRect();
+
+              updateHighlightElement(highlightElement.current, {
+                top,
+                left,
+                width,
+                height,
+              });
+
+              // Get dimensions of selected node
+              // const {
+              //   width,
+              //   height,
+              //   top,
+              //   left,
+              // } = target.getBoundingClientRect();
+
+              // Set selected nodes for DesignToolsApp
+              setSelectedNodes([event._targetInst]);
+            }}
+          >
+            {ast.children.map((c, i) => {
+              return (
+                <RehypeComponent
+                  tagName={c.tagName}
+                  properties={c.properties}
+                  children={c.children}
+                  key={i}
+                />
+              );
+            })}
+          </div>
+
+          <div className="flex-1 w-full">
+            <ControlledEditor
+              // height="50vh"
+              language="html"
+              theme="dark"
+              value={code}
+              options={{
+                minimap: {
+                  enabled: false,
+                },
+              }}
+              onChange={(event, value) => {
+                console.log(event, value);
+                setCode(value);
+              }}
+            />
+          </div>
+          {/* </div> */}
+
+          {/* <LiveProvider
             code={code}
             transformCode={(newCode) => {
               return newCode;
@@ -158,10 +250,11 @@ const LivePage = () => {
             />
 
             <LiveEditor className="flex-1" />
-          </LiveProvider>
+          </LiveProvider> */}
         </div>
 
         <DesignToolsApp
+          // TODO: Reconsider the type of selectedNodes, currently it is a [_targetIinst], a React specific data structure. Perhaps a simple AST will suffice
           selectedNodes={selectedNodes}
           className={['max-h-full h-screen overflow-auto'].join(' ')}
           onNodeChange={handleDesignToolsSubmit}
@@ -170,6 +263,12 @@ const LivePage = () => {
     </DesignToolsProvider>
   );
 };
+
+class Hello extends React.Component {
+  render() {
+    return React.createElement('div', null, `Hello ${this.props.toWhat}`);
+  }
+}
 
 function updateHighlightElement(element, { top, left, width, height }) {
   // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.

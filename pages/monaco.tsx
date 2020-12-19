@@ -13,8 +13,12 @@ const MonacoPage = () => {
       })
       .parse(value);
 
-    ast.children[0].properties.className[0] = 'text-sm';
-    ast.children[0].properties.className[1] = 'ml-4';
+    console.log(ast.children[0].properties);
+
+    // if (ast?.children) {
+    //   ast.children[0].properties.className[0] = 'text-sm';
+    //   ast.children[0].properties.className[1] = 'ml-4';
+    // }
 
     const newValue = rehype().stringify(ast);
     console.log(newValue);
@@ -37,7 +41,12 @@ const MonacoPage = () => {
           setValue(value);
         }}
       />
-      <div dangerouslySetInnerHTML={{ __html: value }}></div>
+      <div
+        dangerouslySetInnerHTML={{ __html: value }}
+        onClick={(event) => {
+          console.log(event.target, event.currentTarget);
+        }}
+      ></div>
     </div>
   );
 };
