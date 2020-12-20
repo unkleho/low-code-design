@@ -1,59 +1,62 @@
 import rehype from 'rehype';
 
+/**
+ * Custom Rehype Parser types as rehype's are lacking
+ */
+export type RehypeNode = {
+  type: 'element' | 'text';
+  tagName: string;
+  properties?: {
+    className?: string[];
+  };
+  children?: RehypeNode[];
+  value?: string;
+};
+
+// Used in RehypeComponent, but getting funny errors if used in parseCode and getSelectedNode
+export type RehypeRootNode = {
+  type: 'root';
+  children?: RehypeNode[];
+};
+
+/**
+ * Update className of a target element within HTML code
+ * @param code HTML code
+ * @param indexes Index array to target element
+ * @param className New className to replace in element
+ */
 export function updateNodeClass(
   code: string,
   indexes: number[],
   className: string,
-) {
+): string {
   const ast = parseCode(code);
   const selectedNode = getSelectedNode(ast, indexes);
 
+  // if (selectedNode.type !== 'root') {
   if (className) {
-    selectedNode.properties.className = className;
+    selectedNode.properties.className = className.split(' ');
   } else if (!className && selectedNode.properties.className) {
     delete selectedNode.properties.className;
   }
-
-  // selectedNode.properties.className = [
-  //   ...(selectedNode.properties.className || []),
-  //   className,
-  // ];
+  // }
 
   const newCode = rehype().stringify(ast);
 
   return newCode;
 }
 
-// export function removeNodeClass(code, indexes, className) {
-//   const ast = parseCode(code);
-//   const selectedNode = getSelectedNode(ast, indexes);
-
-//   selectedNode.properties.className = selectedNode.properties.className.filter(
-//     (c) => {
-//       return c !== className;
-//     },
-//   );
-
-//   if (selectedNode.properties.className.length === 0) {
-//     delete selectedNode.properties.className;
-//   }
-
-//   const newCode = rehype().stringify(ast);
-
-//   return newCode;
-// }
-
-export function parseCode(code: string) {
+export function parseCode(code: string): RehypeNode {
   const ast = rehype()
     .data('settings', {
       fragment: true,
     })
     .parse(code);
 
-  return ast;
+  return ast as RehypeNode;
 }
 
-function getSelectedNode(rootNode, indexes) {
+function getSelectedNode(rootNode: RehypeNode, indexes: number[]): RehypeNode {
   const selectedNode = indexes.reduce((acc, index) => {
     const children = acc.children.filter((child) => child.type === 'element');
 
