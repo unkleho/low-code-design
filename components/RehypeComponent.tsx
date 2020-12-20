@@ -6,18 +6,20 @@ const RehypeRootComponent = ({
 }: Pick<RehypeRootNode, 'children'>) => {
   return (
     <>
-      {children.map((child, i) => {
-        return (
-          <RehypeComponent
-            type={child.type}
-            tagName={child.tagName}
-            properties={child.properties}
-            value={child.value}
-            children={child.children}
-            key={i}
-          />
-        );
-      })}
+      {children
+        .filter((child) => child.type !== 'comment')
+        .map((child, i) => {
+          return (
+            <RehypeComponent
+              type={child.type}
+              tagName={child.tagName}
+              properties={child.properties}
+              value={child.value}
+              children={child.children}
+              key={i}
+            />
+          );
+        })}
     </>
   );
 };

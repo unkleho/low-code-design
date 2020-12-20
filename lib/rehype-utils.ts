@@ -4,7 +4,7 @@ import rehype from 'rehype';
  * Custom Rehype Parser types as rehype's are lacking
  */
 export type RehypeNode = {
-  type: 'element' | 'text';
+  type: 'element' | 'text' | 'comment';
   tagName: string;
   properties?: {
     className?: string[];
@@ -33,13 +33,11 @@ export function updateNodeClass(
   const ast = parseCode(code);
   const selectedNode = getSelectedNode(ast, indexes);
 
-  // if (selectedNode.type !== 'root') {
   if (selectedNode.properties && className) {
     selectedNode.properties.className = className.split(' ');
   } else if (!className && selectedNode.properties.className) {
     delete selectedNode.properties.className;
   }
-  // }
 
   const newCode = rehype().stringify(ast);
 

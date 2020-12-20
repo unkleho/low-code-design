@@ -34,26 +34,32 @@ const LivePage = () => {
 
   React.useEffect(() => {
     const element = getSelectedElement(previewElement, ancestorIndexes);
-    const { top, left, width, height } = element.getBoundingClientRect();
 
-    updateHighlightElement(highlightElement.current, {
-      top,
-      left,
-      width,
-      height,
-    });
+    if (element) {
+      const { top, left, width, height } = element.getBoundingClientRect();
+
+      updateHighlightElement(highlightElement.current, {
+        top,
+        left,
+        width,
+        height,
+      });
+    }
   }, [rootRehypeNode]);
 
   useWindowSize(() => {
     const element = getSelectedElement(previewElement, ancestorIndexes);
-    const { top, left, width, height } = element.getBoundingClientRect();
 
-    updateHighlightElement(highlightElement.current, {
-      top,
-      left,
-      width,
-      height,
-    });
+    if (element) {
+      const { top, left, width, height } = element.getBoundingClientRect();
+
+      updateHighlightElement(highlightElement.current, {
+        top,
+        left,
+        width,
+        height,
+      });
+    }
   });
 
   // TODO: Type events
