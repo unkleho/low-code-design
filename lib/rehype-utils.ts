@@ -34,7 +34,7 @@ export function updateNodeClass(
   const selectedNode = getSelectedNode(ast, indexes);
 
   // if (selectedNode.type !== 'root') {
-  if (className) {
+  if (selectedNode.properties && className) {
     selectedNode.properties.className = className.split(' ');
   } else if (!className && selectedNode.properties.className) {
     delete selectedNode.properties.className;

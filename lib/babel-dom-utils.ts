@@ -56,6 +56,11 @@ export function getAncestorsIndexes(
   rootElement: HTMLElement,
   acc: number[] = [],
 ): number[] {
+  // If document (top level)
+  if (!element.parentNode) {
+    return [];
+  }
+
   const index = [].indexOf.call(element.parentNode.children, element);
   const result = [index, ...acc];
 
