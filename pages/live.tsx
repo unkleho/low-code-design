@@ -71,72 +71,96 @@ const LivePage = () => {
 
   return (
     <DesignToolsProvider>
-      <div className="flex">
+      <div className="livePage h-screen overflow-hidden">
         <div className="fixed" ref={highlightElement}></div>
-        <div className="flex flex-1 justify-center items-center flex-col h-screen">
-          <div
-            // NOTE: This works but doesn't create React nodes properly
-            // dangerouslySetInnerHTML={{
-            //   __html: code,
-            // }}
-            id="preview"
-            className="flex-1 w-full"
-            onClick={(event: TargetEvent) => {
-              // Stop <a> links from navigating away
-              event.preventDefault();
+        <div
+          // NOTE: This works but doesn't create React nodes properly
+          // dangerouslySetInnerHTML={{
+          //   __html: code,
+          // }}
+          id="preview"
+          className="preview flex flex-col items-center justify-center"
+          onClick={(event: TargetEvent) => {
+            // Stop <a> links from navigating away
+            event.preventDefault();
 
-              const { target, currentTarget } = event;
-              const element = target;
-              const indexes = getAncestorsIndexes(target, currentTarget);
-              setAncestorIndexes(indexes);
+            const { target, currentTarget } = event;
+            const element = target;
+            const indexes = getAncestorsIndexes(target, currentTarget);
+            setAncestorIndexes(indexes);
 
-              const {
-                top,
-                left,
-                width,
-                height,
-              } = element.getBoundingClientRect();
+            const {
+              top,
+              left,
+              width,
+              height,
+            } = element.getBoundingClientRect();
 
-              updateHighlightElement(highlightElement.current, {
-                top,
-                left,
-                width,
-                height,
-              });
+            updateHighlightElement(highlightElement.current, {
+              top,
+              left,
+              width,
+              height,
+            });
 
-              // Set selected nodes for DesignToolsApp
-              setSelectedNodes([event._targetInst]);
+            // Set selected nodes for DesignToolsApp
+            setSelectedNodes([event._targetInst]);
+          }}
+        >
+          <RehypeComponent children={rootRehypeNode.children} />
+        </div>
+
+        <div className="editor border-t-4">
+          <ControlledEditor
+            // height="50vh"
+            language="html"
+            // theme="dark"
+            value={code}
+            options={{
+              minimap: {
+                enabled: false,
+              },
             }}
-          >
-            <RehypeComponent children={rootRehypeNode.children} />
-          </div>
-
-          <div className="flex-1 w-full">
-            <ControlledEditor
-              // height="50vh"
-              language="html"
-              theme="dark"
-              value={code}
-              options={{
-                minimap: {
-                  enabled: false,
-                },
-              }}
-              onChange={(event, value) => {
-                console.log(event, value);
-                setCode(value);
-              }}
-            />
-          </div>
+            onChange={(event, value) => {
+              console.log(event, value);
+              setCode(value);
+            }}
+          />
         </div>
 
         <DesignToolsApp
           // TODO: Reconsider the type of selectedNodes, currently it is a [_targetIinst], a React specific data structure. Perhaps a simple AST will suffice
           selectedNodes={selectedNodes}
-          className={['max-h-full h-screen overflow-auto'].join(' ')}
+          className={[
+            'designTools',
+            'max-h-full h-screen overflow-auto border-r-4',
+          ].join(' ')}
           onNodeChange={handleDesignToolsSubmit}
         />
       </div>
+
+      <style>{`
+      .livePage {
+        display: grid;
+        grid-template-areas: 
+          "designTools preview"
+          "designTools editor";
+        grid-template-rows: 1fr 1fr;
+        grid-template-columns: auto 1fr;
+      }
+
+      .preview {
+        grid-area: preview;
+      }
+
+      .editor {
+        grid-area: editor;
+      }
+
+      .designTools {
+        grid-area: designTools;
+      }
+      `}</style>
     </DesignToolsProvider>
   );
 };
