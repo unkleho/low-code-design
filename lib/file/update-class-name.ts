@@ -27,14 +27,21 @@ const updateClassName = ({ lineNumber, columnNumber, className, code }) => {
       ) {
         const attributes = path.node.openingElement.attributes;
 
-        const classNameAttribute = attributes.find(attribute => {
+        const classNameAttribute = attributes.find((attribute) => {
+          // @ts-ignore
           return attribute.name.name === 'className';
-        })
+        });
 
         if (classNameAttribute) {
+          // @ts-ignore
           classNameAttribute.value.value = className;
         } else {
-          attributes.push(t.jsxAttribute(t.jsxIdentifier('className'), t.stringLiteral(className)))
+          attributes.push(
+            t.jsxAttribute(
+              t.jsxIdentifier('className'),
+              t.stringLiteral(className),
+            ),
+          );
         }
 
         // attributes.forEach((attribute, i) => {
@@ -46,7 +53,7 @@ const updateClassName = ({ lineNumber, columnNumber, className, code }) => {
     },
   });
 
-  const newCode =  generate(ast).code;
+  const newCode = generate(ast).code;
   const prettierCode = prettier.format(newCode);
 
   return prettierCode;

@@ -91,7 +91,7 @@ const ColorTile = ({
   React.useEffect(() => {
     if (button && isSelected) {
       // Scroll button container so it is visible
-      button.current.parentNode.parentNode.scrollTop =
+      button.current.parentElement.parentElement.scrollTop =
         button.current.offsetTop - 20;
     }
   }, [isSelected]);

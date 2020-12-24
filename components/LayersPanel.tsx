@@ -22,7 +22,7 @@ const LayersPanel = ({
 
   React.useEffect(() => {
     const rootFiberNode = Utils.getRootFiberNodeFromDOM(
-      document.getElementById('__next')
+      document.getElementById('__next'),
     );
 
     // Doesn't work for some reason
@@ -34,9 +34,11 @@ const LayersPanel = ({
     // Traverse fiber node tree, adding each one to nodes.
     // TODO: Only add nodes within Wrapper
     traverse(rootFiberNode, (node) => {
+      // @ts-ignore
       if (node.stateNode?.id === '__codesign' || isDesignTools) {
         isDesignTools = true;
 
+        // @ts-ignore
         if (node.stateNode?.id !== '__codesign') {
           nodes.push(node);
         }

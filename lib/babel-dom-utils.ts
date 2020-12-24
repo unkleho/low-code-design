@@ -57,15 +57,15 @@ export function getAncestorsIndexes(
   acc: number[] = [],
 ): number[] {
   // If document (top level)
-  if (!element.parentNode) {
+  if (!element.parentElement) {
     return [];
   }
 
-  const index = [].indexOf.call(element.parentNode.children, element);
+  const index = [].indexOf.call(element.parentElement.children, element);
   const result = [index, ...acc];
 
-  if (element.parentNode !== rootElement) {
-    return getAncestorsIndexes(element.parentNode, rootElement, result);
+  if (element.parentElement !== rootElement) {
+    return getAncestorsIndexes(element.parentElement, rootElement, result);
   }
 
   return result;
