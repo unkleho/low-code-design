@@ -24,6 +24,7 @@
     "react-fiber-traverse": "0.0.8",
     "react-live": "^2.2.2",
     "react-render-hook": "^2.0.0",
+    "react-use-dimensions": "^1.2.1",
     "reactronica": "^0.4.5",
     "rehype": "^11.0.0"
   },

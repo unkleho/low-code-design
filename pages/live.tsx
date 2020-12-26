@@ -20,7 +20,6 @@ const defaultCode = `<div id="hello"><strong class="uppercase">Hello World!</str
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [code, setCode] = React.useState(defaultCode);
-
   const [ancestorIndexes, setAncestorIndexes] = React.useState<number[]>();
 
   const highlightElement = React.useRef<HTMLDivElement>();
@@ -30,7 +29,7 @@ const LivePage = () => {
     typeof window === 'undefined' ? null : document.getElementById('preview');
 
   const rootRehypeNode = parseCode(code);
-  console.log(rootRehypeNode);
+  // console.log(rootRehypeNode);
 
   React.useEffect(() => {
     const element = getSelectedElement(previewElement, ancestorIndexes);
@@ -116,9 +115,14 @@ const LivePage = () => {
           <RehypeComponent children={rootRehypeNode.children} />
         </div>
 
-        <div className="editor border-t-4">
+        <div
+          className="editor border-t-4"
+          // https://github.com/suren-atoyan/monaco-react/issues/27
+          style={{
+            overflow: 'hidden',
+          }}
+        >
           <ControlledEditor
-            // height="50vh"
             language="html"
             // theme="dark"
             value={code}
@@ -172,13 +176,15 @@ const LivePage = () => {
 };
 
 function updateHighlightElement(element, { top, left, width, height }) {
-  // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
-  element.style.outline = `1px solid cyan`;
-  element.style.top = `${top}px`;
-  element.style.left = `${left}px`;
-  element.style.width = `${width}px`;
-  element.style.height = `${height}px`;
-  element.style.pointerEvents = `none`;
+  if (element) {
+    // Had to go vanilla JS, tried my hardest with useState and useRef, but it either caused infinite loop or didn't work.
+    element.style.outline = `1px solid cyan`;
+    element.style.top = `${top}px`;
+    element.style.left = `${left}px`;
+    element.style.width = `${width}px`;
+    element.style.height = `${height}px`;
+    element.style.pointerEvents = `none`;
+  }
 }
 
 export default LivePage;
