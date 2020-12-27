@@ -13,9 +13,13 @@ import {
 import useWindowSize from '../lib/hooks/use-window-size';
 import { parseCode, updateNodeClass } from '../lib/rehype-utils';
 
-const defaultCode = `<div id="hello"><strong class="uppercase">Hello World!</strong><p>Some text</p>
-  <div><p>Deep text</p></div>
-  </div>`;
+const defaultCode = `<div id="hello">
+  <strong class="uppercase">Hello World!</strong>
+  <p>Some text</p>
+  <div>
+    <p>Deep text</p>
+  </div>
+</div>`;
 
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -32,33 +36,19 @@ const LivePage = () => {
   // console.log(rootRehypeNode);
 
   React.useEffect(() => {
-    const element = getSelectedElement(previewElement, ancestorIndexes);
-
-    if (element) {
-      const { top, left, width, height } = element.getBoundingClientRect();
-
-      updateHighlightElement(highlightElement.current, {
-        top,
-        left,
-        width,
-        height,
-      });
-    }
+    changeHighlightElement(
+      previewElement,
+      highlightElement.current,
+      ancestorIndexes,
+    );
   }, [rootRehypeNode]);
 
   useWindowSize(() => {
-    const element = getSelectedElement(previewElement, ancestorIndexes);
-
-    if (element) {
-      const { top, left, width, height } = element.getBoundingClientRect();
-
-      updateHighlightElement(highlightElement.current, {
-        top,
-        left,
-        width,
-        height,
-      });
-    }
+    changeHighlightElement(
+      previewElement,
+      highlightElement.current,
+      ancestorIndexes,
+    );
   });
 
   // TODO: Type events
@@ -90,23 +80,8 @@ const LivePage = () => {
             event.preventDefault();
 
             const { target, currentTarget } = event;
-            const element = target;
             const indexes = getAncestorsIndexes(target, currentTarget);
             setAncestorIndexes(indexes);
-
-            const {
-              top,
-              left,
-              width,
-              height,
-            } = element.getBoundingClientRect();
-
-            updateHighlightElement(highlightElement.current, {
-              top,
-              left,
-              width,
-              height,
-            });
 
             // Set selected nodes for DesignToolsApp
             setSelectedNodes([event._targetInst]);
@@ -186,5 +161,28 @@ function updateHighlightElement(element, { top, left, width, height }) {
     element.style.pointerEvents = `none`;
   }
 }
+
+const changeHighlightElement = (
+  previewElement: HTMLElement,
+  highlightElement: HTMLElement,
+  ancestorIndexes = [],
+) => {
+  if (ancestorIndexes.length === 0) {
+    return null;
+  }
+
+  const element = getSelectedElement(previewElement, ancestorIndexes);
+
+  if (element) {
+    const { top, left, width, height } = element.getBoundingClientRect();
+
+    updateHighlightElement(highlightElement, {
+      top,
+      left,
+      width,
+      height,
+    });
+  }
+};
 
 export default LivePage;
