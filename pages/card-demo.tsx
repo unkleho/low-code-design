@@ -15,8 +15,8 @@ export default function HomePage() {
 
           <div className="relative -mt-10 ml-4">
             <p className="text-xs text-white">1920</p>
-            <h1 className="text-4xl font-semibold leading-tight text-white">
-              Trumpet Pianist
+            <h1 className="text-5xl font-medium leading-tight text-red-300">
+              Trumpet Piano Player
             </h1>
             <p></p>
           </div>

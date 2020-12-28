@@ -13,13 +13,13 @@ import {
 import useWindowSize from '../lib/hooks/use-window-size';
 import { parseCode, updateNodeClass } from '../lib/rehype-utils';
 
-const defaultCode = `<div id="hello">
-  <strong class="uppercase">Hello World!</strong>
-  <p>Some text</p>
-  <div>
-    <p>Deep text</p>
-  </div>
-</div>`;
+const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
+<p class="mb-4 text-sm uppercase text-gray-500">Total</p>
+<h1 class="text-4xl text-gray-800 font-bold leading-tight">77%</h1>
+<div>
+  <p class="text-sm text-teal-400">+13%</p>
+</div>
+</article>`;
 
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -68,13 +68,20 @@ const LivePage = () => {
     <DesignToolsProvider>
       <div className="livePage h-screen overflow-hidden">
         <div className="fixed" ref={highlightElement}></div>
+
+        <header className="header p-3 border-b-4">
+          <h1 className="text-sm uppercase text-gray-800 font-bold">
+            {`<>`} Low Code Design <span className="font-normal">/ Demo</span>
+          </h1>
+        </header>
+
         <div
           // NOTE: This works but doesn't create React nodes properly
           // dangerouslySetInnerHTML={{
           //   __html: code,
           // }}
           id="preview"
-          className="preview flex flex-col items-center justify-center"
+          className="preview flex flex-col items-center justify-center bg-gray-100"
           onClick={(event: TargetEvent) => {
             // Stop <a> links from navigating away
             event.preventDefault();
@@ -128,10 +135,15 @@ const LivePage = () => {
       .livePage {
         display: grid;
         grid-template-areas: 
+          "header header"
           "designTools preview"
           "designTools editor";
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: auto 1fr 1fr;
         grid-template-columns: auto 1fr;
+      }
+
+      .header {
+        grid-area: header;
       }
 
       .preview {
