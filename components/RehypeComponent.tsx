@@ -29,8 +29,12 @@ const RehypeComponent = ({
   tagName,
   properties,
   value,
-  children,
+  children = [],
 }: RehypeNode) => {
+  if (type === 'comment') {
+    return null;
+  }
+
   if (type === 'text') {
     return <>{value}</>;
   }
@@ -39,7 +43,7 @@ const RehypeComponent = ({
     tagName,
     {
       ...properties,
-      ...(properties.className
+      ...(properties?.className
         ? { className: properties.className.join(' ') }
         : {}),
     },
