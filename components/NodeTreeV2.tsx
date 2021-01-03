@@ -4,7 +4,7 @@ import { RehypeNode } from '../lib/rehype-utils';
 // import Icon from './Icon';
 
 type NodeTreeProps = {
-  children: RehypeNode[];
+  nodes: RehypeNode[];
   // selectedIDs: number[];
   level?: number;
   dataId?: string;
@@ -13,13 +13,13 @@ type NodeTreeProps = {
 
 const NodeTree = ({
   // parentID,
-  children = [],
+  nodes = [],
   // selectedIDs = [],
   level = 0,
   dataId = 'design-tools',
   onNodeCreateClick,
 }: NodeTreeProps) => {
-  if (children.length === 0) {
+  if (nodes.length === 0) {
     return null;
   }
 
@@ -31,7 +31,7 @@ const NodeTree = ({
 
   return (
     <ul className="pl-0">
-      {children.map((node) => {
+      {nodes.map((node) => {
         // if (!node.type || typeof node.elementType === 'object') {
         //   return null;
         // }
@@ -88,7 +88,7 @@ const NodeTree = ({
               onNodeCreateClick={onNodeCreateClick}
             /> */}
 
-            <NodeTree children={node.children} level={level + 1} />
+            <NodeTree nodes={node.children} level={level + 1} />
           </li>
         );
       })}

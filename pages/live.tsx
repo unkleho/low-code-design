@@ -127,6 +127,7 @@ const LivePage = () => {
         <DesignToolsApp
           // TODO: Reconsider the type of selectedNodes, currently it is a [_targetInst], a React specific data structure. Perhaps a simple AST will suffice
           selectedNodes={selectedNodes}
+          nodes={rootRehypeNode.children}
           className={[
             'designTools',
             'max-h-full h-screen overflow-auto border-r-4',

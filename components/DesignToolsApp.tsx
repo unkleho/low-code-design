@@ -14,9 +14,11 @@ import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 
 import css from './DesignToolsApp.module.css';
+import { RehypeNode } from '../lib/rehype-utils';
 
 type Props = {
   selectedNodes: FiberNode[];
+  nodes?: RehypeNode[];
   className?: string;
   onNodeChange: Function;
 };
@@ -41,6 +43,7 @@ const config = {
 
 const DesignToolsApp = ({
   selectedNodes = [],
+  nodes,
   className: appClassName,
   onNodeChange,
 }: Props) => {
@@ -189,6 +192,7 @@ const DesignToolsApp = ({
 
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
+        nodes={nodes}
         selectedIDs={selectedIDs}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeCreateClick={(selectedNode) => {

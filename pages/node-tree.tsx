@@ -5,7 +5,7 @@ const NodeTreePage = () => {
   return (
     <div>
       <NodeTree
-        children={[
+        nodes={[
           {
             type: 'element',
             tagName: 'div',
