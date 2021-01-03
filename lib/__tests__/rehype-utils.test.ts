@@ -18,17 +18,17 @@ const codeWithClass = `<div>
     </div>
   </section>
 </div>`;
-const ancestorIndexes = [0, 1, 0, 1];
+const pathIndexes = [0, 1, 0, 1];
 
 describe('Rehype', () => {
   it('should select element in code and add class', () => {
-    const newCode = updateNodeClass(code, ancestorIndexes, 'font-2xl');
+    const newCode = updateNodeClass(code, pathIndexes, 'font-2xl');
 
     expect(newCode).toEqual(codeWithClass);
   });
 
   it('should select element in code and remove class', () => {
-    const newCode = updateNodeClass(codeWithClass, ancestorIndexes, null);
+    const newCode = updateNodeClass(codeWithClass, pathIndexes, null);
 
     expect(newCode).toEqual(code);
   });

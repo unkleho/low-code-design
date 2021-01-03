@@ -46,12 +46,11 @@ export function getSelectedNode(
 /**
  * Recursive function to get index array indicating path to element
  * TODO: Move to dom-utils?
- * TODO: Returned order is root -> element, so ancestors isn't quite accurate, rename?
  * @param element Element to start
  * @param rootElement Root element to stop traversal
  * @param acc Accumulator, for recursive trickiness only!
  */
-export function getAncestorsIndexes(
+export function getPathIndexes(
   element: HTMLElement,
   rootElement: HTMLElement,
   acc: number[] = [],
@@ -65,7 +64,7 @@ export function getAncestorsIndexes(
   const result = [index, ...acc];
 
   if (element.parentElement !== rootElement) {
-    return getAncestorsIndexes(element.parentElement, rootElement, result);
+    return getPathIndexes(element.parentElement, rootElement, result);
   }
 
   return result;
@@ -73,9 +72,9 @@ export function getAncestorsIndexes(
 
 export function getSelectedElement(
   rootElement: HTMLElement,
-  ancestorIndexes: number[] = [],
+  pathIndexes: number[] = [],
 ) {
-  const result = ancestorIndexes.reduce((prev, index) => {
+  const result = pathIndexes.reduce((prev, index) => {
     return prev.children[index];
   }, rootElement);
 

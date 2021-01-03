@@ -3,31 +3,28 @@ import { ControlledEditor } from '@monaco-editor/react';
 
 import DesignToolsApp from '../components/DesignToolsApp';
 import RehypeComponent from '../components/RehypeComponent';
-import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 
+import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 import { DesignToolNode, TargetEvent } from '../types';
-import {
-  getAncestorsIndexes,
-  getSelectedElement,
-} from '../lib/babel-dom-utils';
+import { getPathIndexes, getSelectedElement } from '../lib/babel-dom-utils';
 import useWindowSize from '../lib/hooks/use-window-size';
 import { parseCode, RehypeNode, updateNodeClass } from '../lib/rehype-utils';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
-<p class="mb-4 text-sm uppercase text-gray-500">Total</p>
-<h1 class="text-4xl text-gray-800 font-bold leading-tight">77%</h1>
-<p class="mb-2 text-sm text-teal-400">+13%</p>
+  <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
+  <h1 class="text-4xl text-gray-800 font-bold leading-tight">77%</h1>
+  <p class="mb-2 text-sm text-teal-400">+13%</p>
 
-<div class="relative">
-  <div class="absolute w-full h-1 bg-gray-200"></div>
-  <div class="absolute t-0 w-3/4 h-1 bg-pink-500"></div>
-</div>
+  <div class="relative">
+    <div class="absolute w-full h-1 bg-gray-200"></div>
+    <div class="absolute t-0 w-3/4 h-1 bg-pink-500"></div>
+  </div>
 </article>`;
 
 const LivePage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [code, setCode] = React.useState(defaultCode);
-  const [ancestorIndexes, setAncestorIndexes] = React.useState<number[]>();
+  const [pathIndexes, setPathIndexes] = React.useState<number[]>();
 
   const highlightElement = React.useRef<HTMLDivElement>();
 
@@ -37,17 +34,17 @@ const LivePage = () => {
 
   // Convert code to AST
   const rootRehypeNode = parseCode(code);
-  const nodes = addSelected(rootRehypeNode.children, ancestorIndexes);
+  const nodes = addSelected(rootRehypeNode.children, pathIndexes);
 
   // console.log(rootRehypeNode);
-  // console.log(ancestorIndexes);
-  console.log(nodes);
+  // console.log(pathIndexes);
+  // console.log(nodes);
 
   React.useEffect(() => {
     changeHighlightElement(
       previewElement,
       highlightElement.current,
-      ancestorIndexes,
+      pathIndexes,
     );
   }, [rootRehypeNode]);
 
@@ -55,7 +52,7 @@ const LivePage = () => {
     changeHighlightElement(
       previewElement,
       highlightElement.current,
-      ancestorIndexes,
+      pathIndexes,
     );
   });
 
@@ -67,7 +64,7 @@ const LivePage = () => {
     // Change node className
     if (node && type === 'UPDATE_FILE_CLASS_NAME') {
       // Parse code and turn it into an AST
-      const newCode = updateNodeClass(code, ancestorIndexes, className);
+      const newCode = updateNodeClass(code, pathIndexes, className);
       setCode(newCode);
     }
   };
@@ -95,8 +92,8 @@ const LivePage = () => {
             event.preventDefault();
 
             const { target, currentTarget } = event;
-            const indexes = getAncestorsIndexes(target, currentTarget);
-            setAncestorIndexes(indexes);
+            const indexes = getPathIndexes(target, currentTarget);
+            setPathIndexes(indexes);
 
             // Set selected nodes for DesignToolsApp
             setSelectedNodes([event._targetInst]);
@@ -187,13 +184,13 @@ function updateHighlightElement(element, { top, left, width, height }) {
 const changeHighlightElement = (
   previewElement: HTMLElement,
   highlightElement: HTMLElement,
-  ancestorIndexes = [],
+  pathIndexes = [],
 ) => {
-  if (ancestorIndexes.length === 0) {
+  if (pathIndexes.length === 0) {
     return null;
   }
 
-  const element = getSelectedElement(previewElement, ancestorIndexes);
+  const element = getSelectedElement(previewElement, pathIndexes);
 
   if (element) {
     const { top, left, width, height } = element.getBoundingClientRect();
@@ -210,20 +207,20 @@ const changeHighlightElement = (
 /**
  * Add isSelected flag to selected node
  * @param nodes
- * @param ancestorIndexes
+ * @param pathIndexes
  */
 function addSelected(
   nodes: RehypeNode[],
-  ancestorIndexes: number[] = [],
+  pathIndexes: number[] = [],
 ): DesignToolNode[] {
-  if (ancestorIndexes.length === 0) {
+  if (pathIndexes.length === 0) {
     return nodes;
   }
 
   // Recursively find selected node
   const getNode = (children, level = 0) => {
-    const isLast = ancestorIndexes.length === level + 1;
-    const index = ancestorIndexes[level];
+    const isLast = pathIndexes.length === level + 1;
+    const index = pathIndexes[level];
     const node = children.filter((child) => child.type === 'element')[index];
 
     if (isLast) {
