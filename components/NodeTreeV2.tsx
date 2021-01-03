@@ -1,25 +1,23 @@
 import React from 'react';
-import { RehypeNode } from '../lib/rehype-utils';
+import { DesignToolNode } from '../types';
 
 // import Icon from './Icon';
 
 type NodeTreeProps = {
-  nodes: RehypeNode[];
-  // selectedIDs: number[];
+  nodes: DesignToolNode[];
   level?: number;
   dataId?: string;
   onNodeCreateClick?: Function;
 };
 
 const NodeTree = ({
-  // parentID,
   nodes = [],
-  // selectedIDs = [],
   level = 0,
-  dataId = 'design-tools',
   onNodeCreateClick,
 }: NodeTreeProps) => {
-  if (nodes.length === 0) {
+  const displayNodes = nodes.filter((node) => node.type === 'element');
+
+  if (displayNodes.length === 0) {
     return null;
   }
 
@@ -30,26 +28,19 @@ const NodeTree = ({
   // };
 
   return (
-    <ul className="pl-0">
-      {nodes.map((node) => {
-        // if (!node.type || typeof node.elementType === 'object') {
-        //   return null;
-        // }
-
-        // const isSelected = selectedIDs.includes(node._debugID);
-        // const grandChildNodes = getChildNodes(nodes, node._debugID);
+    <ul className="pl-0 text-xs">
+      {displayNodes.map((node) => {
         const hasGrandChildren = node.children?.length > 0;
 
         return (
-          <li data-id={dataId} className="relative">
+          <li className="relative">
             <button
               type="button"
               className={[
                 'flex w-full py-1 hover:bg-gray-200',
-                // isSelected ? 'font-bold' : 'font-normal',
-                // isSelected ? 'bg-gray-200' : '',
+                node.isSelected ? 'font-bold' : 'font-normal',
+                node.isSelected ? 'bg-gray-200' : '',
               ].join(' ')}
-              data-id={dataId}
               style={{
                 paddingLeft: (level + 1) * 12,
               }}
@@ -79,16 +70,11 @@ const NodeTree = ({
               </button>
             )} */}
 
-            {/* {node.memoizedProps.className} */}
-            {/* <NodeTree
-              parentID={node._debugID}
-              nodes={nodes}
-              selectedIDs={selectedIDs}
+            <NodeTree
+              nodes={node.children}
               level={level + 1}
               onNodeCreateClick={onNodeCreateClick}
-            /> */}
-
-            <NodeTree nodes={node.children} level={level + 1} />
+            />
           </li>
         );
       })}

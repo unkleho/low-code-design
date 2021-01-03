@@ -11,14 +11,14 @@ import SizingPanel from './SizingPanel';
 
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
-import { FiberNode, NodeChangeEvent } from '../types';
+import { DesignToolNode, FiberNode, NodeChangeEvent } from '../types';
 
 import css from './DesignToolsApp.module.css';
-import { RehypeNode } from '../lib/rehype-utils';
+// import { RehypeNode } from '../lib/rehype-utils';
 
 type Props = {
   selectedNodes: FiberNode[];
-  nodes?: RehypeNode[];
+  nodes?: DesignToolNode[];
   className?: string;
   onNodeChange: Function;
 };

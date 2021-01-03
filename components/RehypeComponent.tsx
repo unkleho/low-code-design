@@ -2,7 +2,7 @@ import React from 'react';
 import { RehypeNode, RehypeRootNode } from '../lib/rehype-utils';
 
 const RehypeRootComponent = ({
-  children,
+  children = [],
 }: Pick<RehypeRootNode, 'children'>) => {
   return (
     <>

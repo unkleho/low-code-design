@@ -5,13 +5,13 @@ import DesignToolsApp from '../components/DesignToolsApp';
 import RehypeComponent from '../components/RehypeComponent';
 import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 
-import { TargetEvent } from '../types';
+import { DesignToolNode, TargetEvent } from '../types';
 import {
   getAncestorsIndexes,
   getSelectedElement,
 } from '../lib/babel-dom-utils';
 import useWindowSize from '../lib/hooks/use-window-size';
-import { parseCode, updateNodeClass } from '../lib/rehype-utils';
+import { parseCode, RehypeNode, updateNodeClass } from '../lib/rehype-utils';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
 <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
@@ -35,8 +35,13 @@ const LivePage = () => {
   const previewElement =
     typeof window === 'undefined' ? null : document.getElementById('preview');
 
+  // Convert code to AST
   const rootRehypeNode = parseCode(code);
-  console.log(rootRehypeNode);
+  const nodes = addSelected(rootRehypeNode.children, ancestorIndexes);
+
+  // console.log(rootRehypeNode);
+  // console.log(ancestorIndexes);
+  console.log(nodes);
 
   React.useEffect(() => {
     changeHighlightElement(
@@ -127,7 +132,7 @@ const LivePage = () => {
         <DesignToolsApp
           // TODO: Reconsider the type of selectedNodes, currently it is a [_targetInst], a React specific data structure. Perhaps a simple AST will suffice
           selectedNodes={selectedNodes}
-          nodes={rootRehypeNode.children}
+          nodes={nodes}
           className={[
             'designTools',
             'max-h-full h-screen overflow-auto border-r-4',
@@ -201,5 +206,37 @@ const changeHighlightElement = (
     });
   }
 };
+
+/**
+ * Add isSelected flag to selected node
+ * @param nodes
+ * @param ancestorIndexes
+ */
+function addSelected(
+  nodes: RehypeNode[],
+  ancestorIndexes: number[] = [],
+): DesignToolNode[] {
+  if (ancestorIndexes.length === 0) {
+    return nodes;
+  }
+
+  // Recursively find selected node
+  const getNode = (children, level = 0) => {
+    const isLast = ancestorIndexes.length === level + 1;
+    const index = ancestorIndexes[level];
+    const node = children.filter((child) => child.type === 'element')[index];
+
+    if (isLast) {
+      return node;
+    }
+
+    return getNode(node.children, level + 1);
+  };
+
+  const selectedNode = getNode(nodes);
+  selectedNode.isSelected = true;
+
+  return nodes;
+}
 
 export default LivePage;
