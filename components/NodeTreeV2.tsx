@@ -6,13 +6,16 @@ import { DesignToolNode } from '../types';
 type NodeTreeProps = {
   nodes: DesignToolNode[];
   level?: number;
-  dataId?: string;
+  pathIndexes?: number[];
+  onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
   onNodeCreateClick?: Function;
 };
 
 const NodeTree = ({
   nodes = [],
   level = 0,
+  pathIndexes = [],
+  onNodeClick,
   onNodeCreateClick,
 }: NodeTreeProps) => {
   const displayNodes = nodes.filter((node) => node.type === 'element');
@@ -29,8 +32,9 @@ const NodeTree = ({
 
   return (
     <ul className="pl-0 text-xs">
-      {displayNodes.map((node) => {
+      {displayNodes.map((node, i) => {
         const hasGrandChildren = node.children?.length > 0;
+        const childPathIndexes = [...pathIndexes, i];
 
         return (
           <li className="relative">
@@ -44,11 +48,15 @@ const NodeTree = ({
               style={{
                 paddingLeft: (level + 1) * 12,
               }}
-              // onClick={() => {
-              //   if (node.stateNode) {
-              //     node.stateNode.click();
-              //   }
-              // }}
+              onClick={() => {
+                if (typeof onNodeClick === 'function') {
+                  onNodeClick(node, childPathIndexes);
+                }
+
+                // if (node.stateNode) {
+                //   node.stateNode.click();
+                // }
+              }}
             >
               {hasGrandChildren ? (
                 <span className="mr-1 text-gray-500 text-xs">&#9660;</span>
@@ -73,6 +81,8 @@ const NodeTree = ({
             <NodeTree
               nodes={node.children}
               level={level + 1}
+              pathIndexes={childPathIndexes}
+              onNodeClick={onNodeClick}
               onNodeCreateClick={onNodeCreateClick}
             />
           </li>

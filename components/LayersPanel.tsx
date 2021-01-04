@@ -5,13 +5,14 @@ import Panel from './Panel';
 // import NodeTree from './NodeTree';
 import NodeTreeV2 from './NodeTreeV2';
 
-import { FiberNode } from '../types';
+import { DesignToolNode } from '../types';
 import { RehypeNode } from '../lib/rehype-utils';
 
 type Props = {
   nodes?: RehypeNode[];
   selectedIDs: number[];
   refreshCounter?: number;
+  onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
   onNodeCreateClick?: Function;
 };
 
@@ -19,6 +20,7 @@ const LayersPanel = ({
   nodes,
   selectedIDs,
   refreshCounter,
+  onNodeClick,
   onNodeCreateClick,
 }: Props) => {
   // const [nodes, setNodes] = React.useState<FiberNode[]>([]);
@@ -60,7 +62,7 @@ const LayersPanel = ({
   return (
     <Panel title="Layers" name="layers">
       <div className="py-1">
-        <NodeTreeV2 nodes={nodes} />
+        <NodeTreeV2 nodes={nodes} onNodeClick={onNodeClick} />
         {/* <NodeTree
           parentID={rootNode?.return._debugID}
           nodes={nodes}

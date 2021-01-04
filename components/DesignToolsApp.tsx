@@ -20,6 +20,7 @@ type Props = {
   selectedNodes: FiberNode[];
   nodes?: DesignToolNode[];
   className?: string;
+  onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
   onNodeChange: Function;
 };
 
@@ -45,6 +46,7 @@ const DesignToolsApp = ({
   selectedNodes = [],
   nodes,
   className: appClassName,
+  onNodeClick,
   onNodeChange,
 }: Props) => {
   const { state, dispatch } = useDesignTools();
@@ -195,6 +197,7 @@ const DesignToolsApp = ({
         nodes={nodes}
         selectedIDs={selectedIDs}
         refreshCounter={state.layersPanelRefreshCounter}
+        onNodeClick={onNodeClick}
         onNodeCreateClick={(selectedNode) => {
           handleNodeChange([
             {

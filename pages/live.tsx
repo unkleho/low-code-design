@@ -134,6 +134,10 @@ const LivePage = () => {
             'designTools',
             'max-h-full h-screen overflow-auto border-r-4',
           ].join(' ')}
+          onNodeClick={(node, pathIndexes) => {
+            setPathIndexes(pathIndexes);
+            // TODO: Update className, text and tagType in DesignToolsApp
+          }}
           onNodeChange={handleDesignToolsSubmit}
         />
       </div>
