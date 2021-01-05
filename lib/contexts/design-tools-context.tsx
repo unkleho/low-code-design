@@ -16,8 +16,9 @@ export const types = {
   REFRESH_LAYERS_PANEL: 'REFRESH_LAYERS_PANEL',
 };
 
+// TODO: Type state and actions
 function designToolsReducer(state, action) {
-  // console.log(action);
+  console.log(action);
 
   switch (action.type) {
     case types.UPDATE_CURRENT_FIELD: {
@@ -56,12 +57,15 @@ function designToolsReducer(state, action) {
     }
 
     case types.UPDATE_SELECTED_NODE: {
-      const children = action.selectedNode?.pendingProps?.children;
+      // const children = action.selectedNode?.pendingProps?.children;
+      const children = action.selectedNode?.children;
+      const text = children?.find(child => child.type === 'text')?.value;
 
       return {
         ...state,
         selectedNode: action.selectedNode,
-        text: typeof children === 'string' ? children : '',
+        // text: typeof children === 'string' ? children : '',
+        text,
       };
     }
 
@@ -213,7 +217,7 @@ const defaultFormValues = {
   opacity: '',
 };
 
-function buildFormValues(className) {
+function buildFormValues(className = '') {
   return {
     className,
     // Layout

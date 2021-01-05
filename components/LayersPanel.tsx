@@ -10,7 +10,7 @@ import { RehypeNode } from '../lib/rehype-utils';
 
 type Props = {
   nodes?: RehypeNode[];
-  selectedIDs: number[];
+  // selectedIDs: number[];
   refreshCounter?: number;
   onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
   onNodeCreateClick?: Function;
@@ -18,7 +18,7 @@ type Props = {
 
 const LayersPanel = ({
   nodes,
-  selectedIDs,
+  // selectedIDs,
   refreshCounter,
   onNodeClick,
   onNodeCreateClick,

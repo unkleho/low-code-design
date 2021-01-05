@@ -14,11 +14,10 @@ import replaceClassNameValue from '../lib/replace-class-name-value';
 import { DesignToolNode, FiberNode, NodeChangeEvent } from '../types';
 
 import css from './DesignToolsApp.module.css';
-// import { RehypeNode } from '../lib/rehype-utils';
 
 type Props = {
-  selectedNodes: FiberNode[];
   nodes?: DesignToolNode[];
+  selectedNodes: DesignToolNode[];
   className?: string;
   onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
   onNodeChange: Function;
@@ -52,9 +51,10 @@ const DesignToolsApp = ({
   const { state, dispatch } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
+
   const className = state?.className;
   const text = state?.text;
-  const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
+  // const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
 
   // --------------------------------------------------------------------------
   // Effects
@@ -69,11 +69,12 @@ const DesignToolsApp = ({
 
     // console.log(selectedNode.pendingProps.children);
 
-    const className = selectedNode?.stateNode.className || '';
+    // const className = selectedNode?.stateNode.className || '';
+    const classNameList = selectedNode?.properties?.className || [];
 
     dispatch({
       type: types.UPDATE_CLASS_NAME,
-      className,
+      className: classNameList.length > 0 ? classNameList.join(' ') : '',
     });
   }, [selectedNode]);
 
@@ -195,7 +196,7 @@ const DesignToolsApp = ({
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
         nodes={nodes}
-        selectedIDs={selectedIDs}
+        // selectedIDs={selectedIDs}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeClick={onNodeClick}
         onNodeCreateClick={(selectedNode) => {

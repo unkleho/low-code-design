@@ -35,7 +35,7 @@ export function updateNodeClass(
 
   if (selectedNode.properties && className) {
     selectedNode.properties.className = className.split(' ');
-  } else if (!className && selectedNode.properties.className) {
+  } else if (!className && selectedNode.properties?.className) {
     delete selectedNode.properties.className;
   }
 
@@ -54,7 +54,7 @@ export function parseCode(code: string): RehypeNode {
   return ast as RehypeNode;
 }
 
-function getSelectedNode(rootNode: RehypeNode, indexes: number[]): RehypeNode {
+export function getSelectedNode(rootNode: RehypeNode, indexes: number[]): RehypeNode {
   const selectedNode = indexes.reduce((acc, index) => {
     const children = acc.children.filter((child) => child.type === 'element');
 
