@@ -8,7 +8,12 @@ import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 import { DesignToolNode, TargetEvent } from '../types';
 import { getPathIndexes, getSelectedElement } from '../lib/babel-dom-utils';
 import useWindowSize from '../lib/hooks/use-window-size';
-import { parseCode, RehypeNode, updateNodeClass, getSelectedNode } from '../lib/rehype-utils';
+import {
+  parseCode,
+  RehypeNode,
+  updateNodeClass,
+  getSelectedNode,
+} from '../lib/rehype-utils';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
   <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
@@ -94,9 +99,9 @@ const LivePage = () => {
             const { target, currentTarget } = event;
             const indexes = getPathIndexes(target, currentTarget);
             setPathIndexes(indexes);
-            
+
             const selectedNode = getSelectedNode(rootRehypeNode, indexes);
-            setSelectedNodes([selectedNode])
+            setSelectedNodes([selectedNode]);
 
             // Set selected nodes for DesignToolsApp
             // setSelectedNodes([event._targetInst]);
@@ -213,10 +218,11 @@ const changeHighlightElement = (
 
 /**
  * Add isSelected flag to selected node
+ * TODO: Move to own file?
  * @param nodes
  * @param pathIndexes
  */
-function addSelected(
+export function addSelected(
   nodes: RehypeNode[],
   pathIndexes: number[] = [],
 ): DesignToolNode[] {

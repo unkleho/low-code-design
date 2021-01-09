@@ -5,11 +5,15 @@ import DesignToolsAppPortal from './DesignToolsAppPortal';
 
 import { DesignToolNode, TargetEvent } from '../types';
 import { FiberNode } from 'react-fiber-traverse/dist/mocked-types';
+import { getPathIndexes } from '../lib/babel-dom-utils';
+import { getSelectedNode } from '../lib/rehype-utils';
+import { addSelected } from '../pages/live';
 
 const Wrapper = ({ children }) => {
   // Tree of DesignToolNodes within __preview-container
   const [nodes, setNodes] = React.useState([]);
   const [selectedNodes, setSelectedNodes] = React.useState([]);
+  const [pathIndexes, setPathIndexes] = React.useState([]);
   const [prevElement, setPrevElement] = React.useState<HTMLElement>();
   // Temp way to force re-render
   const [increment, setIncrement] = React.useState(0);
@@ -53,29 +57,30 @@ const Wrapper = ({ children }) => {
       <div
         id="__preview-container"
         onClick={(event: TargetEvent) => {
-          // console.log('Wrapper event');
+          const { target, currentTarget } = event;
 
           // Stop <a> links from navigating away
           event.preventDefault();
 
-          const targetInst = event._targetInst;
-
-          // Skip part of DesignTools
-          if (targetInst.stateNode.dataset.id === 'design-tools') {
-            return true;
-          }
-
+          // Update highlight element
           if (prevElement) {
             prevElement.style.outline = null;
           }
+          (target as HTMLElement).style.outline = '1px solid cyan';
+          setPrevElement(target);
 
-          (event.target as HTMLElement).style.outline = '1px solid cyan';
+          // Work out pathIndexes of target
+          const indexes = getPathIndexes(target, currentTarget);
+          setPathIndexes(indexes);
 
-          setPrevElement(event.target);
+          // Work out the selectedNode and set state
+          const selectedNode = getSelectedNode(
+            { tagName: 'div', type: 'element', children: nodes },
+            indexes,
+          );
+          setSelectedNodes([selectedNode]);
 
-          // TODO: set selected DesignToolNodes
-          // setSelectedNodes([targetInst]);
-
+          // Update increment to trigger refresh
           setIncrement(increment + 1);
         }}
       >
@@ -83,9 +88,9 @@ const Wrapper = ({ children }) => {
       </div>
 
       <DesignToolsAppPortal
-        // TODO: Pass in nodes
         selectedNodes={selectedNodes}
-        nodes={nodes}
+        // TODO: Incorporate `addSelected` into DesignToolsApp?
+        nodes={addSelected(nodes, pathIndexes)}
         onNodeChange={() => {
           setIncrement(increment + 1);
         }}
@@ -95,14 +100,14 @@ const Wrapper = ({ children }) => {
 };
 
 // Traverse root node and build tree of DesignToolNodes
-function buildTree(node: FiberNode, allNodes: FiberNode[]): DesignToolNode[] {
+function buildTree(node: FiberNode, allNodes: FiberNode[]): DesignToolNode {
   const childNodes = allNodes.filter((n) => n.return === node);
 
   return {
     tagName: node.elementType as string,
     type: 'element',
     properties: {
-      className: node.stateNode.className,
+      className: node.stateNode.className.split(' '),
     },
     children: childNodes.map((childNode) => buildTree(childNode, allNodes)),
   };

@@ -34,37 +34,37 @@ const DesignToolsAppPortal = ({
     // Change DOM element className
     if (node) {
       if (event.type === 'UPDATE_FILE_CLASS_NAME') {
-        node.stateNode.className = event.className;
+        // node.stateNode.className = event.className;
 
-        await axios.post('/api/file/class-name', {
-          className: event.className,
-          fileName: node._debugSource.fileName,
-          lineNumber: node._debugSource.lineNumber,
-          columnNumber: node._debugSource.columnNumber,
-        });
+        // await axios.post('/api/file/class-name', {
+        //   className: event.className,
+        //   fileName: node._debugSource.fileName,
+        //   lineNumber: node._debugSource.lineNumber,
+        //   columnNumber: node._debugSource.columnNumber,
+        // });
 
         console.log(event.type, event.className);
       } else if (event.type === 'UPDATE_FILE_TEXT') {
         if (event.text) {
-          node.stateNode.innerText = event.text;
+          // node.stateNode.innerText = event.text;
 
-          await axios.post('/api/file/text', {
-            text: event.text,
-            fileName: node._debugSource.fileName,
-            lineNumber: node._debugSource.lineNumber,
-            columnNumber: node._debugSource.columnNumber,
-          });
+          // await axios.post('/api/file/text', {
+          //   text: event.text,
+          //   fileName: node._debugSource.fileName,
+          //   lineNumber: node._debugSource.lineNumber,
+          //   columnNumber: node._debugSource.columnNumber,
+          // });
 
           console.log(event.type, event.text);
         }
       } else if (event.type === 'CREATE_FILE_ELEMENT') {
         if (event.elementType) {
-          await axios.post('/api/file/element', {
-            elementType: event.elementType,
-            fileName: node._debugSource.fileName,
-            lineNumber: node._debugSource.lineNumber,
-            columnNumber: node._debugSource.columnNumber,
-          });
+          // await axios.post('/api/file/element', {
+          //   elementType: event.elementType,
+          //   fileName: node._debugSource.fileName,
+          //   lineNumber: node._debugSource.lineNumber,
+          //   columnNumber: node._debugSource.columnNumber,
+          // });
 
           console.log(event.type, event.elementType);
 
