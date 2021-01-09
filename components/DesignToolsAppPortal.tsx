@@ -6,17 +6,23 @@ import DesignToolsApp from './DesignToolsApp';
 import Icon from './Icon';
 import ControlPanel from './ControlPanel';
 
-import { FiberNode, NodeChangeEvent } from '../types';
+import { DesignToolNode, FiberNode, NodeChangeEvent } from '../types';
 import {
   DesignToolsProvider,
   useDesignTools,
 } from '../lib/contexts/design-tools-context';
 
 type Props = {
-  selectedNodes?: FiberNode[];
+  selectedNodes?: DesignToolNode[];
+  nodes?: DesignToolNode[];
+  onNodeChange?: Function;
 };
 
-const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
+const DesignToolsAppPortal = ({
+  selectedNodes = [],
+  nodes = [],
+  onNodeChange,
+}: Props) => {
   const { dispatch } = useDesignTools();
   const [isActive, setIsActive] = React.useState(false);
 
@@ -71,6 +77,10 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
         }
       }
     }
+
+    if (typeof onNodeChange === 'function') {
+      onNodeChange(events);
+    }
   };
 
   if (canUseDOM()) {
@@ -103,6 +113,7 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
 
           <DesignToolsApp
             selectedNodes={selectedNodes}
+            nodes={nodes}
             onNodeChange={handleNodeChange}
           />
         </aside>
