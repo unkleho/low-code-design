@@ -4,7 +4,7 @@ import { Utils, traverse } from 'react-fiber-traverse';
 import DesignToolsAppPortal from './DesignToolsAppPortal';
 
 import { DesignToolNode, TargetEvent } from '../types';
-import { FiberNode } from 'react-fiber-traverse/dist/mocked-types';
+import { FiberNode } from '../types';
 import { getPathIndexes } from '../lib/babel-dom-utils';
 import { getSelectedNode } from '../lib/rehype-utils';
 import { addSelected } from '../pages/live';
@@ -36,7 +36,7 @@ const Wrapper = ({ children }) => {
     // Get all fiberNodes within #__preview-container
     let fiberNodes: FiberNode[] = [];
     traverse(previewContainerFiberNode, (node) => {
-      fiberNodes.push(node);
+      fiberNodes.push(node as FiberNode);
     });
 
     // Get top level fiberNodes within #__preview-container
@@ -110,6 +110,13 @@ function buildTree(node: FiberNode, allNodes: FiberNode[]): DesignToolNode {
       className: node.stateNode.className.split(' '),
     },
     children: childNodes.map((childNode) => buildTree(childNode, allNodes)),
+    position: {
+      start: {
+        line: node._debugSource.lineNumber,
+        column: node._debugSource.columnNumber,
+      },
+    },
+    fileName: node._debugSource.fileName,
   };
 }
 

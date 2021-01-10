@@ -34,14 +34,15 @@ const DesignToolsAppPortal = ({
     // Change DOM element className
     if (node) {
       if (event.type === 'UPDATE_FILE_CLASS_NAME') {
+        // TODO: Allow DOM reference to be passed so className can be updated in-browser
         // node.stateNode.className = event.className;
 
-        // await axios.post('/api/file/class-name', {
-        //   className: event.className,
-        //   fileName: node._debugSource.fileName,
-        //   lineNumber: node._debugSource.lineNumber,
-        //   columnNumber: node._debugSource.columnNumber,
-        // });
+        await axios.post('/api/file/class-name', {
+          className: event.className,
+          fileName: node.fileName,
+          lineNumber: node.position.start.line,
+          columnNumber: node.position.start.column,
+        });
 
         console.log(event.type, event.className);
       } else if (event.type === 'UPDATE_FILE_TEXT') {

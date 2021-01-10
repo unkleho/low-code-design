@@ -1,23 +1,5 @@
 import rehype from 'rehype';
-
-/**
- * Custom Rehype Parser types as rehype's are lacking
- */
-export type RehypeNode = {
-  type: 'element' | 'text' | 'comment';
-  tagName: string;
-  properties?: {
-    className?: string[];
-  };
-  children?: RehypeNode[];
-  value?: string;
-};
-
-// Used in RehypeComponent, but getting funny errors if used in parseCode and getSelectedNode
-export type RehypeRootNode = {
-  type: 'root';
-  children?: RehypeNode[];
-};
+import { RehypeNode } from '../types';
 
 /**
  * Update className of a target element within HTML code

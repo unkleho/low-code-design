@@ -10,10 +10,10 @@ import { getPathIndexes, getSelectedElement } from '../lib/babel-dom-utils';
 import useWindowSize from '../lib/hooks/use-window-size';
 import {
   parseCode,
-  RehypeNode,
   updateNodeClass,
   getSelectedNode,
 } from '../lib/rehype-utils';
+import { RehypeNode } from '../types';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
   <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
@@ -41,7 +41,7 @@ const LivePage = () => {
   const rootRehypeNode = parseCode(code);
   const nodes = addSelected(rootRehypeNode.children, pathIndexes);
 
-  // console.log(rootRehypeNode);
+  // console.log(selectedNodes);
   // console.log(pathIndexes);
   // console.log(nodes);
 
@@ -231,10 +231,11 @@ export function addSelected(
   }
 
   // Recursively find selected node
-  const getNode = (children, level = 0) => {
+  const getNode = (children = [], level = 0) => {
     const isLast = pathIndexes.length === level + 1;
     const index = pathIndexes[level];
-    const node = children.filter((child) => child.type === 'element')[index];
+    const node =
+      children.filter((child) => child.type === 'element')[index] || [];
 
     if (isLast) {
       return node;

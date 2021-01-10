@@ -1,11 +1,11 @@
 import { FiberNode as FiberNodeBase } from 'react-fiber-traverse/dist/mocked-types';
-import { RehypeNode } from '../lib/rehype-utils';
 
 /**
  * Node type to build elements in design tool's layers panel
  */
 export type DesignToolNode = RehypeNode & {
   isSelected?: boolean;
+  fileName?: string;
 };
 
 // TODO: Extend FiberNode with missing keys
@@ -34,16 +34,41 @@ export type TargetEvent = React.MouseEvent<HTMLDivElement, MouseEvent> & {
 export type NodeChangeEvent =
   | {
       type: 'UPDATE_FILE_CLASS_NAME';
-      node: FiberNode;
+      node: DesignToolNode;
       className: string;
     }
   | {
       type: 'UPDATE_FILE_TEXT';
-      node: FiberNode;
+      node: DesignToolNode;
       text: string;
     }
   | {
       type: 'CREATE_FILE_ELEMENT';
-      node: FiberNode;
+      node: DesignToolNode;
       elementType: string;
     };
+
+/**
+ * Custom Rehype Parser types as rehype's are lacking
+ */
+export type RehypeNode = {
+  type: 'element' | 'text' | 'comment';
+  tagName: string;
+  properties?: {
+    className?: string[];
+  };
+  children?: RehypeNode[];
+  value?: string;
+  // TODO: This should be all required, but it causes probs in DesignToolsNode. Should try and override in DesignToolsNode
+  position?: {
+    start?: { line?: number, column?: number, offset?: number }
+    end?: { line?: number, column?: number, offset?: number }
+  }
+};
+
+// Used in RehypeComponent, but getting funny errors if used in parseCode and getSelectedNode
+export type RehypeRootNode = {
+  type: 'root';
+  children?: RehypeNode[];
+};
+
