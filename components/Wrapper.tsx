@@ -99,9 +99,14 @@ const Wrapper = ({ children }) => {
   );
 };
 
-// Traverse root node and build tree of DesignToolNodes
+// Traverse root node and build tree of DesignToolNodes from FiberNodes
 function buildTree(node: FiberNode, allNodes: FiberNode[]): DesignToolNode {
   const childNodes = allNodes.filter((n) => n.return === node);
+
+  const text =
+    typeof node.memoizedProps.children === 'string'
+      ? node.memoizedProps.children
+      : null;
 
   return {
     tagName: node.elementType as string,
@@ -109,7 +114,17 @@ function buildTree(node: FiberNode, allNodes: FiberNode[]): DesignToolNode {
     properties: {
       className: node.stateNode.className.split(' '),
     },
-    children: childNodes.map((childNode) => buildTree(childNode, allNodes)),
+    // children: childNodes.map((childNode) => buildTree(childNode, allNodes)),
+    children: text
+      ? [
+          {
+            type: 'text',
+            tagName: null,
+            value: text,
+            children: [],
+          },
+        ]
+      : childNodes.map((childNode) => buildTree(childNode, allNodes)),
     position: {
       start: {
         line: node._debugSource.lineNumber,

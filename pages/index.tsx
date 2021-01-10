@@ -10,7 +10,7 @@ export default function HomePage() {
           <img src="/images/trumpet-piano.jpg" className="w-56" />
 
           <h1 className="text-2xl font-extrabold leading-tight text-white mt-4">
-            Trumpet and Piano Man
+            Trumpet and Piano Man1
           </h1>
         </div>
       </div>

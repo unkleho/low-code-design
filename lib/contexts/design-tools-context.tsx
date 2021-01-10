@@ -59,7 +59,7 @@ function designToolsReducer(state, action) {
     case types.UPDATE_SELECTED_NODE: {
       // const children = action.selectedNode?.pendingProps?.children;
       const children = action.selectedNode?.children;
-      const text = children?.find(child => child.type === 'text')?.value;
+      const text = children?.find((child) => child.type === 'text')?.value;
 
       return {
         ...state,

@@ -12,6 +12,7 @@ import {
   parseCode,
   updateNodeClass,
   getSelectedNode,
+  updateNodeText,
 } from '../lib/rehype-utils';
 import { RehypeNode } from '../types';
 
@@ -72,12 +73,11 @@ const LivePage = () => {
 
     // Change node className
     if (type === 'UPDATE_NODE_CLASS_NAME') {
-      // Parse code and turn it into an AST
       const newCode = updateNodeClass(code, pathIndexes, event.className);
       setCode(newCode);
     } else if (type === 'UPDATE_NODE_TEXT') {
-      console.log(node);
-      // TODO: Get this happening. Perhaps use node.position line numbers
+      const newCode = updateNodeText(code, pathIndexes, event.text);
+      setCode(newCode);
     }
   };
 

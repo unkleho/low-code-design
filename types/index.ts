@@ -58,12 +58,12 @@ export type RehypeNode = {
     className?: string[];
   };
   children?: RehypeNode[];
-  value?: string;
+  value?: string; // TODO: Only have value if `text` type
   // TODO: This should be all required, but it causes probs in DesignToolsNode. Should try and override in DesignToolsNode
   position?: {
-    start?: { line?: number, column?: number, offset?: number }
-    end?: { line?: number, column?: number, offset?: number }
-  }
+    start?: { line?: number; column?: number; offset?: number };
+    end?: { line?: number; column?: number; offset?: number };
+  };
 };
 
 // Used in RehypeComponent, but getting funny errors if used in parseCode and getSelectedNode
@@ -71,4 +71,3 @@ export type RehypeRootNode = {
   type: 'root';
   children?: RehypeNode[];
 };
-

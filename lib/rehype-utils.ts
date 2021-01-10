@@ -26,6 +26,27 @@ export function updateNodeClass(
   return newCode;
 }
 
+/**
+ * Update text value of a target element within HTML code
+ * @param code HTML code
+ * @param indexes Index array to target element
+ * @param text New text to replace in element
+ */
+export function updateNodeText(
+  code: string,
+  indexes: number[],
+  text: string,
+): string {
+  const ast = parseCode(code);
+  const selectedNode = getSelectedNode(ast, indexes);
+
+  selectedNode.children[0].value = text;
+
+  const newCode = rehype().stringify(ast);
+
+  return newCode;
+}
+
 export function parseCode(code: string): RehypeNode {
   const ast = rehype()
     .data('settings', {
@@ -36,8 +57,17 @@ export function parseCode(code: string): RehypeNode {
   return ast as RehypeNode;
 }
 
-export function getSelectedNode(rootNode: RehypeNode, indexes: number[]): RehypeNode {
+export function getSelectedNode(
+  rootNode: RehypeNode,
+  indexes: number[],
+): RehypeNode {
+  if (!rootNode) {
+    return null;
+  }
+
   const selectedNode = indexes.reduce((acc, index) => {
+    console.log(rootNode, acc, indexes);
+
     const children = acc.children.filter((child) => child.type === 'element');
 
     return children[index];

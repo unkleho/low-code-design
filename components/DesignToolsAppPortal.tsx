@@ -15,7 +15,7 @@ import {
 type Props = {
   selectedNodes?: DesignToolNode[];
   nodes?: DesignToolNode[];
-  onNodeChange?: Function;
+  onNodeChange?: (events: NodeChangeEvent[]) => void;
 };
 
 const DesignToolsAppPortal = ({
@@ -47,14 +47,15 @@ const DesignToolsAppPortal = ({
         console.log(event.type, event.className);
       } else if (event.type === 'UPDATE_NODE_TEXT') {
         if (event.text) {
+          // TODO: Allow DOM reference to be passed so className can be updated in-browser
           // node.stateNode.innerText = event.text;
 
-          // await axios.post('/api/file/text', {
-          //   text: event.text,
-          //   fileName: node._debugSource.fileName,
-          //   lineNumber: node._debugSource.lineNumber,
-          //   columnNumber: node._debugSource.columnNumber,
-          // });
+          await axios.post('/api/file/text', {
+            text: event.text,
+            fileName: node.fileName,
+            lineNumber: node.position.start.line,
+            columnNumber: node.position.start.column,
+          });
 
           console.log(event.type, event.text);
         }

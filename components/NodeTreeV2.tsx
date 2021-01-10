@@ -37,7 +37,7 @@ const NodeTree = ({
         const childPathIndexes = [...pathIndexes, i];
 
         return (
-          <li className="relative">
+          <li className="relative" key={i}>
             <button
               type="button"
               className={[
