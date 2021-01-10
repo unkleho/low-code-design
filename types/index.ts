@@ -33,17 +33,17 @@ export type TargetEvent = React.MouseEvent<HTMLDivElement, MouseEvent> & {
 
 export type NodeChangeEvent =
   | {
-      type: 'UPDATE_FILE_CLASS_NAME';
+      type: 'UPDATE_NODE_CLASS_NAME';
       node: DesignToolNode;
       className: string;
     }
   | {
-      type: 'UPDATE_FILE_TEXT';
+      type: 'UPDATE_NODE_TEXT';
       node: DesignToolNode;
       text: string;
     }
   | {
-      type: 'CREATE_FILE_ELEMENT';
+      type: 'CREATE_NODE';
       node: DesignToolNode;
       elementType: string;
     };

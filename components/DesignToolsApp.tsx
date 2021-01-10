@@ -11,7 +11,7 @@ import SizingPanel from './SizingPanel';
 
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
-import { DesignToolNode, FiberNode, NodeChangeEvent } from '../types';
+import { DesignToolNode, NodeChangeEvent } from '../types';
 
 import css from './DesignToolsApp.module.css';
 
@@ -20,7 +20,7 @@ type Props = {
   selectedNodes: DesignToolNode[];
   className?: string;
   onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
-  onNodeChange: Function;
+  onNodeChange: (events: NodeChangeEvent[]) => void;
 };
 
 const config = {
@@ -82,7 +82,7 @@ const DesignToolsApp = ({
   React.useEffect(() => {
     handleNodeChange([
       {
-        type: 'UPDATE_FILE_CLASS_NAME',
+        type: 'UPDATE_NODE_CLASS_NAME',
         node: state.selectedNode,
         className,
       },
@@ -93,7 +93,7 @@ const DesignToolsApp = ({
   React.useEffect(() => {
     handleNodeChange([
       {
-        type: 'UPDATE_FILE_TEXT',
+        type: 'UPDATE_NODE_TEXT',
         node: state.selectedNode,
         text,
       },

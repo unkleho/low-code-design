@@ -6,7 +6,7 @@ import DesignToolsApp from './DesignToolsApp';
 import Icon from './Icon';
 import ControlPanel from './ControlPanel';
 
-import { DesignToolNode, FiberNode, NodeChangeEvent } from '../types';
+import { DesignToolNode, NodeChangeEvent } from '../types';
 import {
   DesignToolsProvider,
   useDesignTools,
@@ -33,7 +33,7 @@ const DesignToolsAppPortal = ({
 
     // Change DOM element className
     if (node) {
-      if (event.type === 'UPDATE_FILE_CLASS_NAME') {
+      if (event.type === 'UPDATE_NODE_CLASS_NAME') {
         // TODO: Allow DOM reference to be passed so className can be updated in-browser
         // node.stateNode.className = event.className;
 
@@ -45,7 +45,7 @@ const DesignToolsAppPortal = ({
         });
 
         console.log(event.type, event.className);
-      } else if (event.type === 'UPDATE_FILE_TEXT') {
+      } else if (event.type === 'UPDATE_NODE_TEXT') {
         if (event.text) {
           // node.stateNode.innerText = event.text;
 
@@ -58,7 +58,7 @@ const DesignToolsAppPortal = ({
 
           console.log(event.type, event.text);
         }
-      } else if (event.type === 'CREATE_FILE_ELEMENT') {
+      } else if (event.type === 'CREATE_NODE') {
         if (event.elementType) {
           // await axios.post('/api/file/element', {
           //   elementType: event.elementType,

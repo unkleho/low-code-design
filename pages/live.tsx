@@ -5,7 +5,7 @@ import DesignToolsApp from '../components/DesignToolsApp';
 import RehypeComponent from '../components/RehypeComponent';
 
 import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
-import { DesignToolNode, TargetEvent } from '../types';
+import { DesignToolNode, NodeChangeEvent, TargetEvent } from '../types';
 import { getPathIndexes, getSelectedElement } from '../lib/babel-dom-utils';
 import useWindowSize from '../lib/hooks/use-window-size';
 import {
@@ -62,15 +62,22 @@ const LivePage = () => {
   });
 
   // TODO: Type events
-  const handleDesignToolsSubmit = (events) => {
+  const handleDesignToolsSubmit = (events: NodeChangeEvent[]) => {
     const event = events[0]; // Allow multiple node changes in future
-    const { node, type, className } = event;
+    const { node, type } = event;
+
+    if (!node) {
+      return null;
+    }
 
     // Change node className
-    if (node && type === 'UPDATE_FILE_CLASS_NAME') {
+    if (type === 'UPDATE_NODE_CLASS_NAME') {
       // Parse code and turn it into an AST
-      const newCode = updateNodeClass(code, pathIndexes, className);
+      const newCode = updateNodeClass(code, pathIndexes, event.className);
       setCode(newCode);
+    } else if (type === 'UPDATE_NODE_TEXT') {
+      console.log(node);
+      // TODO: Get this happening. Perhaps use node.position line numbers
     }
   };
 
@@ -135,7 +142,6 @@ const LivePage = () => {
         </div>
 
         <DesignToolsApp
-          // TODO: Reconsider the type of selectedNodes, currently it is a [_targetInst], a React specific data structure. Perhaps a simple AST will suffice
           selectedNodes={selectedNodes}
           nodes={nodes}
           className={[
