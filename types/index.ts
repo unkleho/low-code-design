@@ -6,6 +6,7 @@ import { FiberNode as FiberNodeBase } from 'react-fiber-traverse/dist/mocked-typ
 export type DesignToolNode = RehypeNode & {
   isSelected?: boolean;
   fileName?: string;
+  element?: HTMLElement;
 };
 
 // TODO: Extend FiberNode with missing keys
@@ -36,11 +37,13 @@ export type NodeChangeEvent =
       type: 'UPDATE_NODE_CLASS_NAME';
       node: DesignToolNode;
       className: string;
+      element?: HTMLElement;
     }
   | {
       type: 'UPDATE_NODE_TEXT';
       node: DesignToolNode;
       text: string;
+      element?: HTMLElement;
     }
   | {
       type: 'CREATE_NODE';

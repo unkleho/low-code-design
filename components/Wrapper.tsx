@@ -132,6 +132,7 @@ function buildTree(node: FiberNode, allNodes: FiberNode[]): DesignToolNode {
       },
     },
     fileName: node._debugSource.fileName,
+    element: node.stateNode,
   };
 }
 

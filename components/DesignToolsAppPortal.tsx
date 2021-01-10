@@ -34,8 +34,7 @@ const DesignToolsAppPortal = ({
     // Change DOM element className
     if (node) {
       if (event.type === 'UPDATE_NODE_CLASS_NAME') {
-        // TODO: Allow DOM reference to be passed so className can be updated in-browser
-        // node.stateNode.className = event.className;
+        node.element.className = event.className;
 
         await axios.post('/api/file/class-name', {
           className: event.className,
@@ -47,8 +46,7 @@ const DesignToolsAppPortal = ({
         console.log(event.type, event.className);
       } else if (event.type === 'UPDATE_NODE_TEXT') {
         if (event.text) {
-          // TODO: Allow DOM reference to be passed so className can be updated in-browser
-          // node.stateNode.innerText = event.text;
+          node.element.innerText = event.text;
 
           await axios.post('/api/file/text', {
             text: event.text,
