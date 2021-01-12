@@ -15,12 +15,14 @@ import {
 type Props = {
   selectedNodes?: DesignToolNode[];
   nodes?: DesignToolNode[];
+  onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
   onNodeChange?: (events: NodeChangeEvent[]) => void;
 };
 
 const DesignToolsAppPortal = ({
   selectedNodes = [],
   nodes = [],
+  onNodeClick,
   onNodeChange,
 }: Props) => {
   const { dispatch } = useDesignTools();
@@ -115,6 +117,7 @@ const DesignToolsAppPortal = ({
             selectedNodes={selectedNodes}
             nodes={nodes}
             onNodeChange={handleNodeChange}
+            onNodeClick={onNodeClick}
           />
         </aside>
       </>,

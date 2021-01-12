@@ -94,6 +94,27 @@ const Wrapper = ({ children }) => {
         onNodeChange={() => {
           setIncrement(increment + 1);
         }}
+        onNodeClick={(node, indexes) => {
+          // TODO: Consolidate repeated code
+          // Update highlight element
+          if (prevElement) {
+            prevElement.style.outline = null;
+          }
+          (node.element as HTMLElement).style.outline = '1px solid cyan';
+          setPrevElement(node.element);
+
+          setPathIndexes(indexes);
+
+          // Work out the selectedNode and set state
+          const selectedNode = getSelectedNode(
+            { tagName: 'div', type: 'element', children: nodes },
+            indexes,
+          );
+          setSelectedNodes([selectedNode]);
+
+          // Update increment to trigger refresh
+          setIncrement(increment + 1);
+        }}
       />
     </>
   );
