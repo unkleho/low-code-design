@@ -4,9 +4,9 @@ import { FiberNode as FiberNodeBase } from 'react-fiber-traverse/dist/mocked-typ
  * Node type to build elements in design tool's layers panel
  */
 export type DesignToolNode = RehypeNode & {
-  // isSelected?: boolean;
+  isSelected?: boolean;
   fileName?: string;
-  element: HTMLElement;
+  element?: HTMLElement;
 };
 
 // TODO: Extend FiberNode with missing keys
