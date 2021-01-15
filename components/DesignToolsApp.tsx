@@ -196,13 +196,13 @@ const DesignToolsApp = ({
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
         nodes={nodes}
-        // selectedIDs={selectedIDs}
+        selectedNodes={selectedNodes}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeClick={onNodeClick}
         onNodeCreateClick={(selectedNode) => {
           handleNodeChange([
             {
-              type: 'CREATE_FILE_ELEMENT',
+              type: 'CREATE_NODE',
               node: selectedNode,
               elementType: 'p',
             },

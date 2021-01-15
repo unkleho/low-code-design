@@ -5,6 +5,7 @@ import { DesignToolNode } from '../types';
 
 type NodeTreeProps = {
   nodes: DesignToolNode[];
+  selectedNodes?: DesignToolNode[];
   level?: number;
   pathIndexes?: number[];
   onNodeClick?: (node: DesignToolNode, pathIndexes: number[]) => void;
@@ -13,6 +14,7 @@ type NodeTreeProps = {
 
 const NodeTree = ({
   nodes = [],
+  selectedNodes = [],
   level = 0,
   pathIndexes = [],
   onNodeClick,
@@ -36,14 +38,19 @@ const NodeTree = ({
         const hasGrandChildren = node.children?.length > 0;
         const childPathIndexes = [...pathIndexes, i];
 
+        // Work out if selected by comparing DOM elements
+        const isSelected = selectedNodes
+          .map((n) => n.element)
+          .includes(node.element);
+
         return (
           <li className="relative" key={i}>
             <button
               type="button"
               className={[
                 'flex w-full py-1 hover:bg-gray-200',
-                node.isSelected ? 'font-bold' : 'font-normal',
-                node.isSelected ? 'bg-gray-200' : '',
+                isSelected ? 'font-bold' : 'font-normal',
+                isSelected ? 'bg-gray-200' : '',
               ].join(' ')}
               style={{
                 paddingLeft: (level + 1) * 12,
@@ -80,6 +87,7 @@ const NodeTree = ({
 
             <NodeTree
               nodes={node.children}
+              selectedNodes={selectedNodes}
               level={level + 1}
               pathIndexes={childPathIndexes}
               onNodeClick={onNodeClick}

@@ -7,7 +7,6 @@ import { DesignToolNode, TargetEvent } from '../types';
 import { FiberNode } from '../types';
 import { getPathIndexes } from '../lib/babel-dom-utils';
 import { getSelectedNode } from '../lib/rehype-utils';
-import { addSelected } from '../pages/live';
 
 const Wrapper = ({ children }) => {
   // Tree of DesignToolNodes within __preview-container
@@ -89,8 +88,7 @@ const Wrapper = ({ children }) => {
 
       <DesignToolsAppPortal
         selectedNodes={selectedNodes}
-        // TODO: Incorporate `addSelected` into DesignToolsApp?
-        nodes={addSelected(nodes, pathIndexes)}
+        nodes={nodes}
         onNodeChange={() => {
           setIncrement(increment + 1);
         }}

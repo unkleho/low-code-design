@@ -114,8 +114,8 @@ const DesignToolsAppPortal = ({
           />
 
           <DesignToolsApp
-            selectedNodes={selectedNodes}
             nodes={nodes}
+            selectedNodes={selectedNodes}
             onNodeChange={handleNodeChange}
             onNodeClick={onNodeClick}
           />
