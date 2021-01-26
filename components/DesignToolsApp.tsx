@@ -52,9 +52,11 @@ const DesignToolsApp = ({
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
 
-  const className = state?.className;
-  const text = state?.text;
-  // const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
+  // const className = state?.className;
+  // const text = state?.text;
+  const { className, text, prevSelectedNode } = state;
+
+  // console.log(state.prevSelectedNode);
 
   // --------------------------------------------------------------------------
   // Effects
@@ -80,10 +82,7 @@ const DesignToolsApp = ({
 
   // Run callback whenever className changes
   React.useEffect(() => {
-    // Compare old and new class names and only run if different
-    const oldClassName = state.selectedNode?.properties?.className.join(' ');
-
-    if (oldClassName !== className) {
+    if (state.selectedNode === prevSelectedNode) {
       handleNodeChange([
         {
           type: 'UPDATE_NODE_CLASS_NAME',
@@ -92,14 +91,12 @@ const DesignToolsApp = ({
         },
       ]);
     }
+    // }
   }, [className]);
 
   // Run callback whenever text changes
   React.useEffect(() => {
-    const firstChild = state.selectedNode?.children[0];
-    const oldText = firstChild?.type === 'text' ? firstChild.value : undefined;
-
-    if (oldText !== text) {
+    if (state.selectedNode === prevSelectedNode) {
       handleNodeChange([
         {
           type: 'UPDATE_NODE_TEXT',

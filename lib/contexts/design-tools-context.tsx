@@ -3,6 +3,7 @@ import React from 'react';
 import replaceClassNameValue from '../replace-class-name-value';
 import classNameValues from '../class-name-values';
 import { textColors } from '../tailwind-config';
+import usePrevious from '../hooks/use-previous';
 
 const DesignToolsContext = React.createContext([]);
 
@@ -99,9 +100,11 @@ function designToolsReducer(state, action) {
 }
 
 export function DesignToolsProvider(props) {
+  // TODO: Type state
   const [state, dispatch] = React.useReducer(designToolsReducer, {
     currentField: null,
     selectedNode: null,
+    updateType: null,
     layersPanelKey: 0,
     // WIP
     text: null,
@@ -155,6 +158,12 @@ export function useDesignTools() {
   }
 
   const [state, dispatch] = context;
+  const { selectedNode } = state;
+  const prevSelectedNode = usePrevious(selectedNode);
+
+  // --------------------------------------------------------------------------
+  // Functions
+  // --------------------------------------------------------------------------
 
   const updateCurrentField = (currentField) =>
     dispatch({ type: types.UPDATE_CURRENT_FIELD, currentField });
@@ -177,7 +186,10 @@ export function useDesignTools() {
   };
 
   return {
-    state,
+    state: {
+      ...state,
+      prevSelectedNode,
+    },
     dispatch,
     updateCurrentField,
     updateClassNameValue,
