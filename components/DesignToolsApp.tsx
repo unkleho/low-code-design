@@ -80,24 +80,34 @@ const DesignToolsApp = ({
 
   // Run callback whenever className changes
   React.useEffect(() => {
-    handleNodeChange([
-      {
-        type: 'UPDATE_NODE_CLASS_NAME',
-        node: state.selectedNode,
-        className,
-      },
-    ]);
+    // Compare old and new class names and only run if different
+    const oldClassName = state.selectedNode?.properties?.className.join(' ');
+
+    if (oldClassName !== className) {
+      handleNodeChange([
+        {
+          type: 'UPDATE_NODE_CLASS_NAME',
+          node: state.selectedNode,
+          className,
+        },
+      ]);
+    }
   }, [className]);
 
-  // Run callback whenever className changes
+  // Run callback whenever text changes
   React.useEffect(() => {
-    handleNodeChange([
-      {
-        type: 'UPDATE_NODE_TEXT',
-        node: state.selectedNode,
-        text,
-      },
-    ]);
+    const firstChild = state.selectedNode?.children[0];
+    const oldText = firstChild?.type === 'text' ? firstChild.value : undefined;
+
+    if (oldText !== text) {
+      handleNodeChange([
+        {
+          type: 'UPDATE_NODE_TEXT',
+          node: state.selectedNode,
+          text,
+        },
+      ]);
+    }
   }, [text]);
 
   // --------------------------------------------------------------------------
@@ -202,7 +212,7 @@ const DesignToolsApp = ({
         onNodeCreateClick={(selectedNode) => {
           handleNodeChange([
             {
-              type: 'CREATE_FILE_ELEMENT',
+              type: 'CREATE_NODE',
               node: selectedNode,
               elementType: 'p',
             },

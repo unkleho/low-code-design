@@ -66,7 +66,7 @@ export function getSelectedNode(
   }
 
   const selectedNode = indexes.reduce((acc, index) => {
-    console.log(rootNode, acc, indexes);
+    // console.log(rootNode, acc, indexes);
 
     const children = acc.children.filter((child) => child.type === 'element');
 

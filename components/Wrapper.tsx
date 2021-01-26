@@ -122,7 +122,9 @@ const Wrapper = ({ children }) => {
 
 // Traverse root node and build tree of DesignToolNodes from FiberNodes
 function buildTree(node: FiberNode, allNodes: FiberNode[]): DesignToolNode {
-  const childNodes = allNodes.filter((n) => n.return === node);
+  const childNodes = allNodes.filter(
+    (n) => n.stateNode.parentNode === node.stateNode,
+  );
 
   const text =
     typeof node.memoizedProps.children === 'string'
