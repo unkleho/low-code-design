@@ -205,6 +205,7 @@ const changeHighlightElement = (
   pathIndexes = [],
 ) => {
   if (pathIndexes.length === 0) {
+    highlightElement.style.outline = null;
     return null;
   }
 

@@ -49,14 +49,8 @@ const DesignToolsApp = ({
   onNodeChange,
 }: Props) => {
   const { state, dispatch } = useDesignTools();
-
-  const selectedNode = selectedNodes[0]; // Allow multi-select in the future
-
-  // const className = state?.className;
-  // const text = state?.text;
   const { className, text, prevSelectedNode } = state;
-
-  // console.log(state.prevSelectedNode);
+  const selectedNode = selectedNodes[0]; // Allow multi-select in the future
 
   // --------------------------------------------------------------------------
   // Effects
