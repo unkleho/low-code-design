@@ -6,8 +6,7 @@ import DesignToolsAppPortal from './DesignToolsAppPortal';
 import { DesignToolNode, TargetEvent } from '../types';
 import { FiberNode } from '../types';
 import { getPathIndexes } from '../lib/babel-dom-utils';
-import { getSelectedNode } from '../lib/rehype-utils';
-import { addSelected } from '../pages/live';
+import { addSelected, getSelectedNode } from '../lib/rehype-utils';
 
 const Wrapper = ({ children }) => {
   // Tree of DesignToolNodes within __preview-container

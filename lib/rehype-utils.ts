@@ -1,5 +1,5 @@
 import rehype from 'rehype';
-import { RehypeNode } from '../types';
+import { RehypeNode, DesignToolNode } from '../types';
 
 /**
  * Update className of a target element within HTML code
@@ -76,4 +76,37 @@ export function getSelectedNode(
   }, rootNode);
 
   return selectedNode;
+}
+
+/**
+ * Add isSelected flag to selected node
+ * @param nodes
+ * @param pathIndexes
+ */
+export function addSelected(
+  nodes: RehypeNode[],
+  pathIndexes: number[] = [],
+): DesignToolNode[] {
+  if (pathIndexes.length === 0) {
+    return nodes;
+  }
+
+  // Recursively find selected node
+  const getNode = (children = [], level = 0) => {
+    const isLast = pathIndexes.length === level + 1;
+    const index = pathIndexes[level];
+    const node =
+      children.filter((child) => child.type === 'element')[index] || [];
+
+    if (isLast) {
+      return node;
+    }
+
+    return getNode(node.children, level + 1);
+  };
+
+  const selectedNode = getNode(nodes);
+  selectedNode.isSelected = true;
+
+  return nodes;
 }
