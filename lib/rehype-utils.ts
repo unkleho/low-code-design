@@ -21,6 +21,7 @@ export function updateNodeClass(
     delete selectedNode.properties.className;
   }
 
+  // @ts-ignore
   const newCode = rehype().stringify(ast);
 
   return newCode;
