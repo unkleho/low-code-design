@@ -65,17 +65,17 @@ const LivePage = () => {
   // TODO: Type events
   const handleDesignToolsSubmit = (events: NodeChangeEvent[]) => {
     const event = events[0]; // Allow multiple node changes in future
-    const { node, type } = event;
+    const { node } = event;
 
     if (!node) {
       return null;
     }
 
     // Change node className
-    if (type === 'UPDATE_NODE_CLASS_NAME') {
+    if (event.type === 'UPDATE_NODE_CLASS_NAME') {
       const newCode = updateNodeClass(code, pathIndexes, event.className);
       setCode(newCode);
-    } else if (type === 'UPDATE_NODE_TEXT') {
+    } else if (event.type === 'UPDATE_NODE_TEXT') {
       const newCode = updateNodeText(code, pathIndexes, event.text);
       setCode(newCode);
     }
