@@ -42,6 +42,7 @@ export function updateNodeText(
 
   selectedNode.children[0].value = text;
 
+  // @ts-ignore
   const newCode = rehype().stringify(ast);
 
   return newCode;
