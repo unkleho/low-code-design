@@ -72,7 +72,7 @@ const NodeTree = ({
               ) : (
                 // &#9654; Right Triangle
                 // <Icon name="chevron-down" />
-                <div className="pl-4" />
+                <span className="pl-4" />
               )}
 
               {typeof node.type === 'function' ? node.type.name : node.type}

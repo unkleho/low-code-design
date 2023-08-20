@@ -34,6 +34,10 @@ const LayersPanel = ({
     // Traverse fiber node tree, adding each one to nodes.
     // TODO: Only add nodes within Wrapper
     traverse(rootFiberNode, (node) => {
+      if (!node) {
+        return;
+      }
+
       // @ts-ignore
       if (node.stateNode?.id === '__codesign' || isDesignTools) {
         isDesignTools = true;

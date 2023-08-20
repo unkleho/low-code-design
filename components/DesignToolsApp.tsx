@@ -188,7 +188,7 @@ const DesignToolsApp = ({
       </form>
 
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
-      <LayersPanel
+      {/* <LayersPanel
         selectedIDs={selectedIDs}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeCreateClick={(selectedNode) => {
@@ -200,7 +200,7 @@ const DesignToolsApp = ({
             },
           ]);
         }}
-      />
+      /> */}
     </div>
   );
 };

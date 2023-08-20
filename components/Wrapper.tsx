@@ -13,7 +13,7 @@ const Wrapper = ({ children }) => {
       <div
         id="__codesign"
         onClick={(event: TargetEvent) => {
-          // console.log('Wrapper event');
+          console.log('Wrapper event', event);
 
           // Stop <a> links from navigating away
           event.preventDefault();
@@ -21,7 +21,7 @@ const Wrapper = ({ children }) => {
           const targetInst = event._targetInst;
 
           // Skip part of DesignTools
-          if (targetInst.stateNode.dataset.id === 'design-tools') {
+          if (targetInst?.stateNode.dataset.id === 'design-tools') {
             return true;
           }
 
