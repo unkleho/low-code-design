@@ -2,7 +2,7 @@ import React from 'react';
 
 import DesignToolsAppPortal from './DesignToolsAppPortal';
 
-import { TargetEvent } from '../types';
+import { FiberNode, TargetEvent } from '../types';
 
 const Wrapper = ({ children }) => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -13,12 +13,22 @@ const Wrapper = ({ children }) => {
       <div
         id="__codesign"
         onClick={(event: TargetEvent) => {
-          console.log('Wrapper event', event);
+          console.log('Wrapper event', event, event.target);
 
           // Stop <a> links from navigating away
           event.preventDefault();
 
-          const targetInst = event._targetInst;
+          const targetInstKey = Object.keys(event.target).find((key) => {
+            if (key.startsWith('__reactFiber$')) {
+              return true;
+            }
+
+            return null;
+          });
+          const targetInst = event.target[targetInstKey];
+
+          console.log('Wrapper event', targetInst);
+          // const targetInst = event._targetInst;
 
           // Skip part of DesignTools
           if (targetInst?.stateNode.dataset.id === 'design-tools') {
