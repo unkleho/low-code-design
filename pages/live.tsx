@@ -12,6 +12,7 @@ import {
 } from '../lib/babel-dom-utils';
 import useWindowSize from '../lib/hooks/use-window-size';
 import { parseCode, updateNodeClass } from '../lib/rehype-utils';
+import { getReactFiberInstance } from '../lib/react-fiber-utils';
 
 const defaultCode = `<div id="hello"><strong class="uppercase">Hello World!</strong><p>Some text</p>
   <div><p>Deep text</p></div>
@@ -112,8 +113,10 @@ const LivePage = () => {
               height,
             });
 
+            const targetInst = getReactFiberInstance(event.target);
+
             // Set selected nodes for DesignToolsApp
-            setSelectedNodes([event._targetInst]);
+            setSelectedNodes([targetInst]);
           }}
         >
           <RehypeComponent children={rootRehypeNode.children} />

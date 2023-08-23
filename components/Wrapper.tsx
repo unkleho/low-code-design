@@ -3,6 +3,7 @@ import React from 'react';
 import DesignToolsAppPortal from './DesignToolsAppPortal';
 
 import { FiberNode, TargetEvent } from '../types';
+import { getReactFiberInstance } from '../lib/react-fiber-utils';
 
 const Wrapper = ({ children }) => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -18,14 +19,7 @@ const Wrapper = ({ children }) => {
           // Stop <a> links from navigating away
           event.preventDefault();
 
-          const targetInstKey = Object.keys(event.target).find((key) => {
-            if (key.startsWith('__reactFiber$')) {
-              return true;
-            }
-
-            return null;
-          });
-          const targetInst = event.target[targetInstKey];
+          const targetInst = getReactFiberInstance(event.target);
 
           console.log('Wrapper event', targetInst);
           // const targetInst = event._targetInst;
