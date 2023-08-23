@@ -9,7 +9,7 @@ export default function HomePage() {
         <div className="w-64">
           <img src="/images/trumpet-piano.jpg" className="w-56" />
 
-          <h1 className="text-4xl font-black leading-tight text-white mt-4">
+          <h1 className="text-5xl font-hairline leading-tight text-white mt-4">
             Trumpet and Piano Man
           </h1>
         </div>

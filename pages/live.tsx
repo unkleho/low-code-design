@@ -1,5 +1,5 @@
 import React from 'react';
-import { ControlledEditor } from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react';
 
 import DesignToolsApp from '../components/DesignToolsApp';
 import RehypeComponent from '../components/RehypeComponent';
@@ -30,7 +30,7 @@ const LivePage = () => {
     typeof window === 'undefined' ? null : document.getElementById('preview');
 
   const rootRehypeNode = parseCode(code);
-  console.log(rootRehypeNode);
+  // console.log(rootRehypeNode);
 
   React.useEffect(() => {
     const element = getSelectedElement(previewElement, ancestorIndexes);
@@ -64,6 +64,8 @@ const LivePage = () => {
 
   // TODO: Type events
   const handleDesignToolsSubmit = (events) => {
+    console.log('design-tools', events);
+
     const event = events[0]; // Allow multiple node changes in future
     const { node, type, className } = event;
 
@@ -71,6 +73,7 @@ const LivePage = () => {
     if (node && type === 'UPDATE_FILE_CLASS_NAME') {
       // Parse code and turn it into an AST
       const newCode = updateNodeClass(code, ancestorIndexes, className);
+
       setCode(newCode);
     }
   };
@@ -117,7 +120,7 @@ const LivePage = () => {
         </div>
 
         <div className="editor border-t-4">
-          <ControlledEditor
+          <Editor
             // height="50vh"
             language="html"
             // theme="dark"
@@ -127,7 +130,7 @@ const LivePage = () => {
                 enabled: false,
               },
             }}
-            onChange={(event, value) => {
+            onChange={(value, event) => {
               console.log(event, value);
               setCode(value);
             }}
