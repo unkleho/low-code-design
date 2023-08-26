@@ -11,9 +11,10 @@ import SizingPanel from './SizingPanel';
 
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
-import { FiberNode, NodeChangeEvent } from '../types';
+import { FiberNode, FiberNodeWithId, NodeChangeEvent } from '../types';
 
 import css from './DesignToolsApp.module.css';
+import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -49,7 +50,7 @@ const DesignToolsApp = ({
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const className = state?.className;
   const text = state?.text;
-  const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
+  const selectedIds = selectedNode ? [getFiberNodeId(selectedNode)] : [];
 
   // --------------------------------------------------------------------------
   // Effects
@@ -74,7 +75,7 @@ const DesignToolsApp = ({
 
   // Run callback whenever className changes
   React.useEffect(() => {
-    console.log('kaho', state);
+    // console.log('kaho', state);
 
     handleNodeChange([
       {
@@ -190,8 +191,8 @@ const DesignToolsApp = ({
       </form>
 
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
-      {/* <LayersPanel
-        selectedIDs={selectedIDs}
+      <LayersPanel
+        selectedIds={selectedIds}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeCreateClick={(selectedNode) => {
           handleNodeChange([
@@ -202,7 +203,7 @@ const DesignToolsApp = ({
             },
           ]);
         }}
-      /> */}
+      />
     </div>
   );
 };

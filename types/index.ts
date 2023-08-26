@@ -2,6 +2,7 @@ import { FiberNode as FiberNodeBase } from 'react-fiber-traverse/dist/mocked-typ
 
 // TODO: Extend FiberNode with missing keys
 export type FiberNode = FiberNodeBase & {
+  /** Parent FiberNode */
   return: FiberNode;
   type: string | Function;
   memoizedProps: {
@@ -10,12 +11,24 @@ export type FiberNode = FiberNodeBase & {
   stateNode: HTMLElement & {
     id?: number | string;
   };
-  _debugID: number;
+  flags: number;
+  index: number;
+  key?: string;
+  lanes: number;
+  mode: number;
+  tag: number;
+  subtreeFlags: number;
+  elementDiv: string | null;
   _debugSource: {
     lineNumber: number;
     columnNumber: number;
     fileName: string;
   };
+};
+
+export type FiberNodeWithId = FiberNode & {
+  /** Based on `flags` (parent) and `index` */
+  id: string;
 };
 
 export type TargetEvent = React.MouseEvent<HTMLDivElement, MouseEvent> & {

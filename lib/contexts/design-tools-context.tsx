@@ -152,7 +152,7 @@ export function useDesignTools() {
 
   const [state, dispatch] = context;
 
-  console.log('useDesignTools', state);
+  // console.log('useDesignTools', state);
 
   const updateCurrentField = (currentField) =>
     dispatch({ type: types.UPDATE_CURRENT_FIELD, currentField });

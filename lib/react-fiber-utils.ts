@@ -12,3 +12,8 @@ export function getReactFiberInstance(element: EventTarget & HTMLElement) {
 
   return targetInst as FiberNode;
 }
+
+export function getFiberNodeId(node: FiberNode) {
+  return `${node._debugSource.fileName}-${node._debugSource.lineNumber}-${node._debugSource.columnNumber}`;
+  // return `${node.flags}-${node.index}-${node.subtreeFlags}`;
+}

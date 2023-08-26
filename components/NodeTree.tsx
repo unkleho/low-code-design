@@ -1,34 +1,40 @@
 import React from 'react';
 
-import { FiberNode } from '../types';
+import { FiberNode, FiberNodeWithId } from '../types';
 import Icon from './Icon';
+import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 type NodeTreeProps = {
-  parentID: number;
-  nodes: FiberNode[];
-  selectedIDs: number[];
+  parentId: string;
+  nodes: FiberNodeWithId[];
+  selectedIds: string[];
   level?: number;
   dataId?: string;
   onNodeCreateClick?: Function;
 };
 
-const getChildNodes = (nodes, parentID) => {
+/** Prevent recursive component going forever */
+const MAX_DEPTH = 100;
+
+const getChildNodes = (nodes: FiberNodeWithId[], parentId) => {
   return nodes.filter((node) => {
-    return node.return?._debugID === parentID;
+    const id = getFiberNodeId(node.return);
+    return id === parentId;
   });
 };
 
 const NodeTree = ({
-  parentID,
+  parentId,
   nodes = [],
-  selectedIDs = [],
+  selectedIds = [],
   level = 0,
   dataId = 'design-tools',
   onNodeCreateClick,
 }: NodeTreeProps) => {
-  const childNodes = getChildNodes(nodes, parentID);
+  const childNodes = getChildNodes(nodes, parentId);
+  console.log('nodeTree', parentId, childNodes);
 
-  if (childNodes.length === 0) {
+  if (childNodes.length === 0 || level > MAX_DEPTH) {
     return null;
   }
 
@@ -45,11 +51,11 @@ const NodeTree = ({
           return null;
         }
 
-        const isSelected = selectedIDs.includes(node._debugID);
-        const grandChildNodes = getChildNodes(nodes, node._debugID);
+        const isSelected = selectedIds.includes(node.id);
+        const grandChildNodes = getChildNodes(nodes, node.id);
 
         return (
-          <li key={node._debugID} data-id={dataId} className="relative">
+          <li key={node.id} data-id={dataId} className="relative">
             <button
               type="button"
               className={[
@@ -63,6 +69,7 @@ const NodeTree = ({
               }}
               onClick={() => {
                 if (node.stateNode) {
+                  console.log('nodeClick', node);
                   node.stateNode.click();
                 }
               }}
@@ -90,9 +97,9 @@ const NodeTree = ({
 
             {/* {node.memoizedProps.className} */}
             <NodeTree
-              parentID={node._debugID}
+              parentId={node.id}
               nodes={nodes}
-              selectedIDs={selectedIDs}
+              selectedIds={selectedIds}
               level={level + 1}
               onNodeCreateClick={onNodeCreateClick}
             />
