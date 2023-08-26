@@ -1,18 +1,18 @@
-import * as CSSWhat from "css-what";
-import { traverseGenerator } from "./traverse";
-import { FiberNode } from "./mocked-types";
-import { isNodeNotHtmlLike } from "./utils";
+import * as CSSWhat from 'css-what';
+import { traverseGenerator } from './traverse';
+import { FiberNode } from './mocked-types';
+import { isNodeNotHtmlLike } from './utils';
 
 function* matchGenerator(
   node: FiberNode,
-  match: string | CSSWhat.Selector[][]
+  match: string | CSSWhat.Selector[][],
 ): IterableIterator<FiberNode> {
   // Either parse match string or allow parsed match object as it is
   let matchParsed: CSSWhat.Selector[][];
-  if (typeof match === "string") {
+  if (typeof match === 'string') {
     matchParsed = CSSWhat.parse(match, {
       lowerCaseTags: false,
-      lowerCaseAttributeNames: false
+      lowerCaseAttributeNames: false,
     });
   } else {
     matchParsed = match;
@@ -45,10 +45,10 @@ function* matchGenerator(
       for (const currentNode of currentMatchingNodes) {
         const currentMatchingSelectorPart: CSSWhat.Selector =
           parsedSelector[currentMatchingSelectorPartIndex];
-        if (["tag"].includes(currentMatchingSelectorPart.type)) {
+        if (['tag'].includes(currentMatchingSelectorPart.type)) {
           const startParams = {
             skipSelfForStartNode: true,
-            skipSiblingForStartNode: true
+            skipSiblingForStartNode: true,
           };
 
           let nextParams: {
@@ -57,13 +57,13 @@ function* matchGenerator(
           } = {};
           if (
             lastRelationshipSelectorPart === undefined ||
-            lastRelationshipSelectorPart.type === "descendant"
+            lastRelationshipSelectorPart.type === 'descendant'
           ) {
             nextParams = { skipChild: false, skipSibling: false };
-          } else if (lastRelationshipSelectorPart.type === "child") {
+          } else if (lastRelationshipSelectorPart.type === 'child') {
             // visit only first level of child
             nextParams = { skipChild: true };
-          } else if (lastRelationshipSelectorPart.type === "sibling") {
+          } else if (lastRelationshipSelectorPart.type === 'sibling') {
             // visit only siblings of start node
             nextParams = { skipChild: true, skipSibling: true };
             startParams.skipSiblingForStartNode = false;
@@ -72,9 +72,10 @@ function* matchGenerator(
           const traverseIterator = traverseGenerator(currentNode, startParams);
 
           // Handle supported non-traversal parts here
-          if (currentMatchingSelectorPart.type == "tag") {
+          if (currentMatchingSelectorPart.type == 'tag') {
             let tmpNode: FiberNode;
             while (
+              // @ts-ignore
               !({ value: tmpNode } = traverseIterator.next(nextParams)).done
             ) {
               if (
@@ -88,7 +89,7 @@ function* matchGenerator(
           // traverseIterator.throw &&
           //   traverseIterator.throw(new Error("cleanup"));
         } else if (
-          ["descendant", "child"].includes(currentMatchingSelectorPart.type)
+          ['descendant', 'child'].includes(currentMatchingSelectorPart.type)
         ) {
           // Handle traversal parts here - Save for look back in next part
           lastRelationshipSelectorPart = currentMatchingSelectorPart;
@@ -114,20 +115,20 @@ function* matchGenerator(
 
 function matchAll(
   node: FiberNode,
-  match: string | CSSWhat.Selector[][]
+  match: string | CSSWhat.Selector[][],
 ): Array<FiberNode> {
   return [...matchGenerator(node, match)];
 }
 
 function matchFirst(
   node: FiberNode,
-  match: string | CSSWhat.Selector[][]
+  match: string | CSSWhat.Selector[][],
 ): FiberNode | null {
   const matchIterator = matchGenerator(node, match);
   const firstResult = matchIterator.next();
 
   // Cancel generator
-  matchIterator.throw && matchIterator.throw(new Error("Cleanup"));
+  matchIterator.throw && matchIterator.throw(new Error('Cleanup'));
 
   // If match found, return that
   if (!firstResult.done) {
