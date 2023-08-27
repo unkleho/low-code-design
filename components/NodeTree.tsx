@@ -14,14 +14,54 @@ type NodeTreeProps = {
 };
 
 /** Prevent recursive component going forever */
-const MAX_DEPTH = 100;
+const MAX_DEPTH = 6;
 
-const getChildNodes = (nodes: FiberNodeWithId[], parentId) => {
+const getChildNodes = (nodes: FiberNode[], parentId) => {
   return nodes.filter((node) => {
     const id = getFiberNodeId(node.return);
     return id === parentId;
   });
 };
+
+function getChildNodes2(node: FiberNode): FiberNodeWithId[] {
+  // console.log('nodeTree childNodes', node);
+
+  const child = node?.child;
+
+  if (!child) {
+    return [];
+  }
+
+  const siblings = getSiblings(child);
+
+  if (siblings.length === 0) {
+    return [child].map((n) => {
+      return {
+        ...n,
+        id: getFiberNodeId(n),
+      };
+    });
+  }
+
+  return [child, ...siblings].map((n) => {
+    return {
+      ...n,
+      id: getFiberNodeId(n),
+    };
+  });
+}
+
+function getSiblings(node: FiberNode, siblings = []): FiberNode[] {
+  const sibling = node.sibling;
+
+  if (sibling) {
+    siblings.push(sibling);
+
+    return getSiblings(sibling, siblings);
+  }
+
+  return siblings;
+}
 
 const NodeTree = ({
   parentId,
@@ -31,12 +71,14 @@ const NodeTree = ({
   dataId = 'design-tools',
   onNodeCreateClick,
 }: NodeTreeProps) => {
-  const childNodes = getChildNodes(nodes, parentId);
-  console.log('nodeTree', parentId, childNodes);
+  // const childNodes = getChildNodes(nodes, parentId);
+  // console.log('nodeTree', parentId, nodes);
 
-  if (childNodes.length === 0 || level > MAX_DEPTH) {
+  if (nodes.length === 0 || level > MAX_DEPTH) {
     return null;
   }
+
+  // console.log('nodeTree nodes', nodes);
 
   const handleNodeCreateClick = (node) => {
     if (typeof onNodeCreateClick === 'function') {
@@ -46,12 +88,13 @@ const NodeTree = ({
 
   return (
     <ul className="pl-0">
-      {childNodes.map((node) => {
+      {nodes.map((node) => {
         if (!node.elementType || typeof node.elementType === 'object') {
           return null;
         }
 
         const isSelected = selectedIds.includes(node.id);
+        const childNodes = getChildNodes2(node);
         const grandChildNodes = getChildNodes(nodes, node.id);
 
         return (
@@ -98,7 +141,8 @@ const NodeTree = ({
             {/* {node.memoizedProps.className} */}
             <NodeTree
               parentId={node.id}
-              nodes={nodes}
+              // nodes={nodes}
+              nodes={childNodes}
               selectedIds={selectedIds}
               level={level + 1}
               onNodeCreateClick={onNodeCreateClick}

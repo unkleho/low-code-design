@@ -136,7 +136,8 @@ const LayersPanel = ({
       <div className="py-1">
         <NodeTree
           parentId={rootNode ? getFiberNodeId(rootNode.return) : null}
-          nodes={nodes}
+          nodes={nodes[0] ? [nodes[0]] : []}
+          // nodes={nodes}
           selectedIds={selectedIds}
           onNodeCreateClick={onNodeCreateClick}
         />

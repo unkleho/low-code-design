@@ -4,6 +4,8 @@ import { FiberNode as FiberNodeBase } from 'react-fiber-traverse/dist/mocked-typ
 export type FiberNode = FiberNodeBase & {
   /** Parent FiberNode */
   return: FiberNode;
+  sibling: FiberNode;
+  child: FiberNode;
   type: string | Function;
   memoizedProps: {
     [key: string]: any;
