@@ -17,5 +17,4 @@ const DemoCard = ({ imageUrl, year, title, description }) => {
     </div>
   );
 };
-
 export default DemoCard;

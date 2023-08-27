@@ -104,6 +104,7 @@ const LayersPanel = ({
       'LayersPanel nodes',
       nodesWithId.map((node) => {
         return {
+          type: node.elementType,
           id: node.id,
           parentId: getFiberNodeId(node.return),
           key: node.key,
@@ -112,9 +113,9 @@ const LayersPanel = ({
           lanes: node.lanes,
           mode: node.mode,
           tag: node.tag,
-          type: node.elementType,
           subtreeFlags: node.subtreeFlags,
           returnId: node.return.id,
+          node,
         };
       }),
       'selectedIds',
