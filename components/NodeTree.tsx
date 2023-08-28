@@ -2,10 +2,10 @@ import React from 'react';
 
 import { FiberNode, FiberNodeWithId } from '../types';
 import Icon from './Icon';
-import { getFiberNodeId } from '../lib/react-fiber-utils';
+import { getChildNodes } from '../lib/react-fiber-utils';
 
 type NodeTreeProps = {
-  parentId: string;
+  // parentId: string;
   nodes: FiberNodeWithId[];
   selectedIds: string[];
   level?: number;
@@ -16,55 +16,8 @@ type NodeTreeProps = {
 /** Prevent recursive component going forever */
 const MAX_DEPTH = 6;
 
-const getChildNodes = (nodes: FiberNode[], parentId) => {
-  return nodes.filter((node) => {
-    const id = getFiberNodeId(node.return);
-    return id === parentId;
-  });
-};
-
-function getChildNodes2(node: FiberNode): FiberNodeWithId[] {
-  // console.log('nodeTree childNodes', node);
-
-  const child = node?.child;
-
-  if (!child) {
-    return [];
-  }
-
-  const siblings = getSiblings(child);
-
-  if (siblings.length === 0) {
-    return [child].map((n) => {
-      return {
-        ...n,
-        id: getFiberNodeId(n),
-      };
-    });
-  }
-
-  return [child, ...siblings].map((n) => {
-    return {
-      ...n,
-      id: getFiberNodeId(n),
-    };
-  });
-}
-
-function getSiblings(node: FiberNode, siblings = []): FiberNode[] {
-  const sibling = node.sibling;
-
-  if (sibling) {
-    siblings.push(sibling);
-
-    return getSiblings(sibling, siblings);
-  }
-
-  return siblings;
-}
-
 const NodeTree = ({
-  parentId,
+  // parentId,
   nodes = [],
   selectedIds = [],
   level = 0,
@@ -77,6 +30,10 @@ const NodeTree = ({
   if (nodes.length === 0 || level > MAX_DEPTH) {
     return null;
   }
+
+  // if (level === 6) {
+  //   console.log('NodeTree', nodes, getFiberNodeId2(nodes[0]));
+  // }
 
   // console.log('nodeTree nodes', nodes);
 
@@ -94,8 +51,10 @@ const NodeTree = ({
         }
 
         const isSelected = selectedIds.includes(node.id);
-        const childNodes = getChildNodes2(node);
-        const grandChildNodes = getChildNodes(nodes, node.id);
+        const childNodes = getChildNodes(node);
+        // TODO
+        const grandChildNodes = [];
+        // const grandChildNodes = getChildNodes(nodes, node.id);
 
         return (
           <li key={node.id} data-id={dataId} className="relative">
@@ -124,7 +83,6 @@ const NodeTree = ({
                 // <Icon name="chevron-down" />
                 <span className="pl-4" />
               )}
-
               {typeof node.type === 'function' ? node.type.name : node.type}
             </button>
 
@@ -140,7 +98,7 @@ const NodeTree = ({
 
             {/* {node.memoizedProps.className} */}
             <NodeTree
-              parentId={node.id}
+              // parentId={node.id}
               // nodes={nodes}
               nodes={childNodes}
               selectedIds={selectedIds}
