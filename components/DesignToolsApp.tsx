@@ -47,6 +47,9 @@ const DesignToolsApp = ({
 }: Props) => {
   const { state, dispatch } = useDesignTools();
 
+  const className = state?.className;
+  const text = state?.text;
+
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
   const selectedIds = selectedNode ? [getFiberNodeId(selectedNode)] : [];
 
@@ -68,6 +71,30 @@ const DesignToolsApp = ({
       className,
     });
   }, [selectedNode]);
+
+  // Run callback whenever className changes
+  React.useEffect(() => {
+    // console.log('kaho', state);
+
+    handleNodeChange([
+      {
+        type: 'UPDATE_FILE_CLASS_NAME',
+        node: state.selectedNode,
+        className,
+      },
+    ]);
+  }, [className]);
+
+  // Run callback whenever className changes
+  React.useEffect(() => {
+    handleNodeChange([
+      {
+        type: 'UPDATE_FILE_TEXT',
+        node: state.selectedNode,
+        text,
+      },
+    ]);
+  }, [text]);
 
   // --------------------------------------------------------------------------
   // Handlers
@@ -91,14 +118,6 @@ const DesignToolsApp = ({
         type: types.UPDATE_TEXT,
         text: state.form.text,
       });
-
-      handleNodeChange([
-        {
-          type: 'UPDATE_FILE_TEXT',
-          node: selectedNode,
-          text: state.form.text,
-        },
-      ]);
     } else {
       let newClassName;
 
@@ -130,14 +149,6 @@ const DesignToolsApp = ({
         type: types.UPDATE_CLASS_NAME,
         className: newClassName,
       });
-
-      handleNodeChange([
-        {
-          type: 'UPDATE_FILE_CLASS_NAME',
-          node: selectedNode,
-          className: newClassName,
-        },
-      ]);
     }
   };
 

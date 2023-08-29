@@ -7,7 +7,7 @@ const DemoCard = ({ imageUrl, year, title, description }) => {
 
       <div className="relative -mt-10">
         <p className="text-xs  ml-4 font-normal text-white">{year}</p>
-        <h1 className="font-bold text-4xl  leading-tight mb-4 ml-4 text-teal-300">
+        <h1 className="font-bold text-4xl  leading-tight mb-4 ml-4 text-blue-300">
           {title}
         </h1>
         <p className="mb-4 text-sm text-gray-100 ml-12 opacity-75">
