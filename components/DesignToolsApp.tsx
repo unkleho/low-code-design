@@ -72,25 +72,21 @@ const DesignToolsApp = ({
     });
   }, [selectedNode]);
 
-  // Run callback whenever className changes
   React.useEffect(() => {
-    // console.log('kaho', state);
-
     handleNodeChange([
       {
         type: 'UPDATE_FILE_CLASS_NAME',
-        node: state.selectedNode,
+        node: selectedNode,
         className,
       },
     ]);
   }, [className]);
 
-  // Run callback whenever className changes
   React.useEffect(() => {
     handleNodeChange([
       {
         type: 'UPDATE_FILE_TEXT',
-        node: state.selectedNode,
+        node: selectedNode,
         text,
       },
     ]);
