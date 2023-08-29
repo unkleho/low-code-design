@@ -11,10 +11,10 @@ import SizingPanel from './SizingPanel';
 
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
-import { FiberNode, FiberNodeWithId, NodeChangeEvent } from '../types';
+import { FiberNode, NodeChangeEvent } from '../types';
+import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 import css from './DesignToolsApp.module.css';
-import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -48,8 +48,6 @@ const DesignToolsApp = ({
   const { state, dispatch } = useDesignTools();
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
-  const className = state?.className;
-  const text = state?.text;
   const selectedIds = selectedNode ? [getFiberNodeId(selectedNode)] : [];
 
   // --------------------------------------------------------------------------
@@ -63,8 +61,6 @@ const DesignToolsApp = ({
       selectedNode,
     });
 
-    // console.log(selectedNode.pendingProps.children);
-
     const className = selectedNode?.stateNode.className || '';
 
     dispatch({
@@ -72,30 +68,6 @@ const DesignToolsApp = ({
       className,
     });
   }, [selectedNode]);
-
-  // Run callback whenever className changes
-  React.useEffect(() => {
-    // console.log('kaho', state);
-
-    handleNodeChange([
-      {
-        type: 'UPDATE_FILE_CLASS_NAME',
-        node: state.selectedNode,
-        className,
-      },
-    ]);
-  }, [className]);
-
-  // Run callback whenever className changes
-  React.useEffect(() => {
-    handleNodeChange([
-      {
-        type: 'UPDATE_FILE_TEXT',
-        node: state.selectedNode,
-        text,
-      },
-    ]);
-  }, [text]);
 
   // --------------------------------------------------------------------------
   // Handlers
@@ -119,6 +91,14 @@ const DesignToolsApp = ({
         type: types.UPDATE_TEXT,
         text: state.form.text,
       });
+
+      handleNodeChange([
+        {
+          type: 'UPDATE_FILE_TEXT',
+          node: selectedNode,
+          text: state.form.text,
+        },
+      ]);
     } else {
       let newClassName;
 
@@ -150,6 +130,14 @@ const DesignToolsApp = ({
         type: types.UPDATE_CLASS_NAME,
         className: newClassName,
       });
+
+      handleNodeChange([
+        {
+          type: 'UPDATE_FILE_CLASS_NAME',
+          node: selectedNode,
+          className: newClassName,
+        },
+      ]);
     }
   };
 
@@ -195,6 +183,7 @@ const DesignToolsApp = ({
         selectedIds={selectedIds}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeCreateClick={(selectedNode) => {
+          // TODO: Add more element types to be created
           handleNodeChange([
             {
               type: 'CREATE_FILE_ELEMENT',

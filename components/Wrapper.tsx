@@ -14,15 +14,12 @@ const Wrapper = ({ children }) => {
       <div
         id="__codesign"
         onClick={(event: TargetEvent) => {
-          console.log('Wrapper event', event, event.target);
+          // console.log('Wrapper event', event, event.target);
 
           // Stop <a> links from navigating away
           event.preventDefault();
 
           const targetInst = getReactFiberInstance(event.target);
-
-          console.log('Wrapper event', targetInst);
-          // const targetInst = event._targetInst;
 
           // Skip part of DesignTools
           if (targetInst?.stateNode.dataset.id === 'design-tools') {
