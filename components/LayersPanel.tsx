@@ -29,6 +29,14 @@ const LayersPanel = ({
 
   React.useEffect(() => {
     const coDesignElement = document.getElementById('__codesign');
+
+    if (!coDesignElement) {
+      console.warn(
+        'Make sure an element with id of __codesign wraps around design',
+      );
+      return;
+    }
+
     const coDesignFiberNode = getReactFiberInstance(coDesignElement);
 
     console.log(

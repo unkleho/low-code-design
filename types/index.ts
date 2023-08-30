@@ -54,3 +54,36 @@ export type NodeChangeEvent =
       node: FiberNode;
       elementType: string;
     };
+
+/**
+ * Node type to build elements in design tool's layers panel
+ */
+export type DesignToolNode = RehypeNode & {
+  isSelected?: boolean;
+  fileName?: string;
+  element?: HTMLElement;
+};
+
+/**
+ * Custom Rehype Parser types as rehype's are lacking
+ */
+export type RehypeNode = {
+  type: 'element' | 'text' | 'comment';
+  tagName: string;
+  properties?: {
+    className?: string[];
+  };
+  children?: RehypeNode[];
+  value?: string; // TODO: Only have value if `text` type
+  // TODO: This should be all required, but it causes probs in DesignToolsNode. Should try and override in DesignToolsNode
+  position?: {
+    start?: { line?: number; column?: number; offset?: number };
+    end?: { line?: number; column?: number; offset?: number };
+  };
+};
+
+// Used in RehypeComponent, but getting funny errors if used in parseCode and getSelectedNode
+export type RehypeRootNode = {
+  type: 'root';
+  children?: RehypeNode[];
+};

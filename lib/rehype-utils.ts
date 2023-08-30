@@ -1,23 +1,5 @@
 import rehype from 'rehype';
-
-/**
- * Custom Rehype Parser types as rehype's are lacking
- */
-export type RehypeNode = {
-  type: 'element' | 'text' | 'comment';
-  tagName: string;
-  properties?: {
-    className?: string[];
-  };
-  children?: RehypeNode[];
-  value?: string;
-};
-
-// Used in RehypeComponent, but getting funny errors if used in parseCode and getSelectedNode
-export type RehypeRootNode = {
-  type: 'root';
-  children?: RehypeNode[];
-};
+import { RehypeNode, DesignToolNode } from '../types';
 
 /**
  * Update className of a target element within HTML code
@@ -35,10 +17,33 @@ export function updateNodeClass(
 
   if (selectedNode.properties && className) {
     selectedNode.properties.className = className.split(' ');
-  } else if (!className && selectedNode.properties.className) {
+  } else if (!className && selectedNode.properties?.className) {
     delete selectedNode.properties.className;
   }
 
+  // @ts-ignore
+  const newCode = rehype().stringify(ast);
+
+  return newCode;
+}
+
+/**
+ * Update text value of a target element within HTML code
+ * @param code HTML code
+ * @param indexes Index array to target element
+ * @param text New text to replace in element
+ */
+export function updateNodeText(
+  code: string,
+  indexes: number[],
+  text: string,
+): string {
+  const ast = parseCode(code);
+  const selectedNode = getSelectedNode(ast, indexes);
+
+  selectedNode.children[0].value = text;
+
+  // @ts-ignore
   const newCode = rehype().stringify(ast);
 
   return newCode;
@@ -54,12 +59,54 @@ export function parseCode(code: string): RehypeNode {
   return ast as RehypeNode;
 }
 
-function getSelectedNode(rootNode: RehypeNode, indexes: number[]): RehypeNode {
+export function getSelectedNode(
+  rootNode: RehypeNode,
+  indexes: number[],
+): RehypeNode {
+  if (!rootNode) {
+    return null;
+  }
+
   const selectedNode = indexes.reduce((acc, index) => {
+    // console.log(rootNode, acc, indexes);
+
     const children = acc.children.filter((child) => child.type === 'element');
 
     return children[index];
   }, rootNode);
 
   return selectedNode;
+}
+
+/**
+ * Add isSelected flag to selected node
+ * @param nodes
+ * @param pathIndexes
+ */
+export function addSelected(
+  nodes: RehypeNode[],
+  pathIndexes: number[] = [],
+): DesignToolNode[] {
+  if (pathIndexes.length === 0) {
+    return nodes;
+  }
+
+  // Recursively find selected node
+  const getNode = (children = [], level = 0) => {
+    const isLast = pathIndexes.length === level + 1;
+    const index = pathIndexes[level];
+    const node =
+      children.filter((child) => child.type === 'element')[index] || [];
+
+    if (isLast) {
+      return node;
+    }
+
+    return getNode(node.children, level + 1);
+  };
+
+  const selectedNode = getNode(nodes);
+  selectedNode.isSelected = true;
+
+  return nodes;
 }
