@@ -21,10 +21,10 @@ const Wrapper = ({ children }) => {
 
           const targetInst = getReactFiberInstance(event.target);
 
-          // Skip part of DesignTools
-          if (targetInst?.stateNode.dataset.id === 'design-tools') {
-            return true;
-          }
+          // // Skip part of DesignTools
+          // if (targetInst?.stateNode.dataset.id === 'design-tools') {
+          //   return true;
+          // }
 
           if (prevElement) {
             prevElement.style.outline = null;

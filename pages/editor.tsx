@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
-import { TargetEvent } from '../types';
+import { NodeChangeEvent, TargetEvent } from '../types';
 import DesignToolsApp from '../components/DesignToolsApp';
 import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
+import { parseCode } from '../lib/rehype-utils';
+import RehypeRootComponent from '../components/RehypeComponent';
+import {
+  getFiberNodeAncestors,
+  getReactFiberInstance,
+} from '../lib/react-fiber-utils';
+import { getNodeType, nodeTypesToSkip } from '../components/NodeTree';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
   <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
@@ -17,15 +24,44 @@ const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
 
 const EditorPage = () => {
   const [code, setCode] = React.useState(defaultCode);
+  const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  const handleDesignToolsSubmit = (events: NodeChangeEvent[]) => {
+    const event = events[0]; // Allow multiple node changes in future
+    const { node } = event;
+    const ancestorNodes = getFiberNodeAncestors(node);
+    const pathIndexes = ancestorNodes.filter(
+      (n) => !nodeTypesToSkip.includes(getNodeType(n)),
+    );
+
+    // TODO: Path index wrong because index of react component taken into account
+    console.log('handleDesignToolsSubmit', events, pathIndexes);
+
+    if (!node) {
+      return null;
+    }
+
+    // Change node className
+    // if (event.type === 'UPDATE_NODE_CLASS_NAME') {
+    //   const newCode = updateNodeClass(code, pathIndexes, event.className);
+    //   setCode(newCode);
+    // } else if (event.type === 'UPDATE_NODE_TEXT') {
+    //   const newCode = updateNodeText(code, pathIndexes, event.text);
+    //   setCode(newCode);
+    // }
+  };
+
   if (!isClient) {
     return null;
   }
+
+  // Convert code to AST
+  const rootRehypeNode = parseCode(code);
 
   return (
     <DesignToolsProvider>
@@ -50,6 +86,10 @@ const EditorPage = () => {
             // Stop <a> links from navigating away
             event.preventDefault();
 
+            console.log(event);
+
+            const targetInst = getReactFiberInstance(event.target);
+
             // const { target, currentTarget } = event;
             // const indexes = getPathIndexes(target, currentTarget);
             // setPathIndexes(indexes);
@@ -58,10 +98,10 @@ const EditorPage = () => {
             // setSelectedNodes([selectedNode]);
 
             // Set selected nodes for DesignToolsApp
-            // setSelectedNodes([event._targetInst]);
+            setSelectedNodes([targetInst]);
           }}
         >
-          {/* <RehypeComponent children={rootRehypeNode.children} /> */}
+          <RehypeRootComponent children={rootRehypeNode.children} />
         </div>
 
         <div
@@ -82,16 +122,13 @@ const EditorPage = () => {
               },
             }}
             onChange={(value, event) => {
-              // console.log(event, value);
               setCode(value);
             }}
           />
         </div>
 
         <DesignToolsApp
-          // selectedNodes={selectedNodes}
-          selectedNodes={[]}
-          // nodes={nodes}
+          selectedNodes={selectedNodes}
           className={[
             'designTools',
             'max-h-full h-screen overflow-auto border-r-4',
@@ -100,8 +137,8 @@ const EditorPage = () => {
           //   setPathIndexes(pathIndexes);
           //   // TODO: Update className, text and tagType in DesignToolsApp
           // }}
-          // onNodeChange={handleDesignToolsSubmit}
-          onNodeChange={() => {}}
+          onNodeChange={handleDesignToolsSubmit}
+          // onNodeChange={() => {}}
         />
       </div>
 

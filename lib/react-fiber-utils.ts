@@ -32,6 +32,26 @@ export function getFiberNodeId(node: FiberNode, rootId = '__codesign') {
   return indexes.reverse().join('-');
 }
 
+export function getFiberNodeAncestors(node: FiberNode, rootId = '__codesign') {
+  function getParentNode(node: FiberNode, nodes: FiberNode[] = []) {
+    // TODO: Add another check for body to prevent infinite loop
+    if (node.stateNode?.id === rootId) {
+      return nodes;
+    }
+
+    nodes.push(node);
+
+    return getParentNode(node.return, nodes);
+  }
+
+  const nodes = getParentNode(node);
+
+  return nodes.reverse();
+}
+
+/**
+ * Get an array of child nodes
+ */
 export function getChildNodes(node: FiberNode): FiberNodeWithId[] {
   // console.log('nodeTree childNodes', node);
 
