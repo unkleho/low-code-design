@@ -3,13 +3,18 @@ import { Editor } from '@monaco-editor/react';
 import { NodeChangeEvent, TargetEvent } from '../types';
 import DesignToolsApp from '../components/DesignToolsApp';
 import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
-import { parseCode } from '../lib/rehype-utils';
+import {
+  parseCode,
+  updateNodeClass,
+  updateNodeText,
+} from '../lib/rehype-utils';
 import RehypeRootComponent from '../components/RehypeComponent';
 import {
   getFiberNodeAncestors,
   getReactFiberInstance,
 } from '../lib/react-fiber-utils';
 import { getNodeType, nodeTypesToSkip } from '../components/NodeTree';
+import { getPathIndexes } from '../lib/html-element-utils';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
   <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
@@ -34,26 +39,31 @@ const EditorPage = () => {
   const handleDesignToolsSubmit = (events: NodeChangeEvent[]) => {
     const event = events[0]; // Allow multiple node changes in future
     const { node } = event;
+    const element = node.stateNode;
+    // const { className } = element;
     const ancestorNodes = getFiberNodeAncestors(node);
-    const pathIndexes = ancestorNodes.filter(
-      (n) => !nodeTypesToSkip.includes(getNodeType(n)),
-    );
+    // const pathIndexes = ancestorNodes.filter(
+    // (n) => !nodeTypesToSkip.includes(getNodeType(n)),
+    // );
+
+    const pathIndexes = getPathIndexes(node?.stateNode);
 
     // TODO: Path index wrong because index of react component taken into account
-    console.log('handleDesignToolsSubmit', events, pathIndexes);
+    console.log('handleDesignToolsSubmit', ancestorNodes, pathIndexes, event);
 
     if (!node) {
       return null;
     }
 
     // Change node className
-    // if (event.type === 'UPDATE_NODE_CLASS_NAME') {
-    //   const newCode = updateNodeClass(code, pathIndexes, event.className);
-    //   setCode(newCode);
-    // } else if (event.type === 'UPDATE_NODE_TEXT') {
-    //   const newCode = updateNodeText(code, pathIndexes, event.text);
-    //   setCode(newCode);
-    // }
+    if (event.type === 'UPDATE_FILE_CLASS_NAME') {
+      const newCode = updateNodeClass(code, pathIndexes, event.className);
+      // console.log(newCode);
+      setCode(newCode);
+    } else if (event.type === 'UPDATE_FILE_TEXT') {
+      const newCode = updateNodeText(code, pathIndexes, event.text);
+      setCode(newCode);
+    }
   };
 
   if (!isClient) {

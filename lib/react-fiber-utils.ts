@@ -33,6 +33,10 @@ export function getFiberNodeId(node: FiberNode, rootId = '__codesign') {
 }
 
 export function getFiberNodeAncestors(node: FiberNode, rootId = '__codesign') {
+  if (!node) {
+    return [];
+  }
+
   function getParentNode(node: FiberNode, nodes: FiberNode[] = []) {
     // TODO: Add another check for body to prevent infinite loop
     if (node.stateNode?.id === rootId) {
