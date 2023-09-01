@@ -4,6 +4,8 @@ import { RehypeNode, RehypeRootNode } from '../types';
 const RehypeRootComponent = ({
   children,
 }: Pick<RehypeRootNode, 'children'>) => {
+  // console.log('RehypeRootComponent', children);
+
   return (
     <>
       {children
@@ -36,6 +38,7 @@ const RehypeComponent = ({
   }
 
   if (type === 'text') {
+    // console.log('RehypeRootComponent text', value);
     return <>{value}</>;
   }
 

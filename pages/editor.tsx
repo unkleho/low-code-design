@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
-import { NodeChangeEvent, TargetEvent } from '../types';
+import { FiberNode, NodeChangeEvent, TargetEvent } from '../types';
 import DesignToolsApp from '../components/DesignToolsApp';
 import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
 import {
@@ -29,7 +29,7 @@ const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
 
 const EditorPage = () => {
   const [code, setCode] = React.useState(defaultCode);
-  const [selectedNodes, setSelectedNodes] = React.useState([]);
+  const [selectedNodes, setSelectedNodes] = React.useState<FiberNode[]>([]);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -39,17 +39,8 @@ const EditorPage = () => {
   const handleDesignToolsSubmit = (events: NodeChangeEvent[]) => {
     const event = events[0]; // Allow multiple node changes in future
     const { node } = event;
-    const element = node.stateNode;
-    // const { className } = element;
-    const ancestorNodes = getFiberNodeAncestors(node);
-    // const pathIndexes = ancestorNodes.filter(
-    // (n) => !nodeTypesToSkip.includes(getNodeType(n)),
-    // );
 
     const pathIndexes = getPathIndexes(node?.stateNode);
-
-    // TODO: Path index wrong because index of react component taken into account
-    console.log('handleDesignToolsSubmit', ancestorNodes, pathIndexes, event);
 
     if (!node) {
       return null;
@@ -58,7 +49,6 @@ const EditorPage = () => {
     // Change node className
     if (event.type === 'UPDATE_FILE_CLASS_NAME') {
       const newCode = updateNodeClass(code, pathIndexes, event.className);
-      // console.log(newCode);
       setCode(newCode);
     } else if (event.type === 'UPDATE_FILE_TEXT') {
       const newCode = updateNodeText(code, pathIndexes, event.text);

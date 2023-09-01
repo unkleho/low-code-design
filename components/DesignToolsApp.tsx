@@ -47,6 +47,8 @@ const DesignToolsApp = ({
 }: Props) => {
   const { state, dispatch } = useDesignTools();
 
+  console.log('DesignToolsApp', selectedNodes, state);
+
   const className = state?.className;
   const text = state?.text;
 

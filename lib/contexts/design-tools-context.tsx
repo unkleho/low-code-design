@@ -58,10 +58,25 @@ function designToolsReducer(state, action) {
     case types.UPDATE_SELECTED_NODE: {
       const children = action.selectedNode?.pendingProps?.children;
 
+      let text;
+      if (typeof children === 'string') {
+        text = children;
+      } else if (children?.props?.type === 'text') {
+        // Need this for RehypeComponent
+        text = children.props.value;
+      }
+
+      console.log(
+        'types.UPDATE_SELECTED_NODE',
+        children?.props?.type,
+        children?.props?.value,
+      );
+
       return {
         ...state,
         selectedNode: action.selectedNode,
-        text: typeof children === 'string' ? children : '',
+        // text: typeof children === 'string' ? children : '',
+        text,
       };
     }
 
