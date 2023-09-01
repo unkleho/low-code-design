@@ -14,7 +14,10 @@ import {
   getReactFiberInstance,
 } from '../lib/react-fiber-utils';
 import { getNodeType, nodeTypesToSkip } from '../components/NodeTree';
-import { getPathIndexes } from '../lib/html-element-utils';
+import {
+  changeHighlightElement,
+  getPathIndexes,
+} from '../lib/html-element-utils';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
   <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
@@ -32,9 +35,24 @@ const EditorPage = () => {
   const [selectedNodes, setSelectedNodes] = React.useState<FiberNode[]>([]);
   const [isClient, setIsClient] = useState(false);
 
+  const highlightElement = React.useRef<HTMLDivElement>();
+  // Top level preview element
+  const previewElement =
+    typeof window === 'undefined'
+      ? null
+      : document.getElementById('__codesign');
+
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // useEffect(() => {
+  //   changeHighlightElement(
+  //     previewElement,
+  //     highlightElement.current,
+  //     pathIndexes,
+  //   );
+  // }, []);
 
   const handleDesignToolsSubmit = (events: NodeChangeEvent[]) => {
     const event = events[0]; // Allow multiple node changes in future
@@ -45,6 +63,12 @@ const EditorPage = () => {
     if (!node) {
       return null;
     }
+
+    changeHighlightElement(
+      previewElement,
+      highlightElement.current,
+      pathIndexes,
+    );
 
     // Change node className
     if (event.type === 'UPDATE_FILE_CLASS_NAME') {
@@ -66,7 +90,7 @@ const EditorPage = () => {
   return (
     <DesignToolsProvider>
       <div className="livePage h-screen overflow-hidden">
-        {/* <div className="fixed" ref={highlightElement}></div> */}
+        <div className="fixed" ref={highlightElement}></div>
 
         <header className="header p-3 border-b-4">
           <h1 className="text-sm uppercase text-gray-800 font-bold">

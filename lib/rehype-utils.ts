@@ -1,5 +1,6 @@
 import rehype from 'rehype';
 import { RehypeNode, DesignToolNode } from '../types';
+import { Node } from 'unist';
 
 /**
  * Update className of a target element within HTML code
@@ -41,10 +42,11 @@ export function updateNodeText(
   const ast = parseCode(code);
   const selectedNode = getSelectedNode(ast, indexes);
 
-  selectedNode.children[0].value = text;
+  if (text && selectedNode.children?.length) {
+    selectedNode.children[0].value = text;
+  }
 
-  // @ts-ignore
-  const newCode = rehype().stringify(ast);
+  const newCode = rehype().stringify(ast as Node);
 
   return newCode;
 }
