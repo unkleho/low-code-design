@@ -10,7 +10,7 @@ module.exports = {
     // Or if using `src` directory:
     // "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  purge: ['./components/**/*.js', './pages/**/*.js'],
+  // purge: ['./components/**/*.js', './pages/**/*.js'],
   // theme: {
   //   extend: {
   //     fontSize: {
