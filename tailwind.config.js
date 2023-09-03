@@ -10,7 +10,11 @@ module.exports = {
     // Or if using `src` directory:
     // "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  safelist: [{ pattern: /([a-zA-Z]+)-./ }],
+  safelist: [
+    { pattern: /([a-zA-Z]+)-./ },
+    // TODO: Consider to save space
+    // { pattern: /(bg|text|border)-./ }
+  ],
   // purge: ['./components/**/*.js', './pages/**/*.js'],
   // theme: {
   //   extend: {
