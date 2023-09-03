@@ -1,4 +1,4 @@
-import { FiberNode as FiberNodeBase } from 'react-fiber-traverse/dist/mocked-types';
+import { FiberNode as FiberNodeBase } from '../lib/react-fiber-traverse/src/mocked-types';
 
 // TODO: Extend FiberNode with missing keys
 export type FiberNode = FiberNodeBase & {
