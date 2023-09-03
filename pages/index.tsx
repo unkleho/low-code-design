@@ -5,7 +5,7 @@ export default function HomePage() {
     <Wrapper>
       <div className="flex flex-row items-center justify-center min-h-screen bg-pink-600">
         <div className="w-64">
-          <p>Hello</p>
+          <p className="text-6xl">Hello</p>
         </div>
 
         <div className="w-64">
