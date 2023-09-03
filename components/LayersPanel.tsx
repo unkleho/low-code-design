@@ -1,65 +1,86 @@
 import React from 'react';
-import { Utils, traverse } from 'react-fiber-traverse';
-
 import Panel from './Panel';
 import NodeTree from './NodeTree';
 
-import { FiberNode } from '../types';
+import { FiberNodeWithId } from '../types';
+import {
+  getChildNodes,
+  getFiberNodeId,
+  getReactFiberInstance,
+} from '../lib/react-fiber-utils';
+
+// TODO: Updating a file in editor does not trigger layer update. May need to poll,
+// or use  websockets
 
 type Props = {
-  selectedIDs: number[];
+  selectedIds: string[];
   refreshCounter?: number;
   onNodeCreateClick?: Function;
 };
 
 const LayersPanel = ({
-  selectedIDs,
+  selectedIds,
   refreshCounter,
   onNodeCreateClick,
 }: Props) => {
-  const [nodes, setNodes] = React.useState<FiberNode[]>([]);
-  const rootNode = nodes[0];
+  const [nodes, setNodes] = React.useState<FiberNodeWithId[]>([]);
+
+  // console.log('selectedIds', selectedIds);
 
   React.useEffect(() => {
-    const rootFiberNode = Utils.getRootFiberNodeFromDOM(
-      document.getElementById('__next'),
+    const coDesignElement = document.getElementById('__codesign');
+
+    if (!coDesignElement) {
+      console.warn(
+        'Make sure an element with id of __codesign wraps around design',
+      );
+      return;
+    }
+
+    const coDesignFiberNode = getReactFiberInstance(coDesignElement);
+
+    console.log(
+      'LayersPanel rootFiberNode',
+      // rootFiberNode,
+      coDesignElement,
+      coDesignFiberNode,
+      getChildNodes(coDesignFiberNode),
+      // rootFiberNode.stateNode.containerInfo,
     );
 
-    // Doesn't work for some reason
-    // const mainFiberNode = findNodeByComponentRef(rootFiberNode, ref.current);
+    const nodes = getChildNodes(coDesignFiberNode);
 
-    let isDesignTools = false;
-    let nodes = [];
+    console.log(
+      'LayersPanel nodes',
+      nodes.map((node) => {
+        return {
+          type: node.elementType,
+          id: node.id,
+          parentId: getFiberNodeId(node.return),
+          key: node.key,
+          flags: node.flags,
+          index: node.index,
+          lanes: node.lanes,
+          mode: node.mode,
+          tag: node.tag,
+          subtreeFlags: node.subtreeFlags,
+          // returnId: node.return.id,
+          node,
+        };
+      }),
+      'selectedIds',
+      selectedIds,
+    );
 
-    // Traverse fiber node tree, adding each one to nodes.
-    // TODO: Only add nodes within Wrapper
-    traverse(rootFiberNode, (node) => {
-      // @ts-ignore
-      if (node.stateNode?.id === '__codesign' || isDesignTools) {
-        isDesignTools = true;
-
-        // @ts-ignore
-        if (node.stateNode?.id !== '__codesign') {
-          nodes.push(node);
-        }
-      }
-    });
-
-    // Filter out DesignTools, otherwise we are inspecting the UI that is inspecting the UI
-    // TODO: Just removing the top DesignTools for now, but should remove child nodes too for performance
-    setNodes(nodes.filter((node) => node.type?.name !== 'DesignTools'));
-
-    // console.log(rootFiberNode);
-    // console.log(mainFiberNode);
+    setNodes(nodes);
   }, [refreshCounter]);
 
   return (
     <Panel title="Layers" name="layers">
       <div className="py-1">
         <NodeTree
-          parentID={rootNode?.return._debugID}
           nodes={nodes}
-          selectedIDs={selectedIDs}
+          selectedIds={selectedIds}
           onNodeCreateClick={onNodeCreateClick}
         />
       </div>

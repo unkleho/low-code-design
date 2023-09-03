@@ -1,9 +1,11 @@
 import React from 'react';
-import { RehypeNode, RehypeRootNode } from '../lib/rehype-utils';
+import { RehypeNode, RehypeRootNode } from '../types';
 
 const RehypeRootComponent = ({
   children,
 }: Pick<RehypeRootNode, 'children'>) => {
+  // console.log('RehypeRootComponent', children);
+
   return (
     <>
       {children
@@ -31,7 +33,12 @@ const RehypeComponent = ({
   value,
   children,
 }: RehypeNode) => {
+  if (type === 'comment') {
+    return null;
+  }
+
   if (type === 'text') {
+    // console.log('RehypeRootComponent text', value);
     return <>{value}</>;
   }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
@@ -6,7 +6,7 @@ import DesignToolsApp from './DesignToolsApp';
 import Icon from './Icon';
 import ControlPanel from './ControlPanel';
 
-import { FiberNode, NodeChangeEvent } from '../types';
+import { FiberNode, FiberNodeWithId, NodeChangeEvent } from '../types';
 import {
   DesignToolsProvider,
   useDesignTools,
@@ -19,6 +19,11 @@ type Props = {
 const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
   const { dispatch } = useDesignTools();
   const [isActive, setIsActive] = React.useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Make updates to DOM and send API request
   const handleNodeChange = async (events: NodeChangeEvent[]) => {
@@ -73,7 +78,7 @@ const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
     }
   };
 
-  if (canUseDOM()) {
+  if (isClient) {
     return ReactDOM.createPortal(
       <>
         {!isActive && (

@@ -1,7 +1,21 @@
 // const { colors } = require('tailwindcss/defaultTheme')
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  purge: ['./components/**/*.js', './pages/**/*.js'],
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+
+    // Or if using `src` directory:
+    // "./src/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  safelist: [
+    { pattern: /([a-zA-Z]+)-./ },
+    // TODO: Consider to save space
+    // { pattern: /(bg|text|border)-./ }
+  ],
+  // purge: ['./components/**/*.js', './pages/**/*.js'],
   // theme: {
   //   extend: {
   //     fontSize: {

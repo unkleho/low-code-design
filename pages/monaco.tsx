@@ -1,5 +1,5 @@
 import React from 'react';
-import { ControlledEditor } from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react';
 import rehype from 'rehype';
 
 const MonacoPage = () => {
@@ -26,7 +26,7 @@ const MonacoPage = () => {
 
   return (
     <div>
-      <ControlledEditor
+      <Editor
         height="50vh"
         language="html"
         theme="dark"
@@ -36,7 +36,7 @@ const MonacoPage = () => {
             enabled: false,
           },
         }}
-        onChange={(event, value) => {
+        onChange={(value, event) => {
           console.log(event, value);
           setValue(value);
         }}

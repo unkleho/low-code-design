@@ -1,36 +1,47 @@
 import React from 'react';
 
-import { FiberNode } from '../types';
+import { FiberNode, FiberNodeWithId } from '../types';
 import Icon from './Icon';
+import { getChildNodes } from '../lib/react-fiber-utils';
 
 type NodeTreeProps = {
-  parentID: number;
-  nodes: FiberNode[];
-  selectedIDs: number[];
+  // parentId: string;
+  nodes: FiberNodeWithId[];
+  selectedIds: string[];
   level?: number;
   dataId?: string;
   onNodeCreateClick?: Function;
 };
 
-const getChildNodes = (nodes, parentID) => {
-  return nodes.filter((node) => {
-    return node.return?._debugID === parentID;
-  });
-};
+/** Prevent recursive component going forever */
+const MAX_DEPTH = 6;
+/** TODO: Pass this through as a config? */
+export const nodeTypesToSkip = ['RehypeRootComponent', 'RehypeComponent'];
+
+export function getNodeType(node: FiberNode) {
+  return typeof node.type === 'function' ? node.type.name : node.type;
+}
 
 const NodeTree = ({
-  parentID,
+  // parentId,
   nodes = [],
-  selectedIDs = [],
+  selectedIds = [],
   level = 0,
   dataId = 'design-tools',
   onNodeCreateClick,
 }: NodeTreeProps) => {
-  const childNodes = getChildNodes(nodes, parentID);
+  // const childNodes = getChildNodes(nodes, parentId);
+  // console.log('nodeTree', parentId, nodes);
 
-  if (childNodes.length === 0) {
+  if (nodes.length === 0 || level > MAX_DEPTH) {
     return null;
   }
+
+  // if (level === 6) {
+  //   console.log('NodeTree', nodes, getFiberNodeId2(nodes[0]));
+  // }
+
+  // console.log('nodeTree nodes', nodes);
 
   const handleNodeCreateClick = (node) => {
     if (typeof onNodeCreateClick === 'function') {
@@ -40,16 +51,34 @@ const NodeTree = ({
 
   return (
     <ul className="pl-0">
-      {childNodes.map((node) => {
+      {nodes.map((node) => {
         if (!node.elementType || typeof node.elementType === 'object') {
           return null;
         }
 
-        const isSelected = selectedIDs.includes(node._debugID);
-        const grandChildNodes = getChildNodes(nodes, node._debugID);
+        const isSelected = selectedIds.includes(node.id);
+        const childNodes = getChildNodes(node);
+        // TODO
+        const grandChildNodes = [];
+        const type = getNodeType(node);
+        // const grandChildNodes = getChildNodes(nodes, node.id);
+
+        if (nodeTypesToSkip.includes(type)) {
+          return (
+            <NodeTree
+              key={node.id}
+              // parentId={node.id}
+              // nodes={nodes}
+              nodes={childNodes}
+              selectedIds={selectedIds}
+              level={level}
+              onNodeCreateClick={onNodeCreateClick}
+            />
+          );
+        }
 
         return (
-          <li key={node._debugID} data-id={dataId} className="relative">
+          <li key={node.id} data-id={dataId} className="relative">
             <button
               type="button"
               className={[
@@ -63,6 +92,7 @@ const NodeTree = ({
               }}
               onClick={() => {
                 if (node.stateNode) {
+                  console.log('nodeClick', node);
                   node.stateNode.click();
                 }
               }}
@@ -72,10 +102,9 @@ const NodeTree = ({
               ) : (
                 // &#9654; Right Triangle
                 // <Icon name="chevron-down" />
-                <div className="pl-4" />
+                <span className="pl-4" />
               )}
-
-              {typeof node.type === 'function' ? node.type.name : node.type}
+              {type}
             </button>
 
             {isSelected && (
@@ -90,9 +119,10 @@ const NodeTree = ({
 
             {/* {node.memoizedProps.className} */}
             <NodeTree
-              parentID={node._debugID}
-              nodes={nodes}
-              selectedIDs={selectedIDs}
+              // parentId={node.id}
+              // nodes={nodes}
+              nodes={childNodes}
+              selectedIds={selectedIds}
               level={level + 1}
               onNodeCreateClick={onNodeCreateClick}
             />

@@ -24,6 +24,7 @@ export default function HomePage() {
           ].map(({ title, description, year, imageUrl }) => {
             return (
               <DemoCard
+                key={imageUrl}
                 title={title}
                 description={description}
                 year={year}

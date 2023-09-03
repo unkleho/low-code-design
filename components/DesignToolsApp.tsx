@@ -12,6 +12,7 @@ import SizingPanel from './SizingPanel';
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
 import replaceClassNameValue from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
+import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 import css from './DesignToolsApp.module.css';
 
@@ -46,10 +47,13 @@ const DesignToolsApp = ({
 }: Props) => {
   const { state, dispatch } = useDesignTools();
 
-  const selectedNode = selectedNodes[0]; // Allow multi-select in the future
+  console.log('DesignToolsApp', selectedNodes, state);
+
   const className = state?.className;
   const text = state?.text;
-  const selectedIDs = selectedNode?._debugID ? [selectedNode._debugID] : [];
+
+  const selectedNode = selectedNodes[0]; // Allow multi-select in the future
+  const selectedIds = selectedNode ? [getFiberNodeId(selectedNode)] : [];
 
   // --------------------------------------------------------------------------
   // Effects
@@ -62,8 +66,6 @@ const DesignToolsApp = ({
       selectedNode,
     });
 
-    // console.log(selectedNode.pendingProps.children);
-
     const className = selectedNode?.stateNode.className || '';
 
     dispatch({
@@ -72,23 +74,21 @@ const DesignToolsApp = ({
     });
   }, [selectedNode]);
 
-  // Run callback whenever className changes
   React.useEffect(() => {
     handleNodeChange([
       {
         type: 'UPDATE_FILE_CLASS_NAME',
-        node: state.selectedNode,
+        node: selectedNode,
         className,
       },
     ]);
   }, [className]);
 
-  // Run callback whenever className changes
   React.useEffect(() => {
     handleNodeChange([
       {
         type: 'UPDATE_FILE_TEXT',
-        node: state.selectedNode,
+        node: selectedNode,
         text,
       },
     ]);
@@ -189,9 +189,10 @@ const DesignToolsApp = ({
 
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
-        selectedIDs={selectedIDs}
+        selectedIds={selectedIds}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeCreateClick={(selectedNode) => {
+          // TODO: Add more element types to be created
           handleNodeChange([
             {
               type: 'CREATE_FILE_ELEMENT',

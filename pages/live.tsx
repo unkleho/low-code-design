@@ -1,5 +1,5 @@
 import React from 'react';
-import { ControlledEditor } from '@monaco-editor/react';
+import { Editor } from '@monaco-editor/react';
 
 import DesignToolsApp from '../components/DesignToolsApp';
 import RehypeComponent from '../components/RehypeComponent';
@@ -12,6 +12,7 @@ import {
 } from '../lib/babel-dom-utils';
 import useWindowSize from '../lib/hooks/use-window-size';
 import { parseCode, updateNodeClass } from '../lib/rehype-utils';
+import { getReactFiberInstance } from '../lib/react-fiber-utils';
 
 const defaultCode = `<div id="hello"><strong class="uppercase">Hello World!</strong><p>Some text</p>
   <div><p>Deep text</p></div>
@@ -30,7 +31,7 @@ const LivePage = () => {
     typeof window === 'undefined' ? null : document.getElementById('preview');
 
   const rootRehypeNode = parseCode(code);
-  console.log(rootRehypeNode);
+  // console.log(rootRehypeNode);
 
   React.useEffect(() => {
     const element = getSelectedElement(previewElement, ancestorIndexes);
@@ -64,6 +65,8 @@ const LivePage = () => {
 
   // TODO: Type events
   const handleDesignToolsSubmit = (events) => {
+    console.log('design-tools', events);
+
     const event = events[0]; // Allow multiple node changes in future
     const { node, type, className } = event;
 
@@ -71,6 +74,7 @@ const LivePage = () => {
     if (node && type === 'UPDATE_FILE_CLASS_NAME') {
       // Parse code and turn it into an AST
       const newCode = updateNodeClass(code, ancestorIndexes, className);
+
       setCode(newCode);
     }
   };
@@ -109,15 +113,17 @@ const LivePage = () => {
               height,
             });
 
+            const targetInst = getReactFiberInstance(event.target);
+
             // Set selected nodes for DesignToolsApp
-            setSelectedNodes([event._targetInst]);
+            setSelectedNodes([targetInst]);
           }}
         >
           <RehypeComponent children={rootRehypeNode.children} />
         </div>
 
         <div className="editor border-t-4">
-          <ControlledEditor
+          <Editor
             // height="50vh"
             language="html"
             // theme="dark"
@@ -127,7 +133,7 @@ const LivePage = () => {
                 enabled: false,
               },
             }}
-            onChange={(event, value) => {
+            onChange={(value, event) => {
               console.log(event, value);
               setCode(value);
             }}
