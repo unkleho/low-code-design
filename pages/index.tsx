@@ -9,11 +9,7 @@ import {
   updateNodeText,
 } from '../lib/rehype-utils';
 import RehypeRootComponent from '../components/RehypeComponent';
-import {
-  getFiberNodeAncestors,
-  getReactFiberInstance,
-} from '../lib/react-fiber-utils';
-import { getNodeType, nodeTypesToSkip } from '../components/NodeTree';
+import { getReactFiberInstance } from '../lib/react-fiber-utils';
 import {
   changeHighlightElement,
   getPathIndexes,

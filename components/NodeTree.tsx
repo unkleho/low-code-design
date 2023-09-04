@@ -15,11 +15,19 @@ type NodeTreeProps = {
 
 /** Prevent recursive component going forever */
 const MAX_DEPTH = 6;
-/** TODO: Pass this through as a config? */
-export const nodeTypesToSkip = ['RehypeRootComponent', 'RehypeComponent'];
+/** TODO: Pass this through as a config? `i` is a production name for React component */
+export const nodeTypesToSkip = ['RehypeRootComponent', 'RehypeComponent', 'i'];
 
 export function getNodeType(node: FiberNode) {
   return typeof node.type === 'function' ? node.type.name : node.type;
+}
+
+export function shouldSkipNode(node: FiberNode) {
+  if (typeof node.type === 'function') {
+    return nodeTypesToSkip.includes(node.type.name);
+  }
+
+  return false;
 }
 
 const NodeTree = ({
@@ -63,12 +71,10 @@ const NodeTree = ({
         const type = getNodeType(node);
         // const grandChildNodes = getChildNodes(nodes, node.id);
 
-        if (nodeTypesToSkip.includes(type)) {
+        if (shouldSkipNode(node)) {
           return (
             <NodeTree
               key={node.id}
-              // parentId={node.id}
-              // nodes={nodes}
               nodes={childNodes}
               selectedIds={selectedIds}
               level={level}
