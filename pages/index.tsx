@@ -50,7 +50,9 @@ const EditorPage = () => {
   //   );
   // }, []);
 
-  const handleDesignToolsSubmit = (events: NodeChangeEvent[]) => {
+  const handleDesignToolsChange = (events: NodeChangeEvent[]) => {
+    console.log('handleDesignToolsChange', events[0]);
+
     const event = events[0]; // Allow multiple node changes in future
     const { node } = event;
 
@@ -69,6 +71,7 @@ const EditorPage = () => {
     // Change node className
     if (event.type === 'UPDATE_FILE_CLASS_NAME') {
       const newCode = updateNodeClass(code, pathIndexes, event.className);
+
       setCode(newCode);
     } else if (event.type === 'UPDATE_FILE_TEXT') {
       const newCode = updateNodeText(code, pathIndexes, event.text);
@@ -157,8 +160,7 @@ const EditorPage = () => {
           //   setPathIndexes(pathIndexes);
           //   // TODO: Update className, text and tagType in DesignToolsApp
           // }}
-          onNodeChange={handleDesignToolsSubmit}
-          // onNodeChange={() => {}}
+          onNodeChange={handleDesignToolsChange}
         />
       </div>
 

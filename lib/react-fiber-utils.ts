@@ -17,7 +17,15 @@ export function getReactFiberInstance(element: EventTarget & HTMLElement) {
  * Build a unique ID for Fiber Node by going up the parent chain towards the root element
  */
 export function getFiberNodeId(node: FiberNode, rootId = '__codesign') {
+  if (!node) {
+    return null;
+  }
+
   function getIndexes(node: FiberNode, indexes = []) {
+    if (!node) {
+      return null;
+    }
+
     if (node.stateNode?.id === rootId) {
       return indexes;
     }

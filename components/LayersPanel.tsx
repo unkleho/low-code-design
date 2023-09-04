@@ -39,38 +39,38 @@ const LayersPanel = ({
 
     const coDesignFiberNode = getReactFiberInstance(coDesignElement);
 
-    console.log(
-      'LayersPanel rootFiberNode',
-      // rootFiberNode,
-      coDesignElement,
-      coDesignFiberNode,
-      getChildNodes(coDesignFiberNode),
-      // rootFiberNode.stateNode.containerInfo,
-    );
+    // console.log(
+    //   'LayersPanel rootFiberNode',
+    //   // rootFiberNode,
+    //   coDesignElement,
+    //   coDesignFiberNode,
+    //   getChildNodes(coDesignFiberNode),
+    //   // rootFiberNode.stateNode.containerInfo,
+    // );
 
     const nodes = getChildNodes(coDesignFiberNode);
 
-    console.log(
-      'LayersPanel nodes',
-      nodes.map((node) => {
-        return {
-          type: node.elementType,
-          id: node.id,
-          parentId: getFiberNodeId(node.return),
-          key: node.key,
-          flags: node.flags,
-          index: node.index,
-          lanes: node.lanes,
-          mode: node.mode,
-          tag: node.tag,
-          subtreeFlags: node.subtreeFlags,
-          // returnId: node.return.id,
-          node,
-        };
-      }),
-      'selectedIds',
-      selectedIds,
-    );
+    // console.log(
+    //   'LayersPanel nodes',
+    //   nodes.map((node) => {
+    //     return {
+    //       type: node.elementType,
+    //       id: node.id,
+    //       parentId: getFiberNodeId(node.return),
+    //       key: node.key,
+    //       flags: node.flags,
+    //       index: node.index,
+    //       lanes: node.lanes,
+    //       mode: node.mode,
+    //       tag: node.tag,
+    //       subtreeFlags: node.subtreeFlags,
+    //       // returnId: node.return.id,
+    //       node,
+    //     };
+    //   }),
+    //   'selectedIds',
+    //   selectedIds,
+    // );
 
     setNodes(nodes);
   }, [refreshCounter]);

@@ -21,11 +21,11 @@ const LayoutPanel = () => {
         <PanelRow label="Position">
           <select
             className="p-1 border"
-            value={state.position || ''}
+            value={state.form.position || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(state.position, value);
+              updateClassNameValue(state.form.position, value);
             }}
           >
             <option label=" "></option>
@@ -42,11 +42,11 @@ const LayoutPanel = () => {
         <PanelRow label="Display">
           <select
             className="p-1 border"
-            value={state.display || ''}
+            value={state.form.display || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(state.display, value);
+              updateClassNameValue(state.form.display, value);
             }}
           >
             <option label=" "></option>
@@ -64,7 +64,7 @@ const LayoutPanel = () => {
           {['row', 'col', 'row-reverse', 'col-reverse'].map((flexDirection) => {
             const arrowDirection = flexDirectionArrows[flexDirection];
             const iconName = `arrow-narrow-${arrowDirection}` as ArrowNarrowDirection;
-            const isSelected = flexDirection === state.flexDirection;
+            const isSelected = flexDirection === state.form.flexDirection;
 
             return (
               <button
@@ -77,8 +77,8 @@ const LayoutPanel = () => {
                 ].join(' ')}
                 onClick={() => {
                   updateClassNameValue(
-                    `flex-${state.flexDirection}`,
-                    `flex-${flexDirection}`
+                    `flex-${state.form.flexDirection}`,
+                    `flex-${flexDirection}`,
                   );
                 }}
                 key={flexDirection}

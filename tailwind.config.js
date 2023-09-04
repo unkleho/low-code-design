@@ -11,9 +11,22 @@ module.exports = {
     // "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   safelist: [
-    { pattern: /([a-zA-Z]+)-./ },
-    // TODO: Consider to save space
-    // { pattern: /(bg|text|border)-./ }
+    // { pattern: /([a-zA-Z]+)-./ },
+    { pattern: /(mt|mr|mb|ml|)-./ },
+    { pattern: /(pt|pr|pb|pl|)-./ },
+    {
+      pattern: /(bg|text|border|w|h|opacity|font|leading)-./,
+    },
+    'block',
+    'flex',
+    'grid',
+    'relative',
+    'absolute',
+    'sticky',
+    'uppercase',
+    'lowercase',
+    'capitalize',
+    'normal-case',
   ],
   // purge: ['./components/**/*.js', './pages/**/*.js'],
   // theme: {

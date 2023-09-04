@@ -16,8 +16,49 @@ export const types = {
   REFRESH_LAYERS_PANEL: 'REFRESH_LAYERS_PANEL',
 };
 
-function designToolsReducer(state, action) {
-  // console.log(action);
+type AppState = {
+  currentField: string | null;
+  text: string;
+  form: FormState;
+  panels: { name: string; status: string }[];
+  layersPanelKey: number;
+  layersPanelRefreshCounter?: number;
+};
+
+type FormState = {
+  className: string;
+  // Layout
+  position: string;
+  display: string;
+  flexDirection: string;
+  // Sizing
+  width: string;
+  minWidth: string;
+  height: string;
+  minHeight: string;
+  // Spacing
+  marginTop: string;
+  marginRight: string;
+  marginBottom: string;
+  marginLeft: string;
+  paddingTop: string;
+  paddingRight: string;
+  paddingBottom: string;
+  paddingLeft: string;
+  // Typography
+  fontSize: string;
+  fontWeight: string;
+  textColor: string;
+  textTransform: string;
+  leading: string;
+  // Background
+  backgroundColor: string;
+  // Effect
+  opacity: string;
+};
+
+function designToolsReducer(state: AppState, action) {
+  console.log('designToolsReducer', action);
 
   switch (action.type) {
     case types.UPDATE_CURRENT_FIELD: {
@@ -40,7 +81,7 @@ function designToolsReducer(state, action) {
     case types.UPDATE_CLASS_NAME: {
       return {
         ...state,
-        ...buildFormValues(action.className),
+        // ...buildFormValues(action.className),
         // Experiment with keeping form state in context
         // Will need to access it from handleSubmit, so might as well keep it handy
         // Could cause perf issues, but whatevs for now
@@ -116,7 +157,7 @@ export function DesignToolsProvider(props) {
     layersPanelKey: 0,
     // WIP
     text: null,
-    ...defaultFormValues,
+    // ...defaultFormValues,
     form: defaultFormValues,
     panels: [
       {
@@ -174,7 +215,15 @@ export function useDesignTools() {
 
   const updateClassNameValue = (oldValue, newValue) => {
     const className = replaceClassNameValue(
-      state.className,
+      state.form.className,
+      oldValue,
+      newValue,
+    );
+
+    console.log(
+      'updateClassNameValue',
+      state.form.className,
+      className,
       oldValue,
       newValue,
     );

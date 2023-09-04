@@ -10,11 +10,14 @@ import EffectPanel from './EffectPanel';
 import SizingPanel from './SizingPanel';
 
 import { useDesignTools, types } from '../lib/contexts/design-tools-context';
-import replaceClassNameValue from '../lib/replace-class-name-value';
+import replaceClassNameValue, {
+  updateClassName,
+} from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 import css from './DesignToolsApp.module.css';
+import usePrevious from '../lib/hooks/use-previous';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -46,10 +49,11 @@ const DesignToolsApp = ({
   onNodeChange,
 }: Props) => {
   const { state, dispatch } = useDesignTools();
+  // const prevState = usePrevious(state);
 
-  console.log('DesignToolsApp', selectedNodes, state);
+  // console.log('DesignToolsApp', state.form, prevState.form);
 
-  const className = state?.className;
+  const className = state?.form.className;
   const text = state?.text;
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
@@ -66,7 +70,7 @@ const DesignToolsApp = ({
       selectedNode,
     });
 
-    const className = selectedNode?.stateNode.className || '';
+    const className = selectedNode?.stateNode?.className || '';
 
     dispatch({
       type: types.UPDATE_CLASS_NAME,
@@ -126,21 +130,26 @@ const DesignToolsApp = ({
         const newValue = state.form[currentField];
         const prefix = config[currentField];
 
+        // console.log('handleFormSubmit', state);
+
         // Sorry, need to check for negative values, so a bit messy right now.
         // TODO: Consider moving this funky logic to reducer
-        newClassName = replaceClassNameValue(
-          state.form.className,
-          oldValue
-            ? `${oldValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
-                oldValue.charAt(0) === '-' ? oldValue.substring(1) : oldValue
-              }`
-            : '',
-          newValue
-            ? `${newValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
-                newValue.charAt(0) === '-' ? newValue.substring(1) : newValue
-              }`
-            : '',
-        );
+        // TODO: Remove when sure we don't need to worry about old vs new value
+        // newClassName = replaceClassNameValue(
+        //   state.form.className,
+        //   oldValue
+        //     ? `${oldValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
+        //         oldValue.charAt(0) === '-' ? oldValue.substring(1) : oldValue
+        //       }`
+        //     : '',
+        //   newValue
+        //     ? `${newValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
+        //         newValue.charAt(0) === '-' ? newValue.substring(1) : newValue
+        //       }`
+        //     : '',
+        // );
+
+        newClassName = updateClassName(state.form.className, prefix, newValue);
       }
 
       dispatch({

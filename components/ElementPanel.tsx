@@ -9,7 +9,8 @@ const ElementPanel = () => {
   const [textInputValue, setTextInputValue] = React.useState('');
 
   const { state, updateCurrentField, dispatch } = useDesignTools();
-  const { className, text, selectedNode } = state;
+  const { form, text, selectedNode } = state;
+  const { className } = form;
 
   const type = selectedNode?.type;
   const lineNumber = selectedNode?._debugSource?.lineNumber;

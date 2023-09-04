@@ -17,13 +17,13 @@ const TypographyPanel = () => {
         <PanelRow label="Font Size">
           <select
             className="p-1 border"
-            value={state.fontSize || ''}
+            value={state.form.fontSize || ''}
             onChange={(event) => {
               const { value } = event.target;
 
               updateClassNameValue(
-                state.fontSize ? `text-${state.fontSize}` : '',
-                value ? `text-${value}` : ''
+                state.form.fontSize ? `text-${state.form.fontSize}` : '',
+                value ? `text-${value}` : '',
               );
             }}
           >
@@ -59,13 +59,13 @@ const TypographyPanel = () => {
         <PanelRow label="Weight">
           <select
             className="p-1 border"
-            value={state.fontWeight || ''}
+            value={state.form.fontWeight || ''}
             onChange={(event) => {
               const { value } = event.target;
 
               updateClassNameValue(
-                state.fontWeight ? `font-${state.fontWeight}` : '',
-                value ? `font-${value}` : ''
+                state.form.fontWeight ? `font-${state.form.fontWeight}` : '',
+                value ? `font-${value}` : '',
               );
             }}
           >
@@ -87,7 +87,7 @@ const TypographyPanel = () => {
               // TODO: Consider wrapping function to handle ternaries
               updateClassNameValue(
                 textColor ? `text-${textColor}` : '',
-                color ? `text-${color}` : ''
+                color ? `text-${color}` : '',
               );
             }}
           />
@@ -96,11 +96,11 @@ const TypographyPanel = () => {
         <PanelRow label="Transform">
           <select
             className="p-1 border"
-            value={state.textTransform || ''}
+            value={state.form.textTransform || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(state.textTransform, value);
+              updateClassNameValue(state.form.textTransform, value);
             }}
           >
             <option label=" "></option>
@@ -116,13 +116,13 @@ const TypographyPanel = () => {
         <PanelRow label="Leading">
           <select
             className="p-1 border"
-            value={state.leading || ''}
+            value={state.form.leading || ''}
             onChange={(event) => {
               const { value } = event.target;
 
               updateClassNameValue(
-                state.leading ? `leading-${state.leading}` : '',
-                value ? `leading-${value}` : ''
+                state.form.leading ? `leading-${state.form.leading}` : '',
+                value ? `leading-${value}` : '',
               );
             }}
           >
