@@ -26,7 +26,6 @@
     "react-devtools": "^4.8.2",
     "react-dom": "^18.2.0",
     "react-live": "^2.2.2",
-    "react-render-hook": "^2.0.0",
     "reactronica": "^0.4.5",
     "rehype": "^11.0.0"
   },

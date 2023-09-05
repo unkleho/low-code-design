@@ -109,16 +109,7 @@ const EditorPage = () => {
             // Stop <a> links from navigating away
             event.preventDefault();
 
-            console.log(event);
-
             const targetInst = getReactFiberInstance(event.target);
-
-            // const { target, currentTarget } = event;
-            // const indexes = getPathIndexes(target, currentTarget);
-            // setPathIndexes(indexes);
-
-            // const selectedNode = getSelectedNode(rootRehypeNode, indexes);
-            // setSelectedNodes([selectedNode]);
 
             // Set selected nodes for DesignToolsApp
             setSelectedNodes([targetInst]);

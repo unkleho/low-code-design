@@ -2,7 +2,7 @@ import React from 'react';
 
 import DesignToolsAppPortal from './DesignToolsAppPortal';
 
-import { FiberNode, TargetEvent } from '../types';
+import { TargetEvent } from '../types';
 import { getReactFiberInstance } from '../lib/react-fiber-utils';
 
 const Wrapper = ({ children }) => {
@@ -20,11 +20,6 @@ const Wrapper = ({ children }) => {
           event.preventDefault();
 
           const targetInst = getReactFiberInstance(event.target);
-
-          // // Skip part of DesignTools
-          // if (targetInst?.stateNode.dataset.id === 'design-tools') {
-          //   return true;
-          // }
 
           if (prevElement) {
             prevElement.style.outline = null;

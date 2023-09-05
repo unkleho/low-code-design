@@ -6,7 +6,7 @@ import DesignToolsApp from './DesignToolsApp';
 import Icon from './Icon';
 import ControlPanel from './ControlPanel';
 
-import { FiberNode, FiberNodeWithId, NodeChangeEvent } from '../types';
+import { FiberNode, NodeChangeEvent } from '../types';
 import {
   DesignToolsProvider,
   useDesignTools,
