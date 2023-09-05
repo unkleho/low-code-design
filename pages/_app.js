@@ -1,14 +1,14 @@
 import '../styles/globals.css';
 
-const Wrapper = ({ children }) => {
+const CodesignLiveAppWrapper = ({ children }) => {
   return children;
 };
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Wrapper>
+    <CodesignLiveAppWrapper>
       <Component {...pageProps} />
-    </Wrapper>
+    </CodesignLiveAppWrapper>
   );
 }
 

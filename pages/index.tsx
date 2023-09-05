@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import { FiberNode, NodeChangeEvent, TargetEvent } from '../types';
-import DesignToolsApp from '../components/DesignToolsApp';
-import { DesignToolsProvider } from '../lib/contexts/design-tools-context';
+import DesignToolsApp from '../components/CodesignSidebar';
+import { CodesignProvider } from '../lib/contexts/codesign-context';
 import {
   parseCode,
   updateNodeClass,
@@ -87,7 +87,7 @@ const EditorPage = () => {
   const rootRehypeNode = parseCode(code);
 
   return (
-    <DesignToolsProvider>
+    <CodesignProvider>
       <div className="livePage h-screen overflow-hidden">
         <div className="fixed" ref={highlightElement}></div>
 
@@ -182,7 +182,7 @@ const EditorPage = () => {
         grid-area: designTools;
       }
       `}</style>
-    </DesignToolsProvider>
+    </CodesignProvider>
   );
 };
 

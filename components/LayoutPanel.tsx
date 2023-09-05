@@ -3,7 +3,7 @@ import PanelRow from './PanelRow';
 
 import Icon from './Icon';
 
-import { useDesignTools } from '../lib/contexts/design-tools-context';
+import { useCodesign } from '../lib/contexts/codesign-context';
 import classNameValues from '../lib/class-name-values';
 
 type ArrowNarrowDirection =
@@ -13,7 +13,7 @@ type ArrowNarrowDirection =
   | 'arrow-narrow-up';
 
 const LayoutPanel = () => {
-  const { updateClassNameValue, state } = useDesignTools();
+  const { updateClassNameValue, state } = useCodesign();
 
   return (
     <Panel title="Layout" name="layout">

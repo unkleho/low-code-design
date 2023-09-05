@@ -1,11 +1,11 @@
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 
-import { useDesignTools } from '../lib/contexts/design-tools-context';
+import { useCodesign } from '../lib/contexts/codesign-context';
 import classNameValues from '../lib/class-name-values';
 
 const EffectPanel = () => {
-  const { state, updateClassNameValue } = useDesignTools();
+  const { state, updateClassNameValue } = useCodesign();
 
   return (
     <Panel title="Effect" name="effect">
@@ -19,7 +19,7 @@ const EffectPanel = () => {
 
               updateClassNameValue(
                 state.opacity ? `opacity-${state.opacity}` : '',
-                value ? `opacity-${value}` : ''
+                value ? `opacity-${value}` : '',
               );
             }}
           >

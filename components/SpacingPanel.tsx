@@ -3,10 +3,10 @@ import React from 'react';
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 
-import { useDesignTools, types } from '../lib/contexts/design-tools-context';
+import { useCodesign, types } from '../lib/contexts/codesign-context';
 
 const SpacingPanel = () => {
-  const { state, updateCurrentField, dispatch } = useDesignTools();
+  const { state, updateCurrentField, dispatch } = useCodesign();
 
   return (
     <Panel title="Spacing" name="spacing">

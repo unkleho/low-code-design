@@ -1,5 +1,5 @@
 import Icon from './Icon';
-import { useDesignTools } from '../lib/contexts/design-tools-context';
+import { useCodesign } from '../lib/contexts/codesign-context';
 
 type PanelProps = {
   title: string;
@@ -8,7 +8,7 @@ type PanelProps = {
 };
 
 const Panel = ({ title, name, children }: PanelProps) => {
-  const { state, togglePanelStatus } = useDesignTools();
+  const { state, togglePanelStatus } = useCodesign();
   const panel = state.panels.find((panel) => panel.name === name);
 
   return (

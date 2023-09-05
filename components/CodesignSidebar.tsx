@@ -9,14 +9,12 @@ import SpacingPanel from './SpacingPanel';
 import EffectPanel from './EffectPanel';
 import SizingPanel from './SizingPanel';
 
-import { useDesignTools, types } from '../lib/contexts/design-tools-context';
-import replaceClassNameValue, {
-  updateClassName,
-} from '../lib/replace-class-name-value';
+import { useCodesign, types } from '../lib/contexts/codesign-context';
+import { updateClassName } from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 import { getFiberNodeId } from '../lib/react-fiber-utils';
 
-import css from './DesignToolsApp.module.css';
+import css from './CodesignSidebar.module.css';
 import usePrevious from '../lib/hooks/use-previous';
 
 type Props = {
@@ -43,15 +41,15 @@ const config = {
   backgroundColor: 'bg',
 };
 
-const DesignToolsApp = ({
+const CodesignSidebar = ({
   selectedNodes = [],
   className: appClassName,
   onNodeChange,
 }: Props) => {
-  const { state, dispatch } = useDesignTools();
+  const { state, dispatch } = useCodesign();
   // const prevState = usePrevious(state);
 
-  // console.log('DesignToolsApp', state.form, prevState.form);
+  // console.log('CodesignSidebar', state.form, prevState.form);
 
   const className = state?.form.className;
   const text = state?.text;
@@ -215,4 +213,4 @@ const DesignToolsApp = ({
   );
 };
 
-export default DesignToolsApp;
+export default CodesignSidebar;

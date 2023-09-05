@@ -1,5 +1,5 @@
 import React from 'react';
-import Wrapper from '../components/Wrapper'; // import Example from '../components/Example';
+import CodesignLiveAppWrapper from '../components/CodesignLiveAppWrapper';
 
 import { Instrument, Song, Track } from 'reactronica';
 export default function HomePage() {
@@ -11,7 +11,7 @@ export default function HomePage() {
   };
 
   return (
-    <Wrapper>
+    <CodesignLiveAppWrapper>
       <div className="flex flex-col items-center justify-center min-h-screen">
         <button onClick={handlePlayClick}>Play</button>
 
@@ -28,6 +28,6 @@ export default function HomePage() {
           </Track>
         </Song>
       </div>
-    </Wrapper>
+    </CodesignLiveAppWrapper>
   );
 }

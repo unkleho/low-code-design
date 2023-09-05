@@ -1,11 +1,11 @@
 import React from 'react';
 
-import DesignToolsAppPortal from './DesignToolsAppPortal';
+import CodesignLiveApp from './CodesignLiveApp';
 
 import { TargetEvent } from '../types';
 import { getReactFiberInstance } from '../lib/react-fiber-utils';
 
-const Wrapper = ({ children }) => {
+const CodesignLiveAppWrapper = ({ children }) => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
   const [prevElement, setPrevElement] = React.useState<HTMLElement>();
 
@@ -14,7 +14,7 @@ const Wrapper = ({ children }) => {
       <div
         id="__codesign"
         onClick={(event: TargetEvent) => {
-          // console.log('Wrapper event', event, event.target);
+          // console.log('CodesignLiveAppWrapper event', event, event.target);
 
           // Stop <a> links from navigating away
           event.preventDefault();
@@ -34,9 +34,9 @@ const Wrapper = ({ children }) => {
         {children}
       </div>
 
-      <DesignToolsAppPortal selectedNodes={selectedNodes} />
+      <CodesignLiveApp selectedNodes={selectedNodes} />
     </>
   );
 };
 
-export default Wrapper;
+export default CodesignLiveAppWrapper;

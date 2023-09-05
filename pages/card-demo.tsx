@@ -1,8 +1,8 @@
 import React from 'react';
-import Wrapper from '../components/Wrapper';
+import CodesignLiveAppWrapper from '../components/CodesignLiveAppWrapper';
 export default function HomePage() {
   return (
-    <Wrapper>
+    <CodesignLiveAppWrapper>
       <div className="flex items-center justify-center min-h-screen bg-pink-600">
         <div className="w-64"></div>
         <div className="relative block w-64">
@@ -22,6 +22,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-    </Wrapper>
+    </CodesignLiveAppWrapper>
   );
 }

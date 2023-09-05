@@ -5,10 +5,10 @@ import PanelRow from './PanelRow';
 import ColorPicker from './ColorPicker';
 // import ColorPickerSelect from './ColorPickerSelect';
 
-import { useDesignTools } from '../lib/contexts/design-tools-context';
+import { useCodesign } from '../lib/contexts/codesign-context';
 
 const BackgroundPanel = () => {
-  const { state, updateClassNameValue } = useDesignTools();
+  const { state, updateClassNameValue } = useCodesign();
   const { backgroundColor } = state.form;
 
   return (
@@ -20,7 +20,7 @@ const BackgroundPanel = () => {
             onColorClick={(color) => {
               updateClassNameValue(
                 backgroundColor ? `bg-${backgroundColor}` : '',
-                color ? `bg-${color}` : ''
+                color ? `bg-${color}` : '',
               );
             }}
           />

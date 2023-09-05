@@ -4,7 +4,7 @@ import replaceClassNameValue from '../replace-class-name-value';
 import classNameValues from '../class-name-values';
 import { textColors } from '../tailwind-config';
 
-const DesignToolsContext = React.createContext([]);
+const CodesignContext = React.createContext([]);
 
 export const types = {
   UPDATE_CLASS_NAME: 'UPDATE_CLASS_NAME',
@@ -57,8 +57,8 @@ type FormState = {
   opacity: string;
 };
 
-function designToolsReducer(state: AppState, action) {
-  console.log('designToolsReducer', action);
+function CodesignReducer(state: AppState, action) {
+  console.log('CodesignReducer', action);
 
   switch (action.type) {
     case types.UPDATE_CURRENT_FIELD: {
@@ -150,8 +150,8 @@ function designToolsReducer(state: AppState, action) {
   }
 }
 
-export function DesignToolsProvider(props) {
-  const [state, dispatch] = React.useReducer(designToolsReducer, {
+export function CodesignProvider(props) {
+  const [state, dispatch] = React.useReducer(CodesignReducer, {
     currentField: null,
     selectedNode: null,
     layersPanelKey: 0,
@@ -196,19 +196,19 @@ export function DesignToolsProvider(props) {
   });
   const value = React.useMemo(() => [state, dispatch], [state]);
 
-  return <DesignToolsContext.Provider value={value} {...props} />;
+  return <CodesignContext.Provider value={value} {...props} />;
 }
 
-export function useDesignTools() {
-  const context = React.useContext(DesignToolsContext);
+export function useCodesign() {
+  const context = React.useContext(CodesignContext);
 
   if (!context) {
-    throw new Error(`useDesignTools must be used within a DesignToolsProvider`);
+    throw new Error(`useCodesign must be used within a CodesignProvider`);
   }
 
   const [state, dispatch] = context;
 
-  // console.log('useDesignTools', state);
+  // console.log('useCodesign', state);
 
   const updateCurrentField = (currentField) =>
     dispatch({ type: types.UPDATE_CURRENT_FIELD, currentField });

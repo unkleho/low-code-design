@@ -2,22 +2,22 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
-import DesignToolsApp from './DesignToolsApp';
+import DesignToolsApp from './CodesignSidebar';
 import Icon from './Icon';
 import ControlPanel from './ControlPanel';
 
 import { FiberNode, NodeChangeEvent } from '../types';
 import {
-  DesignToolsProvider,
-  useDesignTools,
-} from '../lib/contexts/design-tools-context';
+  CodesignProvider,
+  useCodesign,
+} from '../lib/contexts/codesign-context';
 
 type Props = {
   selectedNodes?: FiberNode[];
 };
 
-const DesignToolsAppPortal = ({ selectedNodes = [] }: Props) => {
-  const { dispatch } = useDesignTools();
+const CodesignLiveApp = ({ selectedNodes = [] }: Props) => {
+  const { dispatch } = useCodesign();
   const [isActive, setIsActive] = React.useState(false);
   const [isClient, setIsClient] = useState(false);
 
@@ -127,12 +127,12 @@ function canUseDOM() {
   );
 }
 
-const DesignToolsAppPortalWrapper = (props: Props) => {
+const CodesignLiveAppWrapper = (props: Props) => {
   return (
-    <DesignToolsProvider>
-      <DesignToolsAppPortal {...props} />
-    </DesignToolsProvider>
+    <CodesignProvider>
+      <CodesignLiveApp {...props} />
+    </CodesignProvider>
   );
 };
 
-export default DesignToolsAppPortalWrapper;
+export default CodesignLiveAppWrapper;

@@ -2,13 +2,13 @@ import React from 'react';
 
 import Panel from './Panel';
 import PanelRow from './PanelRow';
-import { useDesignTools, types } from '../lib/contexts/design-tools-context';
+import { useCodesign, types } from '../lib/contexts/codesign-context';
 
 const ElementPanel = () => {
   const [classInputValue, setClassInputValue] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
 
-  const { state, updateCurrentField, dispatch } = useDesignTools();
+  const { state, updateCurrentField, dispatch } = useCodesign();
   const { form, text, selectedNode } = state;
   const { className } = form;
 

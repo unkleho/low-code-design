@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDesignTools } from '../lib/contexts/design-tools-context';
+import { useCodesign } from '../lib/contexts/codesign-context';
 
 import Panel from './Panel';
 import PanelRow from './PanelRow';
@@ -8,7 +8,7 @@ import classNameValues from '../lib/class-name-values';
 import ColorPicker from './ColorPicker';
 
 const TypographyPanel = () => {
-  const { state, updateClassNameValue } = useDesignTools();
+  const { state, updateClassNameValue } = useCodesign();
   const { textColor } = state.form;
 
   return (
