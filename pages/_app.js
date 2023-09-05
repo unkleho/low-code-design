@@ -1,9 +1,6 @@
 import '../styles/globals.css';
-// import '../styles/tailwind.css';
 
 const Wrapper = ({ children }) => {
-  // console.log(children);
-
   return children;
 };
 
