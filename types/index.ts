@@ -35,7 +35,7 @@ export type FiberNodeWithId = FiberNode & {
 
 export type TargetEvent = React.MouseEvent<HTMLDivElement, MouseEvent> & {
   target: HTMLElement;
-  _targetInst: FiberNode;
+  // _targetInst: FiberNode;
 };
 
 export type NodeChangeEvent =

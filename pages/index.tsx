@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import { FiberNode, NodeChangeEvent, TargetEvent } from '../types';
-import DesignToolsApp from '../components/CodesignSidebar';
+import CodesignSidebar from '../components/CodesignSidebar';
 import { CodesignProvider } from '../lib/contexts/codesign-context';
 import {
   parseCode,
@@ -14,6 +14,7 @@ import {
   changeHighlightElement,
   getPathIndexes,
 } from '../lib/html-element-utils';
+import { CodesignWorkArea } from '../components/CodesignWorkArea';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
   <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
@@ -97,7 +98,7 @@ const EditorPage = () => {
           </h1>
         </header>
 
-        <div
+        {/* <div
           // NOTE: This works but doesn't create React nodes properly
           // dangerouslySetInnerHTML={{
           //   __html: code,
@@ -111,12 +112,24 @@ const EditorPage = () => {
 
             const targetInst = getReactFiberInstance(event.target);
 
-            // Set selected nodes for DesignToolsApp
+            // Set selected nodes for CodesignSidebar
             setSelectedNodes([targetInst]);
           }}
         >
           <RehypeRootComponent children={rootRehypeNode.children} />
-        </div>
+        </div> */}
+
+        <CodesignWorkArea
+          className="preview flex flex-col items-center justify-center bg-gray-100"
+          onClick={(event) => {
+            const targetInst = getReactFiberInstance(event.target);
+
+            // Set selected nodes for CodesignSidebar
+            setSelectedNodes([targetInst]);
+          }}
+        >
+          <RehypeRootComponent children={rootRehypeNode.children} />
+        </CodesignWorkArea>
 
         <div
           className="editor border-t-4"
@@ -141,7 +154,7 @@ const EditorPage = () => {
           />
         </div>
 
-        <DesignToolsApp
+        <CodesignSidebar
           selectedNodes={selectedNodes}
           className={[
             'designTools',
@@ -149,7 +162,7 @@ const EditorPage = () => {
           ].join(' ')}
           // onNodeClick={(node, pathIndexes) => {
           //   setPathIndexes(pathIndexes);
-          //   // TODO: Update className, text and tagType in DesignToolsApp
+          //   // TODO: Update className, text and tagType in CodesignSidebar
           // }}
           onNodeChange={handleDesignToolsChange}
         />

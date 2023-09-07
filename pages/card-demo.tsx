@@ -13,9 +13,9 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="relative -mt-10 ml-4">
+          <div className="relative -mt-10 ml-6 mt--12">
             <p className="text-xs text-white">1920</p>
-            <h1 className="text-4xl font-semibold leading-tight text-white">
+            <h1 className="text-5xl font-semibold leading-tight text-pink-600">
               Trumpet Pianist
             </h1>
             <p></p>

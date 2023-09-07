@@ -4,6 +4,7 @@ import CodesignLiveApp from './CodesignLiveApp';
 
 import { TargetEvent } from '../types';
 import { getReactFiberInstance } from '../lib/react-fiber-utils';
+import { CodesignWorkArea } from './CodesignWorkArea';
 
 const CodesignLiveAppWrapper = ({ children }) => {
   const [selectedNodes, setSelectedNodes] = React.useState([]);
@@ -11,14 +12,8 @@ const CodesignLiveAppWrapper = ({ children }) => {
 
   return (
     <>
-      <div
-        id="__codesign"
-        onClick={(event: TargetEvent) => {
-          // console.log('CodesignLiveAppWrapper event', event, event.target);
-
-          // Stop <a> links from navigating away
-          event.preventDefault();
-
+      <CodesignWorkArea
+        onClick={(event) => {
           const targetInst = getReactFiberInstance(event.target);
 
           if (prevElement) {
@@ -32,7 +27,7 @@ const CodesignLiveAppWrapper = ({ children }) => {
         }}
       >
         {children}
-      </div>
+      </CodesignWorkArea>
 
       <CodesignLiveApp selectedNodes={selectedNodes} />
     </>
