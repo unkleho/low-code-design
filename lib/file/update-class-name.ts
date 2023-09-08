@@ -5,7 +5,12 @@ import * as t from '@babel/types';
 
 import prettier from '../prettier';
 
-const updateClassName = ({ lineNumber, columnNumber, className, code }) => {
+const updateClassNameInFile = ({
+  lineNumber,
+  columnNumber,
+  className,
+  code,
+}) => {
   if (!className) {
     return code;
   }
@@ -59,4 +64,4 @@ const updateClassName = ({ lineNumber, columnNumber, className, code }) => {
   return prettierCode;
 };
 
-export default updateClassName;
+export default updateClassNameInFile;

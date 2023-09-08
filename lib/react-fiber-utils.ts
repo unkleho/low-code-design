@@ -27,7 +27,7 @@ export function getFiberNodeId(node: FiberNode, rootId = '__codesign') {
     }
 
     if (node.stateNode?.id === rootId) {
-      return indexes;
+      return indexes || [];
     }
 
     indexes.push(node.index);
@@ -37,7 +37,7 @@ export function getFiberNodeId(node: FiberNode, rootId = '__codesign') {
 
   const indexes = getIndexes(node);
 
-  return indexes.reverse().join('-');
+  return indexes?.reverse().join('-');
 }
 
 export function getFiberNodeAncestors(node: FiberNode, rootId = '__codesign') {
