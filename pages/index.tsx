@@ -103,27 +103,6 @@ const EditorPage = () => {
           </h1>
         </header>
 
-        {/* <div
-          // NOTE: This works but doesn't create React nodes properly
-          // dangerouslySetInnerHTML={{
-          //   __html: code,
-          // }}
-          // id="preview"
-          id="__codesign"
-          className="preview flex flex-col items-center justify-center bg-gray-100"
-          onClick={(event: TargetEvent) => {
-            // Stop <a> links from navigating away
-            event.preventDefault();
-
-            const targetInst = getReactFiberInstance(event.target);
-
-            // Set selected nodes for CodesignSidebar
-            setSelectedNodes([targetInst]);
-          }}
-        >
-          <RehypeRootComponent children={rootRehypeNode.children} />
-        </div> */}
-
         <CodesignWorkArea
           className="preview flex flex-col items-center justify-center bg-gray-100"
           onClick={(event) => {
@@ -149,9 +128,7 @@ const EditorPage = () => {
             // theme="dark"
             value={code}
             options={{
-              minimap: {
-                enabled: false,
-              },
+              minimap: { enabled: false },
             }}
             onChange={(value, event) => {
               setCode(value);

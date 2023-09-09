@@ -16,6 +16,7 @@ export const types = {
   REFRESH_LAYERS_PANEL: 'REFRESH_LAYERS_PANEL',
 };
 
+// TODO: pathIndexes? selectedElement?
 type AppState = {
   currentField: string | null;
   text: string;
