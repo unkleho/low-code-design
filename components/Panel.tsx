@@ -13,7 +13,7 @@ const Panel = ({ title, name, children }: PanelProps) => {
 
   return (
     <div className="border-b">
-      <div className="flex px-3 py-2 bg-gray-200 border-b">
+      <div className="flex px-3 pt-3 pb-1 bg-gray-100">
         <h2 className="mr-auto font-bold text-xs">{title}</h2>
 
         <button

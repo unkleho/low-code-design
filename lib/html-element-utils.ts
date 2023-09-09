@@ -37,6 +37,10 @@ export const changeHighlightElement = (
   highlightElement: HTMLElement,
   pathIndexes = [],
 ) => {
+  if (!highlightElement) {
+    return;
+  }
+
   if (pathIndexes.length === 0) {
     highlightElement.style.outline = null;
     return null;

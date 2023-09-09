@@ -30,6 +30,7 @@ const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
 const EditorPage = () => {
   const [code, setCode] = React.useState(defaultCode);
   const [selectedNodes, setSelectedNodes] = React.useState<FiberNode[]>([]);
+  const [pathIndexes, setPathIndexes] = React.useState<number[]>([]);
   const [isClient, setIsClient] = useState(false);
 
   const highlightElement = React.useRef<HTMLDivElement>();
@@ -43,13 +44,15 @@ const EditorPage = () => {
     setIsClient(true);
   }, []);
 
-  // useEffect(() => {
-  //   changeHighlightElement(
-  //     previewElement,
-  //     highlightElement.current,
-  //     pathIndexes,
-  //   );
-  // }, []);
+  useEffect(() => {
+    if (highlightElement) {
+      changeHighlightElement(
+        previewElement,
+        highlightElement.current,
+        pathIndexes,
+      );
+    }
+  }, [code]);
 
   const handleDesignToolsChange = (events: NodeChangeEvent[]) => {
     console.log('handleDesignToolsChange', events[0]);
@@ -58,6 +61,7 @@ const EditorPage = () => {
     const { node } = event;
 
     const pathIndexes = getPathIndexes(node?.stateNode);
+    setPathIndexes(pathIndexes);
 
     if (!node) {
       return null;
@@ -69,8 +73,9 @@ const EditorPage = () => {
       pathIndexes,
     );
 
-    // Change node className
+    // TODO: Add a select element/node type
     if (event.type === 'UPDATE_FILE_CLASS_NAME') {
+      // Change node className
       const newCode = updateNodeClass(code, pathIndexes, event.className);
 
       setCode(newCode);
