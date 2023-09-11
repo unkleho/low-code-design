@@ -47,7 +47,6 @@ const CodesignSidebar = ({
   onNodeChange,
 }: Props) => {
   const { state, dispatch } = useCodesign();
-  // const prevState = usePrevious(state);
 
   // console.log('CodesignSidebar', state.form, prevState.form);
 
@@ -55,7 +54,12 @@ const CodesignSidebar = ({
   const text = state?.text;
 
   const selectedNode = selectedNodes[0]; // Allow multi-select in the future
-  const selectedIds = selectedNode ? [getFiberNodeId(selectedNode)] : [];
+
+  // Array of path indexes eg. ['0-0-1']
+  const selectedId = selectedNode ? getFiberNodeId(selectedNode) : '';
+  const prevSelectedId = usePrevious(selectedId);
+
+  console.log('CodesignSidebar selectedIds', selectedId, prevSelectedId);
 
   // --------------------------------------------------------------------------
   // Effects
@@ -77,23 +81,27 @@ const CodesignSidebar = ({
   }, [selectedNode]);
 
   React.useEffect(() => {
-    handleNodeChange([
-      {
-        type: 'UPDATE_FILE_CLASS_NAME',
-        node: selectedNode,
-        className,
-      },
-    ]);
+    if (selectedId === prevSelectedId) {
+      handleNodeChange([
+        {
+          type: 'UPDATE_FILE_CLASS_NAME',
+          node: selectedNode,
+          className,
+        },
+      ]);
+    }
   }, [className]);
 
   React.useEffect(() => {
-    handleNodeChange([
-      {
-        type: 'UPDATE_FILE_TEXT',
-        node: selectedNode,
-        text,
-      },
-    ]);
+    if (selectedId === prevSelectedId) {
+      handleNodeChange([
+        {
+          type: 'UPDATE_FILE_TEXT',
+          node: selectedNode,
+          text,
+        },
+      ]);
+    }
   }, [text]);
 
   // --------------------------------------------------------------------------
@@ -196,7 +204,7 @@ const CodesignSidebar = ({
 
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
-        selectedIds={selectedIds}
+        selectedIds={[selectedId]}
         refreshCounter={state.layersPanelRefreshCounter}
         onNodeCreateClick={(selectedNode) => {
           // TODO: Add more element types to be created
