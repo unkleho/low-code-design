@@ -4,9 +4,11 @@ import Panel from './Panel';
 import PanelRow from './PanelRow';
 
 import { useCodesign, types } from '../lib/contexts/codesign-context';
+import { useCodesignStore } from '../lib/store/store';
 
 const SpacingPanel = () => {
-  const { state, updateCurrentField, dispatch } = useCodesign();
+  const { state, dispatch } = useCodesign();
+  const { setCurrentField } = useCodesignStore();
 
   return (
     <Panel title="Spacing" name="spacing">
@@ -39,7 +41,7 @@ const SpacingPanel = () => {
                     value={state.form[space.field] || ''}
                     className={`flex-1 w-full p-1 mr-1 border border-${space.side}-4`}
                     key={space.side}
-                    onFocus={() => updateCurrentField(space.field)}
+                    onFocus={() => setCurrentField(space.field)}
                     onChange={(event) => {
                       const { value } = event.target;
 

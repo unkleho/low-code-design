@@ -1,9 +1,11 @@
 import Panel from './Panel';
 // import PanelRow from './PanelRow';
 import { useCodesign, types } from '../lib/contexts/codesign-context';
+import { useCodesignStore } from '../lib/store/store';
 
 const SizingPanel = () => {
-  const { state, updateCurrentField, dispatch } = useCodesign();
+  const { state, dispatch } = useCodesign();
+  const { setCurrentField } = useCodesignStore();
 
   return (
     <Panel title="Sizing" name="sizing">
@@ -17,7 +19,7 @@ const SizingPanel = () => {
             id="element-width"
             className="flex-1 w-full p-1 mr-4 border"
             value={state.form.width || ''}
-            onFocus={() => updateCurrentField('width')}
+            onFocus={() => setCurrentField('width')}
             onChange={(event) => {
               const { value } = event.target;
 
@@ -33,7 +35,7 @@ const SizingPanel = () => {
             type="text"
             className="flex-1 w-full p-1 border"
             value={state.form.minWidth || ''}
-            onFocus={() => updateCurrentField('minWidth')}
+            onFocus={() => setCurrentField('minWidth')}
             onChange={(event) => {
               const { value } = event.target;
 
@@ -54,7 +56,7 @@ const SizingPanel = () => {
             id="element-height"
             className="flex-1 w-full p-1 mr-4 border"
             value={state.form.height || ''}
-            onFocus={() => updateCurrentField('height')}
+            onFocus={() => setCurrentField('height')}
             onChange={(event) => {
               const { value } = event.target;
 
@@ -70,7 +72,7 @@ const SizingPanel = () => {
             type="text"
             className="flex-1 w-full p-1 border"
             value={state.form.minHeight || ''}
-            onFocus={() => updateCurrentField('minHeight')}
+            onFocus={() => setCurrentField('minHeight')}
             onChange={(event) => {
               const { value } = event.target;
 

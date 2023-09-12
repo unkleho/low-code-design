@@ -16,6 +16,7 @@ import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 import css from './CodesignSidebar.module.css';
 import usePrevious from '../lib/hooks/use-previous';
+import { useCodesignStore } from '../lib/store/store';
 
 type Props = {
   selectedNodes: FiberNode[];
@@ -47,6 +48,7 @@ const CodesignSidebar = ({
   onNodeChange,
 }: Props) => {
   const { state, dispatch } = useCodesign();
+  const { currentField } = useCodesignStore();
 
   // console.log('CodesignSidebar', state.form, prevState.form);
 
@@ -115,7 +117,7 @@ const CodesignSidebar = ({
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    const { currentField } = state;
+    // const { currentField } = state;
 
     // Not working
     // event.nativeEvent.stopPropagation();
@@ -135,25 +137,6 @@ const CodesignSidebar = ({
         const oldValue = state[currentField];
         const newValue = state.form[currentField];
         const prefix = config[currentField];
-
-        // console.log('handleFormSubmit', state);
-
-        // Sorry, need to check for negative values, so a bit messy right now.
-        // TODO: Consider moving this funky logic to reducer
-        // TODO: Remove when sure we don't need to worry about old vs new value
-        // newClassName = replaceClassNameValue(
-        //   state.form.className,
-        //   oldValue
-        //     ? `${oldValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
-        //         oldValue.charAt(0) === '-' ? oldValue.substring(1) : oldValue
-        //       }`
-        //     : '',
-        //   newValue
-        //     ? `${newValue.charAt(0) === '-' ? '-' : ''}${prefix}-${
-        //         newValue.charAt(0) === '-' ? newValue.substring(1) : newValue
-        //       }`
-        //     : '',
-        // );
 
         newClassName = updateClassName(state.form.className, prefix, newValue);
       }

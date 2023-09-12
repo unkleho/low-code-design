@@ -1,15 +1,17 @@
 import Icon from './Icon';
 import { useCodesign } from '../lib/contexts/codesign-context';
+import { PanelName, useCodesignStore } from '../lib/store/store';
 
 type PanelProps = {
   title: string;
-  name: string;
+  name: PanelName;
   children: React.ReactNode;
 };
 
 const Panel = ({ title, name, children }: PanelProps) => {
-  const { state, togglePanelStatus } = useCodesign();
-  const panel = state.panels.find((panel) => panel.name === name);
+  // const { state } = useCodesign();
+  const { panels, togglePanelStatus } = useCodesignStore();
+  const panel = panels.find((panel) => panel.name === name);
 
   return (
     <div className="border-b">

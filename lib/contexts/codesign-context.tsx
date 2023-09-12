@@ -9,19 +9,15 @@ const CodesignContext = React.createContext([]);
 export const types = {
   UPDATE_CLASS_NAME: 'UPDATE_CLASS_NAME',
   UPDATE_TEXT: 'UPDATE_TEXT',
-  UPDATE_CURRENT_FIELD: 'UPDATE_CURRENT_FIELD',
   UPDATE_FORM_VALUE: 'UPDATE_FORM_VALUE',
   UPDATE_SELECTED_NODE: 'UPDATE_SELECTED_NODE',
-  TOGGLE_PANEL_STATUS: 'TOGGLE_PANEL_STATUS',
   REFRESH_LAYERS_PANEL: 'REFRESH_LAYERS_PANEL',
 };
 
 // TODO: pathIndexes? selectedElement?
 type AppState = {
-  currentField: string | null;
   text: string;
   form: FormState;
-  panels: { name: string; status: string }[];
   layersPanelKey: number;
   layersPanelRefreshCounter?: number;
 };
@@ -62,13 +58,6 @@ function CodesignReducer(state: AppState, action) {
   console.log('CodesignReducer', action);
 
   switch (action.type) {
-    case types.UPDATE_CURRENT_FIELD: {
-      return {
-        ...state,
-        currentField: action.currentField,
-      };
-    }
-
     case types.UPDATE_FORM_VALUE: {
       return {
         ...state,
@@ -122,22 +111,6 @@ function CodesignReducer(state: AppState, action) {
       };
     }
 
-    case types.TOGGLE_PANEL_STATUS: {
-      return {
-        ...state,
-        panels: state.panels.map((panel) => {
-          if (panel.name === action.panelName) {
-            return {
-              ...panel,
-              status: panel.status === 'open' ? 'closed' : 'open',
-            };
-          }
-
-          return panel;
-        }),
-      };
-    }
-
     case types.REFRESH_LAYERS_PANEL: {
       return {
         ...state,
@@ -153,47 +126,10 @@ function CodesignReducer(state: AppState, action) {
 
 export function CodesignProvider(props) {
   const [state, dispatch] = React.useReducer(CodesignReducer, {
-    currentField: null,
     selectedNode: null,
     layersPanelKey: 0,
-    // WIP
     text: null,
-    // ...defaultFormValues,
     form: defaultFormValues,
-    panels: [
-      {
-        name: 'element',
-        status: 'open',
-      },
-      {
-        name: 'layout',
-        status: 'open',
-      },
-      {
-        name: 'spacing',
-        status: 'open',
-      },
-      {
-        name: 'sizing',
-        status: 'open',
-      },
-      {
-        name: 'typography',
-        status: 'open',
-      },
-      {
-        name: 'background',
-        status: 'open',
-      },
-      {
-        name: 'effect',
-        status: 'closed',
-      },
-      {
-        name: 'layers',
-        status: 'open',
-      },
-    ],
   });
   const value = React.useMemo(() => [state, dispatch], [state]);
 
@@ -208,11 +144,6 @@ export function useCodesign() {
   }
 
   const [state, dispatch] = context;
-
-  // console.log('useCodesign', state);
-
-  const updateCurrentField = (currentField) =>
-    dispatch({ type: types.UPDATE_CURRENT_FIELD, currentField });
 
   const updateClassNameValue = (oldValue, newValue) => {
     const className = replaceClassNameValue(
@@ -232,19 +163,10 @@ export function useCodesign() {
     dispatch({ type: types.UPDATE_CLASS_NAME, className });
   };
 
-  const togglePanelStatus = (panelName) => {
-    dispatch({
-      type: types.TOGGLE_PANEL_STATUS,
-      panelName,
-    });
-  };
-
   return {
     state,
     dispatch,
-    updateCurrentField,
     updateClassNameValue,
-    togglePanelStatus,
   };
 }
 

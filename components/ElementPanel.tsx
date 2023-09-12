@@ -3,12 +3,14 @@ import React from 'react';
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 import { useCodesign, types } from '../lib/contexts/codesign-context';
+import { useCodesignStore } from '../lib/store/store';
 
 const ElementPanel = () => {
   const [classInputValue, setClassInputValue] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
 
-  const { state, updateCurrentField, dispatch } = useCodesign();
+  const { setCurrentField } = useCodesignStore();
+  const { state, dispatch } = useCodesign();
   const { form, text, selectedNode } = state;
   const { className } = form;
 
@@ -16,8 +18,6 @@ const ElementPanel = () => {
   const lineNumber = selectedNode?._debugSource?.lineNumber;
   const columnNumber = selectedNode?._debugSource?.columnNumber;
   const fileName = selectedNode?._debugSource?.fileName;
-
-  // console.log(state.text);
 
   // --------------------------------------------------------------------------
   // Effects
@@ -78,7 +78,7 @@ const ElementPanel = () => {
             type="text"
             value={classInputValue || ''}
             className="w-full p-1 flex-1 border border-blue"
-            onFocus={() => updateCurrentField('className')}
+            onFocus={() => setCurrentField('className')}
             onChange={handleClassInputChange}
           />
         </PanelRow>
@@ -88,7 +88,7 @@ const ElementPanel = () => {
             type="text"
             value={textInputValue || ''}
             className="w-full p-1 flex-1 border border-blue"
-            onFocus={() => updateCurrentField('text')}
+            onFocus={() => setCurrentField('text')}
             onChange={handleTextInputChange}
           />
         </PanelRow>
