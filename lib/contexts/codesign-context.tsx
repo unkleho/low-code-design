@@ -18,7 +18,6 @@ export const types = {
 type AppState = {
   text: string;
   form: FormState;
-  layersPanelKey: number;
   layersPanelRefreshCounter?: number;
 };
 
@@ -127,7 +126,6 @@ function CodesignReducer(state: AppState, action) {
 export function CodesignProvider(props) {
   const [state, dispatch] = React.useReducer(CodesignReducer, {
     selectedNode: null,
-    layersPanelKey: 0,
     text: null,
     form: defaultFormValues,
   });

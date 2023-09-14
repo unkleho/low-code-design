@@ -34,6 +34,8 @@ export type FormState = {
   opacity: string;
 };
 
+export type FormField = keyof FormState;
+
 export type PanelName =
   | 'element'
   | 'layout'
@@ -51,11 +53,13 @@ export type PanelState = {
 };
 
 export type CodesignAppState = {
-  currentField?: string;
+  // Form
   form?: FormState;
+  currentField?: FormField;
+  setCurrentField: (currentField: FormField) => void;
+  // Panels
   panels: PanelState[];
-  setCurrentField: (currentField: string) => void;
-  togglePanelStatus: (name: PanelState['name']) => void;
+  togglePanelStatus: (name: PanelName) => void;
 };
 
 export const useCodesignStore = create<CodesignAppState>((set) => {
@@ -63,7 +67,7 @@ export const useCodesignStore = create<CodesignAppState>((set) => {
     // Form
     form: defaultForm,
     currentField: null,
-    setCurrentField: (currentField: string) => set(() => ({ currentField })),
+    setCurrentField: (currentField: FormField) => set(() => ({ currentField })),
     // Panels
     panels: defaultPanels,
     togglePanelStatus: (name) =>

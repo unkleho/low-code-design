@@ -4,7 +4,7 @@ import Panel from './Panel';
 import PanelRow from './PanelRow';
 
 import { useCodesign, types } from '../lib/contexts/codesign-context';
-import { useCodesignStore } from '../lib/store/store';
+import { FormField, useCodesignStore } from '../lib/store/store';
 
 const SpacingPanel = () => {
   const { state, dispatch } = useCodesign();
@@ -33,7 +33,7 @@ const SpacingPanel = () => {
                   side: 'l',
                   field: `${spacing}Left`,
                 },
-              ].map((space) => {
+              ].map((space: { side: string; field: FormField }) => {
                 return (
                   <input
                     type="text"
