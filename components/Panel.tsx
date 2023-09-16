@@ -1,5 +1,4 @@
 import Icon from './Icon';
-import { useCodesign } from '../lib/contexts/codesign-context';
 import { PanelName, useCodesignStore } from '../lib/store/store';
 
 type PanelProps = {
@@ -9,7 +8,6 @@ type PanelProps = {
 };
 
 const Panel = ({ title, name, children }: PanelProps) => {
-  // const { state } = useCodesign();
   const { panels, togglePanelStatus } = useCodesignStore();
   const panel = panels.find((panel) => panel.name === name);
 

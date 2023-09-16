@@ -5,11 +5,11 @@ import PanelRow from './PanelRow';
 import ColorPicker from './ColorPicker';
 // import ColorPickerSelect from './ColorPickerSelect';
 
-import { useCodesign } from '../lib/contexts/codesign-context';
+import { useCodesignStore } from '../lib/store/store';
 
 const BackgroundPanel = () => {
-  const { state, updateClassNameValue } = useCodesign();
-  const { backgroundColor } = state.form;
+  const { form, setClassNameValue } = useCodesignStore();
+  const { backgroundColor } = form;
 
   return (
     <Panel title="Background" name="background">
@@ -18,7 +18,7 @@ const BackgroundPanel = () => {
           <ColorPicker
             selectedColor={backgroundColor}
             onColorClick={(color) => {
-              updateClassNameValue(
+              setClassNameValue(
                 backgroundColor ? `bg-${backgroundColor}` : '',
                 color ? `bg-${color}` : '',
               );

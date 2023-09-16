@@ -3,9 +3,10 @@ import PanelRow from './PanelRow';
 
 import { useCodesign } from '../lib/contexts/codesign-context';
 import classNameValues from '../lib/class-name-values';
+import { useCodesignStore } from '../lib/store/store';
 
 const EffectPanel = () => {
-  const { state, updateClassNameValue } = useCodesign();
+  const { form, setClassNameValue } = useCodesignStore();
 
   return (
     <Panel title="Effect" name="effect">
@@ -13,12 +14,12 @@ const EffectPanel = () => {
         <PanelRow label="Opacity">
           <select
             className="p-1 border"
-            value={state.opacity || ''}
+            value={form.opacity || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(
-                state.opacity ? `opacity-${state.opacity}` : '',
+              setClassNameValue(
+                form.opacity ? `opacity-${form.opacity}` : '',
                 value ? `opacity-${value}` : '',
               );
             }}

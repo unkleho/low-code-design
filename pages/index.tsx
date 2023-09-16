@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import { FiberNode, NodeChangeEvent, TargetEvent } from '../types';
 import CodesignSidebar from '../components/CodesignSidebar';
-import { CodesignProvider } from '../lib/contexts/codesign-context';
+// import { CodesignProvider } from '../lib/contexts/codesign-context';
 import {
   parseCode,
   updateNodeClass,
@@ -93,7 +93,7 @@ const EditorPage = () => {
   const rootRehypeNode = parseCode(code);
 
   return (
-    <CodesignProvider>
+    <>
       <div className="livePage h-screen overflow-hidden">
         <div className="fixed" ref={highlightElement}></div>
 
@@ -177,7 +177,7 @@ const EditorPage = () => {
         grid-area: designTools;
       }
       `}</style>
-    </CodesignProvider>
+    </>
   );
 };
 

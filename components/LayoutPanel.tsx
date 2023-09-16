@@ -3,8 +3,8 @@ import PanelRow from './PanelRow';
 
 import Icon from './Icon';
 
-import { useCodesign } from '../lib/contexts/codesign-context';
 import classNameValues from '../lib/class-name-values';
+import { useCodesignStore } from '../lib/store/store';
 
 type ArrowNarrowDirection =
   | 'arrow-narrow-right'
@@ -13,7 +13,7 @@ type ArrowNarrowDirection =
   | 'arrow-narrow-up';
 
 const LayoutPanel = () => {
-  const { updateClassNameValue, state } = useCodesign();
+  const { form, setClassNameValue } = useCodesignStore();
 
   return (
     <Panel title="Layout" name="layout">
@@ -21,11 +21,11 @@ const LayoutPanel = () => {
         <PanelRow label="Position">
           <select
             className="p-1 border"
-            value={state.form.position || ''}
+            value={form.position || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(state.form.position, value);
+              setClassNameValue(form.position, value);
             }}
           >
             <option label=" "></option>
@@ -42,11 +42,11 @@ const LayoutPanel = () => {
         <PanelRow label="Display">
           <select
             className="p-1 border"
-            value={state.form.display || ''}
+            value={form.display || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(state.form.display, value);
+              setClassNameValue(form.display, value);
             }}
           >
             <option label=" "></option>
@@ -64,7 +64,7 @@ const LayoutPanel = () => {
           {['row', 'col', 'row-reverse', 'col-reverse'].map((flexDirection) => {
             const arrowDirection = flexDirectionArrows[flexDirection];
             const iconName = `arrow-narrow-${arrowDirection}` as ArrowNarrowDirection;
-            const isSelected = flexDirection === state.form.flexDirection;
+            const isSelected = flexDirection === form.flexDirection;
 
             return (
               <button
@@ -76,8 +76,8 @@ const LayoutPanel = () => {
                     : 'text-gray-400',
                 ].join(' ')}
                 onClick={() => {
-                  updateClassNameValue(
-                    `flex-${state.form.flexDirection}`,
+                  setClassNameValue(
+                    `flex-${form.flexDirection}`,
                     `flex-${flexDirection}`,
                   );
                 }}

@@ -3,7 +3,7 @@ import { Editor } from '@monaco-editor/react';
 
 import DesignToolsApp from '../components/CodesignSidebar';
 import RehypeComponent from '../components/RehypeComponent';
-import { CodesignProvider } from '../lib/contexts/codesign-context';
+// import { CodesignProvider } from '../lib/contexts/codesign-context';
 
 import { TargetEvent } from '../types';
 import {
@@ -80,7 +80,7 @@ const LivePage = () => {
   };
 
   return (
-    <CodesignProvider>
+    <>
       <div className="livePage h-screen overflow-hidden">
         <div className="fixed" ref={highlightElement}></div>
         <div
@@ -173,7 +173,7 @@ const LivePage = () => {
         grid-area: designTools;
       }
       `}</style>
-    </CodesignProvider>
+    </>
   );
 };
 

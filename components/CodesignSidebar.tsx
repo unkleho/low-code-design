@@ -9,7 +9,7 @@ import SpacingPanel from './SpacingPanel';
 import EffectPanel from './EffectPanel';
 import SizingPanel from './SizingPanel';
 
-import { useCodesign, types } from '../lib/contexts/codesign-context';
+// import { useCodesign, types } from '../lib/contexts/codesign-context';
 import { updateClassName } from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 import { getFiberNodeId } from '../lib/react-fiber-utils';
@@ -47,39 +47,33 @@ const CodesignSidebar = ({
   className: appClassName,
   onNodeChange,
 }: Props) => {
-  const { state, dispatch } = useCodesign();
-  const { currentField } = useCodesignStore();
+  const {
+    currentField,
+    form,
+    setSelectedNodes,
+    setClassName,
+    setFormValue,
+    layersPanelCounter,
+  } = useCodesignStore();
 
-  // console.log('CodesignSidebar', state.form, prevState.form);
+  const { text, className } = form;
 
-  const className = state?.form.className;
-  const text = state?.text;
-
-  const selectedNode = selectedNodes[0]; // Allow multi-select in the future
+  // Allow multi-select in the future
+  const selectedNode = selectedNodes[0];
 
   // Array of path indexes eg. ['0-0-1']
   const selectedId = selectedNode ? getFiberNodeId(selectedNode) : '';
   const prevSelectedId = usePrevious(selectedId);
 
-  console.log('CodesignSidebar selectedIds', selectedId, prevSelectedId);
+  // console.log('CodesignSidebar', { text, className });
 
   // --------------------------------------------------------------------------
   // Effects
   // --------------------------------------------------------------------------
 
-  // Set selectedNode and initial className
+  // Set selectedNode into store. This also sets `text` and `className`
   React.useEffect(() => {
-    dispatch({
-      type: types.UPDATE_SELECTED_NODE,
-      selectedNode,
-    });
-
-    const className = selectedNode?.stateNode?.className || '';
-
-    dispatch({
-      type: types.UPDATE_CLASS_NAME,
-      className,
-    });
+    setSelectedNodes([selectedNode]);
   }, [selectedNode]);
 
   React.useEffect(() => {
@@ -117,34 +111,24 @@ const CodesignSidebar = ({
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
-    // const { currentField } = state;
-
-    // Not working
-    // event.nativeEvent.stopPropagation();
-    // event.nativeEvent.stopImmediatePropagation();
+    // console.log('Sidebar', 'handleFormSubmit');
 
     if (currentField === 'text') {
-      dispatch({
-        type: types.UPDATE_TEXT,
-        text: state.form.text,
-      });
+      // Not sure if this works
+      setFormValue('text', form.text);
     } else {
       let newClassName;
 
       if (currentField === 'className') {
-        newClassName = state.form.className;
+        newClassName = form.className;
       } else {
-        const oldValue = state[currentField];
-        const newValue = state.form[currentField];
+        const newValue = form[currentField];
         const prefix = config[currentField];
 
-        newClassName = updateClassName(state.form.className, prefix, newValue);
+        newClassName = updateClassName(form.className, prefix, newValue);
       }
 
-      dispatch({
-        type: types.UPDATE_CLASS_NAME,
-        className: newClassName,
-      });
+      setClassName(newClassName);
     }
   };
 
@@ -188,7 +172,7 @@ const CodesignSidebar = ({
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
         selectedIds={[selectedId]}
-        refreshCounter={state.layersPanelRefreshCounter}
+        refreshCounter={layersPanelCounter}
         onNodeCreateClick={(selectedNode) => {
           // TODO: Add more element types to be created
           handleNodeChange([

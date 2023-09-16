@@ -25,8 +25,6 @@ const LayersPanel = ({
 }: Props) => {
   const [nodes, setNodes] = React.useState<FiberNodeWithId[]>([]);
 
-  // console.log('selectedIds', selectedIds);
-
   React.useEffect(() => {
     const coDesignElement = document.getElementById('__codesign');
 

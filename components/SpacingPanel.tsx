@@ -3,12 +3,10 @@ import React from 'react';
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 
-import { useCodesign, types } from '../lib/contexts/codesign-context';
 import { FormField, useCodesignStore } from '../lib/store/store';
 
 const SpacingPanel = () => {
-  const { state, dispatch } = useCodesign();
-  const { setCurrentField } = useCodesignStore();
+  const { form, setCurrentField, setFormValue } = useCodesignStore();
 
   return (
     <Panel title="Spacing" name="spacing">
@@ -17,39 +15,23 @@ const SpacingPanel = () => {
           return (
             <PanelRow label={spacing} key={spacing}>
               {[
-                {
-                  side: 't',
-                  field: `${spacing}Top`,
-                },
-                {
-                  side: 'r',
-                  field: `${spacing}Right`,
-                },
-                {
-                  side: 'b',
-                  field: `${spacing}Bottom`,
-                },
-                {
-                  side: 'l',
-                  field: `${spacing}Left`,
-                },
+                { side: 't', field: `${spacing}Top` },
+                { side: 'r', field: `${spacing}Right` },
+                { side: 'b', field: `${spacing}Bottom` },
+                { side: 'l', field: `${spacing}Left` },
               ].map((space: { side: string; field: FormField }) => {
                 return (
                   <input
                     type="text"
                     placeholder={space.side}
-                    value={state.form[space.field] || ''}
+                    value={form[space.field] || ''}
                     className={`flex-1 w-full p-1 mr-1 border border-${space.side}-4`}
                     key={space.side}
                     onFocus={() => setCurrentField(space.field)}
                     onChange={(event) => {
                       const { value } = event.target;
 
-                      dispatch({
-                        type: types.UPDATE_FORM_VALUE,
-                        key: space.field,
-                        value,
-                      });
+                      setFormValue(space.field, value);
                     }}
                   />
                 );

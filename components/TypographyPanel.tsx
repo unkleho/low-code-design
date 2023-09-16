@@ -1,15 +1,14 @@
 import React from 'react';
-import { useCodesign } from '../lib/contexts/codesign-context';
-
 import Panel from './Panel';
 import PanelRow from './PanelRow';
-
 import classNameValues from '../lib/class-name-values';
 import ColorPicker from './ColorPicker';
+import { useCodesignStore } from '../lib/store/store';
 
 const TypographyPanel = () => {
-  const { state, updateClassNameValue } = useCodesign();
-  const { textColor } = state.form;
+  const { form, setClassNameValue } = useCodesignStore();
+
+  const { textColor } = form;
 
   return (
     <Panel title="Typography" name="typography">
@@ -17,12 +16,12 @@ const TypographyPanel = () => {
         <PanelRow label="Font Size">
           <select
             className="p-1 border"
-            value={state.form.fontSize || ''}
+            value={form.fontSize || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(
-                state.form.fontSize ? `text-${state.form.fontSize}` : '',
+              setClassNameValue(
+                form.fontSize ? `text-${form.fontSize}` : '',
                 value ? `text-${value}` : '',
               );
             }}
@@ -38,33 +37,15 @@ const TypographyPanel = () => {
           </select>
         </PanelRow>
 
-        {/* <PanelRow label="Font Size">
-          <input
-            className="w-12 p-1 border"
-            type="text"
-            value={state.form.fontSize || ''}
-            onFocus={() => updateCurrentField('fontSize')}
-            onChange={(event) => {
-              const { value } = event.target;
-
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'fontSize',
-                value,
-              });
-            }}
-          />
-        </PanelRow> */}
-
         <PanelRow label="Weight">
           <select
             className="p-1 border"
-            value={state.form.fontWeight || ''}
+            value={form.fontWeight || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(
-                state.form.fontWeight ? `font-${state.form.fontWeight}` : '',
+              setClassNameValue(
+                form.fontWeight ? `font-${form.fontWeight}` : '',
                 value ? `font-${value}` : '',
               );
             }}
@@ -85,7 +66,7 @@ const TypographyPanel = () => {
             selectedColor={textColor}
             onColorClick={(color) => {
               // TODO: Consider wrapping function to handle ternaries
-              updateClassNameValue(
+              setClassNameValue(
                 textColor ? `text-${textColor}` : '',
                 color ? `text-${color}` : '',
               );
@@ -96,11 +77,11 @@ const TypographyPanel = () => {
         <PanelRow label="Transform">
           <select
             className="p-1 border"
-            value={state.form.textTransform || ''}
+            value={form.textTransform || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(state.form.textTransform, value);
+              setClassNameValue(form.textTransform, value);
             }}
           >
             <option label=" "></option>
@@ -116,12 +97,12 @@ const TypographyPanel = () => {
         <PanelRow label="Leading">
           <select
             className="p-1 border"
-            value={state.form.leading || ''}
+            value={form.leading || ''}
             onChange={(event) => {
               const { value } = event.target;
 
-              updateClassNameValue(
-                state.form.leading ? `leading-${state.form.leading}` : '',
+              setClassNameValue(
+                form.leading ? `leading-${form.leading}` : '',
                 value ? `leading-${value}` : '',
               );
             }}

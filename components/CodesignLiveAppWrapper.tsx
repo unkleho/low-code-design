@@ -2,7 +2,6 @@ import React from 'react';
 
 import CodesignLiveApp from './CodesignLiveApp';
 
-import { TargetEvent } from '../types';
 import { getReactFiberInstance } from '../lib/react-fiber-utils';
 import { CodesignWorkArea } from './CodesignWorkArea';
 

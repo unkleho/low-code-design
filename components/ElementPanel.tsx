@@ -2,22 +2,29 @@ import React from 'react';
 
 import Panel from './Panel';
 import PanelRow from './PanelRow';
-import { useCodesign, types } from '../lib/contexts/codesign-context';
 import { useCodesignStore } from '../lib/store/store';
 
 const ElementPanel = () => {
   const [classInputValue, setClassInputValue] = React.useState('');
   const [textInputValue, setTextInputValue] = React.useState('');
 
-  const { setCurrentField } = useCodesignStore();
-  const { state, dispatch } = useCodesign();
-  const { form, text, selectedNode } = state;
-  const { className } = form;
+  const {
+    setCurrentField,
+    form,
+    setFormValue,
+    selectedNodes,
+  } = useCodesignStore();
+  const { text, className } = form;
 
-  const type = selectedNode?.type;
+  // TODO: Multi-select one day
+  const selectedNode = selectedNodes?.[0];
+
+  const type = selectedNode?.type as string;
   const lineNumber = selectedNode?._debugSource?.lineNumber;
   const columnNumber = selectedNode?._debugSource?.columnNumber;
   const fileName = selectedNode?._debugSource?.fileName;
+
+  // console.log('ElementPanel', { text, className, type });
 
   // --------------------------------------------------------------------------
   // Effects
@@ -37,12 +44,6 @@ const ElementPanel = () => {
     const newValue = event.target.value;
 
     setClassInputValue(newValue);
-
-    dispatch({
-      type: types.UPDATE_FORM_VALUE,
-      key: 'className',
-      value: newValue,
-    });
   };
 
   const handleTextInputChange = (event) => {
@@ -50,11 +51,7 @@ const ElementPanel = () => {
 
     setTextInputValue(newValue);
 
-    dispatch({
-      type: types.UPDATE_FORM_VALUE,
-      key: 'text',
-      value: newValue,
-    });
+    setFormValue('text', newValue);
   };
 
   return (

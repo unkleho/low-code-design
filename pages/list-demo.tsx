@@ -1,6 +1,7 @@
 import React from 'react';
 import DemoCard from '../components/DemoCard';
 import CodesignLiveAppWrapper from '../components/CodesignLiveAppWrapper';
+
 export default function HomePage() {
   return (
     <CodesignLiveAppWrapper>

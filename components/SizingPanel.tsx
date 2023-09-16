@@ -1,11 +1,8 @@
 import Panel from './Panel';
-// import PanelRow from './PanelRow';
-import { useCodesign, types } from '../lib/contexts/codesign-context';
 import { useCodesignStore } from '../lib/store/store';
 
 const SizingPanel = () => {
-  const { state, dispatch } = useCodesign();
-  const { setCurrentField } = useCodesignStore();
+  const { form, setCurrentField, setFormValue } = useCodesignStore();
 
   return (
     <Panel title="Sizing" name="sizing">
@@ -18,32 +15,24 @@ const SizingPanel = () => {
             type="text"
             id="element-width"
             className="flex-1 w-full p-1 mr-4 border"
-            value={state.form.width || ''}
+            value={form.width || ''}
             onFocus={() => setCurrentField('width')}
             onChange={(event) => {
               const { value } = event.target;
 
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'width',
-                value,
-              });
+              setFormValue('width', value);
             }}
           />
           <label className="text-xs mr-2">Min-Width</label>
           <input
             type="text"
             className="flex-1 w-full p-1 border"
-            value={state.form.minWidth || ''}
+            value={form.minWidth || ''}
             onFocus={() => setCurrentField('minWidth')}
             onChange={(event) => {
               const { value } = event.target;
 
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'minWidth',
-                value,
-              });
+              setFormValue('minWidth', value);
             }}
           />
         </div>
@@ -55,32 +44,24 @@ const SizingPanel = () => {
             type="text"
             id="element-height"
             className="flex-1 w-full p-1 mr-4 border"
-            value={state.form.height || ''}
+            value={form.height || ''}
             onFocus={() => setCurrentField('height')}
             onChange={(event) => {
               const { value } = event.target;
 
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'height',
-                value,
-              });
+              setFormValue('height', value);
             }}
           />
           <label className="text-xs mr-2">Min-Height</label>
           <input
             type="text"
             className="flex-1 w-full p-1 border"
-            value={state.form.minHeight || ''}
+            value={form.minHeight || ''}
             onFocus={() => setCurrentField('minHeight')}
             onChange={(event) => {
               const { value } = event.target;
 
-              dispatch({
-                type: types.UPDATE_FORM_VALUE,
-                key: 'minHeight',
-                value,
-              });
+              setFormValue('minHeight', value);
             }}
           />
         </div>
