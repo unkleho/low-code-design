@@ -3,7 +3,6 @@ import { Editor } from '@monaco-editor/react';
 
 import DesignToolsApp from '../components/CodesignSidebar';
 import RehypeComponent from '../components/RehypeComponent';
-// import { CodesignProvider } from '../lib/contexts/codesign-context';
 
 import { TargetEvent } from '../types';
 import {

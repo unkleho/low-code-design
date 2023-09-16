@@ -9,7 +9,6 @@ import SpacingPanel from './SpacingPanel';
 import EffectPanel from './EffectPanel';
 import SizingPanel from './SizingPanel';
 
-// import { useCodesign, types } from '../lib/contexts/codesign-context';
 import { updateClassName } from '../lib/replace-class-name-value';
 import { FiberNode, NodeChangeEvent } from '../types';
 import { getFiberNodeId } from '../lib/react-fiber-utils';

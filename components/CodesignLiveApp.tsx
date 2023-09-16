@@ -7,10 +7,6 @@ import Icon from './Icon';
 import ControlPanel from './ControlPanel';
 
 import { FiberNode, NodeChangeEvent } from '../types';
-// import {
-//   CodesignProvider,
-//   useCodesign,
-// } from '../lib/contexts/codesign-context';
 import { useCodesignStore } from '../lib/store/store';
 
 type Props = {
@@ -71,9 +67,6 @@ const CodesignLiveApp = ({ selectedNodes = [] }: Props) => {
           // Delay refresh otherwise layers panel can't pick up new dom nodes in time
           setTimeout(() => {
             refreshLayersPanelCounter();
-            // dispatch({
-            //   type: 'REFRESH_LAYERS_PANEL',
-            // });
           }, 1000);
         }
       }
@@ -130,11 +123,7 @@ function canUseDOM() {
 }
 
 const CodesignLiveAppWrapper = (props: Props) => {
-  return (
-    // <CodesignProvider>
-    <CodesignLiveApp {...props} />
-    // </CodesignProvider>
-  );
+  return <CodesignLiveApp {...props} />;
 };
 
 export default CodesignLiveAppWrapper;

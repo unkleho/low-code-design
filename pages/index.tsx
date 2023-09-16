@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import { FiberNode, NodeChangeEvent, TargetEvent } from '../types';
 import CodesignSidebar from '../components/CodesignSidebar';
-// import { CodesignProvider } from '../lib/contexts/codesign-context';
 import {
   parseCode,
   updateNodeClass,
