@@ -3,6 +3,7 @@ import { defaultForm, defaultPanels } from './default-values';
 import { FiberNode } from '../../types';
 import replaceClassNameValue from '../replace-class-name-value';
 import { buildFormValues } from './store-utils';
+import { getPathIndexes } from '../html-element-utils';
 
 export type FormState = {
   // TODO: Consider deriving this from formState?
@@ -57,7 +58,9 @@ export type PanelState = {
 };
 
 export type CodesignAppState = {
+  // --------------------------------------------------------------------------
   // Form
+  // --------------------------------------------------------------------------
   form?: FormState;
   currentField?: FormField;
   setCurrentField: (currentField: FormField) => void;
@@ -67,7 +70,10 @@ export type CodesignAppState = {
    * Replace className with newValue from oldValue
    */
   setClassNameValue: (oldValue: string, newValue: string) => void;
+
+  // --------------------------------------------------------------------------
   // Nodes
+  // --------------------------------------------------------------------------
   selectedNodes: FiberNode[];
   /**
    * Set selected React Fiber nodes. Also populates form `text` and
@@ -75,14 +81,22 @@ export type CodesignAppState = {
    * TODO: Only handles one node for now.
    */
   setSelectedNodes: (selectedNodes: FiberNode[]) => void;
+  getSelectedNode: () => FiberNode;
+  /**
+   * The path to element by indexes. TODO: Change to selectedId?
+   */
+  getSelectedPathIndexes: () => number[];
+
+  // --------------------------------------------------------------------------
   // Panels
+  // --------------------------------------------------------------------------
   panels: PanelState[];
   togglePanelStatus: (name: PanelName) => void;
   layersPanelCounter: number;
   refreshLayersPanelCounter: () => void;
 };
 
-export const useCodesignStore = create<CodesignAppState>((set) => {
+export const useCodesignStore = create<CodesignAppState>((set, get) => {
   return {
     // Form
     form: defaultForm,
@@ -119,7 +133,7 @@ export const useCodesignStore = create<CodesignAppState>((set) => {
     // Nodes
     selectedNodes: null,
     setSelectedNodes: (selectedNodes) =>
-      set((state) => {
+      set(() => {
         let text: string = null;
         let className;
 
@@ -138,11 +152,36 @@ export const useCodesignStore = create<CodesignAppState>((set) => {
           }
         }
 
+        console.log(
+          'store',
+          'setSelectedNodes',
+          selectedNodes,
+          className,
+          text,
+        );
+
         return {
           selectedNodes,
           form: { ...buildFormValues(className), text },
         };
       }),
+    getSelectedNode: () => {
+      const selectedNodes = get().selectedNodes;
+      if (selectedNodes?.length) {
+        return selectedNodes[0];
+      }
+
+      return null;
+    },
+    getSelectedPathIndexes: () => {
+      const node = get().getSelectedNode();
+
+      if (node) {
+        return getPathIndexes(node.stateNode);
+      }
+
+      return [];
+    },
     // Panels
     panels: defaultPanels,
     togglePanelStatus: (name) =>

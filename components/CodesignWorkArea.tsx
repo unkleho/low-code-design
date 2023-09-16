@@ -1,5 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import { TargetEvent } from '../types';
+import { changeHighlightElement } from '../lib/html-element-utils';
+import { useCodesignStore } from '../lib/store/store';
 
 type Props = {
   className?: string;
@@ -8,20 +10,39 @@ type Props = {
 };
 
 export const CodesignWorkArea = ({ className, onClick, children }: Props) => {
-  return (
-    <div
-      id="__codesign"
-      className={className}
-      onClick={(event: TargetEvent) => {
-        // Stop <a> links from navigating away
-        event.preventDefault();
+  const pathIndexes = useCodesignStore((state) =>
+    state.getSelectedPathIndexes(),
+  );
 
-        if (typeof onClick === 'function') {
-          onClick(event);
-        }
-      }}
-    >
-      {children}
-    </div>
+  // console.log('CodesignWorkArea', pathIndexes);
+
+  const highlightElement = useRef<HTMLDivElement>();
+  // Top level preview element
+  const previewElement =
+    typeof window === 'undefined'
+      ? null
+      : document.getElementById('__codesign');
+
+  changeHighlightElement(previewElement, highlightElement.current, pathIndexes);
+
+  return (
+    <>
+      {/* TODO: Create new component for highlight. Get values from selectedNode */}
+      <div className="fixed" ref={highlightElement}></div>
+      <div
+        id="__codesign"
+        className={className}
+        onClick={(event: TargetEvent) => {
+          // Stop <a> links from navigating away
+          event.preventDefault();
+
+          if (typeof onClick === 'function') {
+            onClick(event);
+          }
+        }}
+      >
+        {children}
+      </div>
+    </>
   );
 };

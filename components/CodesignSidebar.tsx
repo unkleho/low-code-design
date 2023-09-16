@@ -49,6 +49,7 @@ const CodesignSidebar = ({
   const {
     currentField,
     form,
+    selectedNodes: nodes,
     setSelectedNodes,
     setClassName,
     setFormValue,
@@ -59,12 +60,22 @@ const CodesignSidebar = ({
 
   // Allow multi-select in the future
   const selectedNode = selectedNodes[0];
+  const node = nodes?.[0];
 
   // Array of path indexes eg. ['0-0-1']
-  const selectedId = selectedNode ? getFiberNodeId(selectedNode) : '';
+  const selectedId = node ? getFiberNodeId(node) : '';
   const prevSelectedId = usePrevious(selectedId);
+  const prevClassName = usePrevious(className);
+  const prevText = usePrevious(text);
 
-  // console.log('CodesignSidebar', { text, className });
+  console.log('CodesignSidebar', {
+    prevSelectedId,
+    selectedId,
+    prevText,
+    text,
+    prevClassName,
+    className,
+  });
 
   // --------------------------------------------------------------------------
   // Effects
@@ -73,10 +84,17 @@ const CodesignSidebar = ({
   // Set selectedNode into store. This also sets `text` and `className`
   React.useEffect(() => {
     setSelectedNodes([selectedNode]);
+
+    handleNodeChange([
+      {
+        type: 'SELECT_NODE',
+        node: selectedNode,
+      },
+    ]);
   }, [selectedNode]);
 
   React.useEffect(() => {
-    if (selectedId === prevSelectedId) {
+    if (selectedId === prevSelectedId && prevClassName !== className) {
       handleNodeChange([
         {
           type: 'UPDATE_FILE_CLASS_NAME',
@@ -88,7 +106,7 @@ const CodesignSidebar = ({
   }, [className]);
 
   React.useEffect(() => {
-    if (selectedId === prevSelectedId) {
+    if (selectedId === prevSelectedId && prevText !== text) {
       handleNodeChange([
         {
           type: 'UPDATE_FILE_TEXT',

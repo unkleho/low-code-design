@@ -9,10 +9,7 @@ import {
 } from '../lib/rehype-utils';
 import RehypeRootComponent from '../components/RehypeComponent';
 import { getReactFiberInstance } from '../lib/react-fiber-utils';
-import {
-  changeHighlightElement,
-  getPathIndexes,
-} from '../lib/html-element-utils';
+import { getPathIndexes } from '../lib/html-element-utils';
 import { CodesignWorkArea } from '../components/CodesignWorkArea';
 
 const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
@@ -29,48 +26,36 @@ const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
 const EditorPage = () => {
   const [code, setCode] = React.useState(defaultCode);
   const [selectedNodes, setSelectedNodes] = React.useState<FiberNode[]>([]);
-  const [pathIndexes, setPathIndexes] = React.useState<number[]>([]);
+  // const [pathIndexes, setPathIndexes] = React.useState<number[]>([]);
   const [isClient, setIsClient] = useState(false);
-
-  const highlightElement = React.useRef<HTMLDivElement>();
-  // Top level preview element
-  const previewElement =
-    typeof window === 'undefined'
-      ? null
-      : document.getElementById('__codesign');
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    if (highlightElement) {
-      changeHighlightElement(
-        previewElement,
-        highlightElement.current,
-        pathIndexes,
-      );
-    }
-  }, [code]);
+  // Not sure if needed
+  // useEffect(() => {
+  //   if (highlightElement) {
+  //     changeHighlightElement(
+  //       previewElement,
+  //       highlightElement.current,
+  //       pathIndexes,
+  //     );
+  //   }
+  // }, [code]);
 
   const handleDesignToolsChange = (events: NodeChangeEvent[]) => {
-    console.log('handleDesignToolsChange', events[0]);
+    console.log('Editor Page', 'handleDesignToolsChange', events[0]);
 
     const event = events[0]; // Allow multiple node changes in future
     const { node } = event;
 
     const pathIndexes = getPathIndexes(node?.stateNode);
-    setPathIndexes(pathIndexes);
+    // setPathIndexes(pathIndexes);
 
     if (!node) {
       return null;
     }
-
-    changeHighlightElement(
-      previewElement,
-      highlightElement.current,
-      pathIndexes,
-    );
 
     // TODO: Add a select element/node type
     if (event.type === 'UPDATE_FILE_CLASS_NAME') {
@@ -94,7 +79,7 @@ const EditorPage = () => {
   return (
     <>
       <div className="livePage h-screen overflow-hidden">
-        <div className="fixed" ref={highlightElement}></div>
+        {/* <div className="fixed" ref={highlightElement}></div> */}
 
         <header className="header p-3 border-b-4">
           <h1 className="text-sm uppercase text-gray-800 font-bold">

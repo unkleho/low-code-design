@@ -53,6 +53,10 @@ export type NodeChangeEvent =
       type: 'CREATE_FILE_ELEMENT';
       node: FiberNode;
       elementType: string;
+    }
+  | {
+      type: 'SELECT_NODE';
+      node: FiberNode;
     };
 
 /**
