@@ -1,7 +1,6 @@
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 
-import { useCodesign } from '../lib/contexts/codesign-context';
 import classNameValues from '../lib/class-name-values';
 import { useCodesignStore } from '../lib/store/store';
 
