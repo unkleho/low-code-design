@@ -81,8 +81,8 @@ const EditorPage = () => {
       <div className="livePage h-screen overflow-hidden">
         {/* <div className="fixed" ref={highlightElement}></div> */}
 
-        <header className="header p-3 border-b-4">
-          <h1 className="text-sm uppercase text-gray-800 font-bold">
+        <header className="header p-3 bg-gray-800">
+          <h1 className="text-sm uppercase text-gray-200 font-bold ">
             {`<>`} Low Code Design <span className="font-normal">/ Demo</span>
           </h1>
         </header>
@@ -100,7 +100,7 @@ const EditorPage = () => {
         </CodesignWorkArea>
 
         <div
-          className="editor border-t-4"
+          className="editor border-t"
           style={{
             // Doesn't shrink properly without this
             // https://github.com/suren-atoyan/monaco-react/issues/27
@@ -124,7 +124,7 @@ const EditorPage = () => {
           selectedNodes={selectedNodes}
           className={[
             'designTools',
-            'max-h-full h-screen overflow-auto border-r-4',
+            'max-h-full h-screen overflow-auto border-r',
           ].join(' ')}
           // onNodeClick={(node, pathIndexes) => {
           //   setPathIndexes(pathIndexes);

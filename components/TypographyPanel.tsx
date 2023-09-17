@@ -12,7 +12,7 @@ const TypographyPanel = () => {
 
   return (
     <Panel title="Typography" name="typography">
-      <div className="p-3">
+      <div className="px-4">
         <PanelRow label="Font Size">
           <select
             className="p-1 border"

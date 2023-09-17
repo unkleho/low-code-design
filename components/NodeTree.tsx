@@ -94,7 +94,7 @@ const NodeTree = ({
               ].join(' ')}
               data-id={dataId}
               style={{
-                paddingLeft: (level + 1) * 12,
+                paddingLeft: level * 12,
               }}
               onClick={() => {
                 if (node.stateNode) {

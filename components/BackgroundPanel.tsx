@@ -13,7 +13,7 @@ const BackgroundPanel = () => {
 
   return (
     <Panel title="Background" name="background">
-      <div className="p-3">
+      <div className="px-4">
         <PanelRow label="Color">
           <ColorPicker
             selectedColor={backgroundColor}

@@ -64,6 +64,9 @@ export type CodesignAppState = {
   form?: FormState;
   currentField?: FormField;
   setCurrentField: (currentField: FormField) => void;
+  /**
+   * Set value of a form field. Use value without prefix eg. "1" instead of "ml-1".
+   */
   setFormValue: (field: FormField, value: string) => void;
   setClassName: (className: string) => void;
   /**
@@ -120,6 +123,11 @@ export const useCodesignStore = create<CodesignAppState>((set, get) => {
       }),
     setClassNameValue: (oldValue: string, newValue: string) =>
       set((state) => {
+        console.log('setClassNameValue', state.form.className, {
+          oldValue,
+          newValue,
+        });
+
         const newClassName = replaceClassNameValue(
           state.form.className,
           oldValue,

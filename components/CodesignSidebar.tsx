@@ -161,7 +161,7 @@ const CodesignSidebar = ({
     <div
       className={[
         css.designToolsApp,
-        'flex-col w-64 bg-gray-100 text-sm text-gray-800',
+        'flex-col w-72 bg-gray-50 text-sm text-gray-800',
         appClassName || '',
       ].join(' ')}
     >

@@ -6,14 +6,17 @@ const SizingPanel = () => {
 
   return (
     <Panel title="Sizing" name="sizing">
-      <div className="p-3">
+      <div className="px-4">
         <div className="flex items-baseline mb-2">
-          <label className="w-16 mr-2 text-xs" htmlFor="element-width">
+          <label
+            className="w-16 mr-2 text-xs text-gray-500"
+            htmlFor="sizing-width"
+          >
             Width
           </label>
           <input
             type="text"
-            id="element-width"
+            id="sizing-width"
             className="flex-1 w-full p-1 mr-4 border"
             value={form.width || ''}
             onFocus={() => setCurrentField('width')}
@@ -23,9 +26,15 @@ const SizingPanel = () => {
               setFormValue('width', value);
             }}
           />
-          <label className="text-xs mr-2">Min-Width</label>
+          <label
+            className="text-xs mr-2 text-gray-500"
+            htmlFor="sizing-min-width"
+          >
+            Min-Width
+          </label>
           <input
             type="text"
+            id="sizing-min-width"
             className="flex-1 w-full p-1 border"
             value={form.minWidth || ''}
             onFocus={() => setCurrentField('minWidth')}
@@ -37,12 +46,15 @@ const SizingPanel = () => {
           />
         </div>
         <div className="flex items-baseline">
-          <label className="w-16 mr-2 text-xs" htmlFor="element-height">
+          <label
+            className="w-16 mr-2 text-xs text-gray-500"
+            htmlFor="sizing-height"
+          >
             Height
           </label>
           <input
             type="text"
-            id="element-height"
+            id="sizing-height"
             className="flex-1 w-full p-1 mr-4 border"
             value={form.height || ''}
             onFocus={() => setCurrentField('height')}
@@ -52,9 +64,15 @@ const SizingPanel = () => {
               setFormValue('height', value);
             }}
           />
-          <label className="text-xs mr-2">Min-Height</label>
+          <label
+            className="text-xs mr-2 text-gray-500"
+            htmlFor="sizing-min-height"
+          >
+            Min-Height
+          </label>
           <input
             type="text"
+            id="sizing-min-height"
             className="flex-1 w-full p-1 border"
             value={form.minHeight || ''}
             onFocus={() => setCurrentField('minHeight')}

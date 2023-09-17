@@ -13,8 +13,10 @@ const Panel = ({ title, name, children }: PanelProps) => {
 
   return (
     <div className="border-b">
-      <div className="flex px-3 pt-3 pb-1 bg-gray-100">
-        <h2 className="mr-auto font-bold text-xs">{title}</h2>
+      <div className="flex items-center px-4 pt-4 pb-4">
+        <h2 className="mr-auto font-semibold text-xs leading-none text-gray-800">
+          {title}
+        </h2>
 
         <button
           onClick={() => {
@@ -28,7 +30,7 @@ const Panel = ({ title, name, children }: PanelProps) => {
         </button>
       </div>
 
-      {panel.status === 'open' && <div>{children}</div>}
+      {panel.status === 'open' && <div className="pb-4">{children}</div>}
     </div>
   );
 };

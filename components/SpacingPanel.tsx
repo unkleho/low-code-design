@@ -10,32 +10,62 @@ const SpacingPanel = () => {
 
   return (
     <Panel title="Spacing" name="spacing">
-      <div className="p-3">
+      <div className="px-4">
         {['margin', 'padding'].map((spacing) => {
           return (
             <PanelRow label={spacing} key={spacing}>
               {[
-                { side: 't', field: `${spacing}Top` },
-                { side: 'r', field: `${spacing}Right` },
-                { side: 'b', field: `${spacing}Bottom` },
-                { side: 'l', field: `${spacing}Left` },
-              ].map((space: { side: string; field: FormField }) => {
-                return (
-                  <input
-                    type="text"
-                    placeholder={space.side}
-                    value={form[space.field] || ''}
-                    className={`flex-1 w-full p-1 mr-1 border border-${space.side}-4`}
-                    key={space.side}
-                    onFocus={() => setCurrentField(space.field)}
-                    onChange={(event) => {
-                      const { value } = event.target;
+                {
+                  side: 't',
+                  field: `${spacing}Top`,
+                  borderClassName: 'w-full h-1',
+                },
+                {
+                  side: 'r',
+                  field: `${spacing}Right`,
+                  borderClassName: 'h-full w-1 right-0',
+                },
+                {
+                  side: 'b',
+                  field: `${spacing}Bottom`,
+                  borderClassName: 'w-full h-1 bottom-0',
+                },
+                {
+                  side: 'l',
+                  field: `${spacing}Left`,
+                  borderClassName: 'h-full w-1',
+                },
+              ].map(
+                (space: {
+                  side: string;
+                  field: FormField;
+                  borderClassName: string;
+                }) => {
+                  return (
+                    <div className="relative mr-2 last:mr-0">
+                      <div
+                        className={[
+                          'absolute bg-gray-200',
+                          space.borderClassName,
+                        ].join(' ')}
+                      ></div>
+                      <input
+                        type="text"
+                        placeholder={space.side}
+                        value={form[space.field] || ''}
+                        className={`flex-1 w-full p-2 border border-${space.side}-gray-500`}
+                        key={space.side}
+                        onFocus={() => setCurrentField(space.field)}
+                        onChange={(event) => {
+                          const { value } = event.target;
 
-                      setFormValue(space.field, value);
-                    }}
-                  />
-                );
-              })}
+                          setFormValue(space.field, value);
+                        }}
+                      />
+                    </div>
+                  );
+                },
+              )}
             </PanelRow>
           );
         })}

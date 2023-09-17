@@ -56,11 +56,11 @@ const ElementPanel = () => {
 
   return (
     <Panel title="Element" name="element">
-      <div className="p-3">
+      <div className="px-4">
         <PanelRow label="Type">
           {type && (
             <span
-              className="px-2 py-1 font-bold bg-gray-200 rounded-md"
+              className="px-2 py-1 font-bold bg-gray-200 rounded-sm"
               title={`Line ${lineNumber}, column ${columnNumber}, ${fileName}`}
             >
               {type}

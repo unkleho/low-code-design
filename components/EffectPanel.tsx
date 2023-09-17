@@ -9,7 +9,7 @@ const EffectPanel = () => {
 
   return (
     <Panel title="Effect" name="effect">
-      <div className="p-3">
+      <div className="px-4">
         <PanelRow label="Opacity">
           <select
             className="p-1 border"

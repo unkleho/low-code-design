@@ -1,7 +1,7 @@
 .designToolsApp input[type='text'] {
-  @apply text-xs rounded-md;
+  @apply p-2 text-xs rounded-sm border-gray-200;
 }
 
 .designToolsApp select {
-  @apply rounded-md;
+  @apply p-2 text-xs border-gray-200 rounded-sm bg-white;
 }

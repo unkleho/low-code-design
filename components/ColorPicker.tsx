@@ -19,7 +19,7 @@ const ColorPicker = ({ selectedColor, className, onColorClick }: Props) => {
   return (
     <div
       className={[
-        'relative w-full h-16 overflow-scroll border bg-white rounded-md',
+        'relative w-full h-[76px] overflow-scroll border bg-white rounded-sm',
         className,
       ].join(' ')}
       style={{
@@ -100,7 +100,7 @@ const ColorTile = ({
     <button
       type="button"
       className={[
-        'relative flex-1 h-4 border-t border-l focus:outline-none last:border-r',
+        'relative flex-1 h-5 border-t border-l focus:outline-none last:border-r',
         isSelected ? 'z-10' : '',
       ].join(' ')}
       style={{

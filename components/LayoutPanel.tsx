@@ -13,11 +13,13 @@ type ArrowNarrowDirection =
   | 'arrow-narrow-up';
 
 const LayoutPanel = () => {
-  const { form, setClassNameValue } = useCodesignStore();
+  const { form, setClassNameValue, setFormValue } = useCodesignStore();
+
+  console.log('LayoutPanel', form);
 
   return (
     <Panel title="Layout" name="layout">
-      <div className="p-3">
+      <div className="px-4">
         <PanelRow label="Position">
           <select
             className="p-1 border"
@@ -70,16 +72,11 @@ const LayoutPanel = () => {
               <button
                 type="button"
                 className={[
-                  'p-1 border mr-2 bg-white rounded-md',
-                  isSelected
-                    ? 'text-gray-700 border-gray-500'
-                    : 'text-gray-400',
+                  'p-1 border mr-2 bg-white rounded-sm',
+                  isSelected ? 'text-gray-700' : 'text-gray-300',
                 ].join(' ')}
                 onClick={() => {
-                  setClassNameValue(
-                    `flex-${form.flexDirection}`,
-                    `flex-${flexDirection}`,
-                  );
+                  setFormValue('flexDirection', flexDirection);
                 }}
                 key={flexDirection}
               >

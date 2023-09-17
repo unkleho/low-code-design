@@ -75,7 +75,7 @@ const LayersPanel = ({
 
   return (
     <Panel title="Layers" name="layers">
-      <div className="py-1">
+      <div className="">
         <NodeTree
           nodes={nodes}
           selectedIds={selectedIds}
