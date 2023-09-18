@@ -2,9 +2,8 @@ import React from 'react';
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 import classNameValues from '../lib/class-name-values';
-import ColorPicker from './ColorPicker';
 import { useCodesignStore } from '../lib/store/store';
-import ColorPickerSelect from './ColorPickerSelect';
+import { ColorPicker } from './ColorPicker';
 
 const TypographyPanel = () => {
   const { form, setClassNameValue } = useCodesignStore();
@@ -63,23 +62,12 @@ const TypographyPanel = () => {
         </PanelRow>
 
         <PanelRow label="Color">
-          {/* <ColorPickerSelect
-            selectedColor={textColor}
-            onColorClick={(color) => {
-              // TODO: Consider wrapping function to handle ternaries
-              setClassNameValue(
-                textColor ? `text-${textColor}` : '',
-                color ? `text-${color}` : '',
-              );
-            }}
-          ></ColorPickerSelect> */}
           <ColorPicker
             selectedColor={textColor}
-            onColorClick={(color) => {
-              // TODO: Consider wrapping function to handle ternaries
+            onColourClick={(colour) => {
               setClassNameValue(
                 textColor ? `text-${textColor}` : '',
-                color ? `text-${color}` : '',
+                colour ? `text-${colour}` : '',
               );
             }}
           />
