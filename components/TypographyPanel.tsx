@@ -63,7 +63,7 @@ const TypographyPanel = () => {
         </PanelRow>
 
         <PanelRow label="Color">
-          <ColorPickerSelect
+          {/* <ColorPickerSelect
             selectedColor={textColor}
             onColorClick={(color) => {
               // TODO: Consider wrapping function to handle ternaries
@@ -72,8 +72,8 @@ const TypographyPanel = () => {
                 color ? `text-${color}` : '',
               );
             }}
-          ></ColorPickerSelect>
-          {/* <ColorPicker
+          ></ColorPickerSelect> */}
+          <ColorPicker
             selectedColor={textColor}
             onColorClick={(color) => {
               // TODO: Consider wrapping function to handle ternaries
@@ -82,7 +82,7 @@ const TypographyPanel = () => {
                 color ? `text-${color}` : '',
               );
             }}
-          /> */}
+          />
         </PanelRow>
 
         <PanelRow label="Transform">
