@@ -38,18 +38,9 @@ const NodeTree = ({
   dataId = 'design-tools',
   onNodeCreateClick,
 }: NodeTreeProps) => {
-  // const childNodes = getChildNodes(nodes, parentId);
-  // console.log('nodeTree', parentId, nodes);
-
   if (nodes.length === 0 || level > MAX_DEPTH) {
     return null;
   }
-
-  // if (level === 6) {
-  //   console.log('NodeTree', nodes, getFiberNodeId2(nodes[0]));
-  // }
-
-  // console.log('nodeTree nodes', nodes);
 
   const handleNodeCreateClick = (node) => {
     if (typeof onNodeCreateClick === 'function') {
@@ -88,9 +79,9 @@ const NodeTree = ({
             <button
               type="button"
               className={[
-                'flex w-full py-1 hover:bg-gray-200',
+                'flex w-full py-1 hover:bg-blue-100',
                 isSelected ? 'font-bold' : 'font-normal',
-                isSelected ? 'bg-gray-200' : '',
+                isSelected ? 'bg-blue-100' : '',
               ].join(' ')}
               data-id={dataId}
               style={{
@@ -125,8 +116,6 @@ const NodeTree = ({
 
             {/* {node.memoizedProps.className} */}
             <NodeTree
-              // parentId={node.id}
-              // nodes={nodes}
               nodes={childNodes}
               selectedIds={selectedIds}
               level={level + 1}
