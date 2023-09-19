@@ -10,7 +10,7 @@ export const ColorPicker = ({ selectedColor, onColourClick }: Props) => {
   return (
     <Popover className="relative">
       <Popover.Button
-        className={[`w-8 h-8 p-1 border rounded-sm bg-white`].join(' ')}
+        className={[`w-7 h-7 p-1 border rounded-sm bg-white`].join(' ')}
       >
         <div
           className={[
