@@ -131,9 +131,12 @@ const ColorTile = ({
 
       {isSelected && (
         <span
-          className={['absolute top-0 left-0 block w-full h-full'].join(' ')}
+          className={[
+            'absolute top-0 left-0 block w-full h-full  outline-gray-500',
+          ].join(' ')}
           style={{
-            outline: '1px solid gray',
+            outlineWidth: '1px',
+            outlineStyle: 'solid',
           }}
         ></span>
       )}
