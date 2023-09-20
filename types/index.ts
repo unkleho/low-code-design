@@ -1,5 +1,8 @@
 import { FiberNode as FiberNodeBase } from '../lib/react-fiber-traverse/src/mocked-types';
 
+/** `live` for use on deployed website. `dev` local dev environment only. */
+export type CodesignMode = 'live' | 'dev';
+
 // TODO: Extend FiberNode with missing keys
 export type FiberNode = FiberNodeBase & {
   /** Parent FiberNode */

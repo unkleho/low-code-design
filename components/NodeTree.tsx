@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FiberNode, FiberNodeWithId } from '../types';
+import { CodesignMode, FiberNode, FiberNodeWithId } from '../types';
 import Icon from './Icon';
 import { getChildNodes } from '../lib/react-fiber-utils';
 
@@ -10,32 +10,36 @@ type NodeTreeProps = {
   selectedIds: string[];
   level?: number;
   dataId?: string;
+  mode?: CodesignMode;
   onNodeCreateClick?: Function;
 };
 
 /** Prevent recursive component going forever */
-const MAX_DEPTH = 6;
-/** TODO: Pass this through as a config? `i` is a production name for React component */
-export const nodeTypesToSkip = ['RehypeRootComponent', 'RehypeComponent', 'i'];
+const MAX_DEPTH = 10;
 
 export function getNodeType(node: FiberNode) {
   return typeof node.type === 'function' ? node.type.name : node.type;
 }
 
-export function shouldSkipNode(node: FiberNode) {
-  if (typeof node.type === 'function') {
-    return nodeTypesToSkip.includes(node.type.name);
+export function shouldSkipNode(node: FiberNode, mode: CodesignMode) {
+  /** TODO: Although `i` is a production name for React component, it does change */
+  const nodeTypesToSkip = ['RehypeRootComponent', 'RehypeComponent', 'i'];
+
+  // Skip all React components in layers panel
+  if (typeof node.type === 'function' && mode === 'live') {
+    // return nodeTypesToSkip.includes(node.type.name);
+    return true;
   }
 
   return false;
 }
 
 const NodeTree = ({
-  // parentId,
   nodes = [],
   selectedIds = [],
   level = 0,
   dataId = 'design-tools',
+  mode = 'live',
   onNodeCreateClick,
 }: NodeTreeProps) => {
   if (nodes.length === 0 || level > MAX_DEPTH) {
@@ -62,7 +66,7 @@ const NodeTree = ({
         const type = getNodeType(node);
         // const grandChildNodes = getChildNodes(nodes, node.id);
 
-        if (shouldSkipNode(node)) {
+        if (shouldSkipNode(node, mode)) {
           return (
             <NodeTree
               key={node.id}

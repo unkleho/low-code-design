@@ -10,7 +10,7 @@ import EffectPanel from './EffectPanel';
 import SizingPanel from './SizingPanel';
 
 import { updateClassName } from '../lib/replace-class-name-value';
-import { FiberNode, NodeChangeEvent } from '../types';
+import { CodesignMode, FiberNode, NodeChangeEvent } from '../types';
 import { getFiberNodeId } from '../lib/react-fiber-utils';
 
 import css from './CodesignSidebar.module.css';
@@ -19,6 +19,7 @@ import { useCodesignStore } from '../lib/store/store';
 
 type Props = {
   selectedNodes: FiberNode[];
+  mode?: CodesignMode;
   className?: string;
   onNodeChange: Function;
 };
@@ -43,6 +44,7 @@ const config = {
 
 const CodesignSidebar = ({
   selectedNodes = [],
+  mode = 'live',
   className: appClassName,
   onNodeChange,
 }: Props) => {
@@ -188,6 +190,7 @@ const CodesignSidebar = ({
 
       {/* Trigger an update of layers by incrementing the key. Useful when new elements are added or when they are removed. LayersPanel internally builds the DOM element hierarchy. TODO: Consider moving this to context state. */}
       <LayersPanel
+        mode={mode}
         selectedIds={[selectedId]}
         refreshCounter={layersPanelCounter}
         onNodeCreateClick={(selectedNode) => {

@@ -2,7 +2,7 @@ import React from 'react';
 import Panel from './Panel';
 import NodeTree from './NodeTree';
 
-import { FiberNodeWithId } from '../types';
+import { CodesignMode, FiberNodeWithId } from '../types';
 import {
   getChildNodes,
   getFiberNodeId,
@@ -15,12 +15,14 @@ import {
 type Props = {
   selectedIds: string[];
   refreshCounter?: number;
+  mode?: CodesignMode;
   onNodeCreateClick?: Function;
 };
 
 const LayersPanel = ({
   selectedIds,
   refreshCounter,
+  mode = 'dev',
   onNodeCreateClick,
 }: Props) => {
   const [nodes, setNodes] = React.useState<FiberNodeWithId[]>([]);
@@ -79,6 +81,7 @@ const LayersPanel = ({
         <NodeTree
           nodes={nodes}
           selectedIds={selectedIds}
+          mode={mode}
           onNodeCreateClick={onNodeCreateClick}
         />
       </div>
