@@ -123,10 +123,10 @@ export const useCodesignStore = create<CodesignAppState>((set, get) => {
       }),
     setClassNameValue: (oldValue: string, newValue: string) =>
       set((state) => {
-        console.log('setClassNameValue', state.form.className, {
-          oldValue,
-          newValue,
-        });
+        // console.log('setClassNameValue', state.form.className, {
+        //   oldValue,
+        //   newValue,
+        // });
 
         const newClassName = replaceClassNameValue(
           state.form.className,
@@ -160,13 +160,13 @@ export const useCodesignStore = create<CodesignAppState>((set, get) => {
           }
         }
 
-        console.log(
-          'store',
-          'setSelectedNodes',
-          selectedNodes,
-          className,
-          text,
-        );
+        // console.log(
+        //   'store',
+        //   'setSelectedNodes',
+        //   selectedNodes,
+        //   className,
+        //   text,
+        // );
 
         return {
           selectedNodes,

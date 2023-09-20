@@ -1,3 +1,5 @@
+'use client';
+
 import { ReactNode, useRef } from 'react';
 import { TargetEvent } from '../types';
 import { changeHighlightElement } from '../lib/html-element-utils';
@@ -22,6 +24,22 @@ export const CodesignWorkArea = ({ className, onClick, children }: Props) => {
     typeof window === 'undefined'
       ? null
       : document.getElementById('__codesign');
+
+  // TODO: Get this working.
+  // useWindowSize(() => {
+  //   const element = getSelectedElement(previewElement, ancestorIndexes);
+
+  //   if (element) {
+  //     const { top, left, width, height } = element.getBoundingClientRect();
+
+  //     updateHighlightElement(highlightElement.current, {
+  //       top,
+  //       left,
+  //       width,
+  //       height,
+  //     });
+  //   }
+  // });
 
   changeHighlightElement(previewElement, highlightElement.current, pathIndexes);
 

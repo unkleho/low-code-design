@@ -42,7 +42,7 @@ const SpacingPanel = () => {
                   borderClassName: string;
                 }) => {
                   return (
-                    <div className="relative mr-2 last:mr-0">
+                    <div className="relative mr-2 last:mr-0" key={space.side}>
                       <div
                         className={[
                           'absolute bg-gray-200',

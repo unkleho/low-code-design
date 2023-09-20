@@ -15,7 +15,7 @@ type ArrowNarrowDirection =
 const LayoutPanel = () => {
   const { form, setClassNameValue, setFormValue } = useCodesignStore();
 
-  console.log('LayoutPanel', form);
+  // console.log('LayoutPanel', form);
 
   return (
     <Panel title="Layout" name="layout">

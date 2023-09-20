@@ -68,14 +68,14 @@ const CodesignSidebar = ({
   const prevClassName = usePrevious(className);
   const prevText = usePrevious(text);
 
-  console.log('CodesignSidebar', {
-    prevSelectedId,
-    selectedId,
-    prevText,
-    text,
-    prevClassName,
-    className,
-  });
+  // console.log('CodesignSidebar', {
+  //   prevSelectedId,
+  //   selectedId,
+  //   prevText,
+  //   text,
+  //   prevClassName,
+  //   className,
+  // });
 
   // --------------------------------------------------------------------------
   // Effects
