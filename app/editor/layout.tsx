@@ -30,8 +30,8 @@ const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
 export function EditorLayout({ children }: { children: React.ReactNode }) {
   const [code, setCode] = useState(defaultCode);
   const [selectedNodes, setSelectedNodes] = useState<FiberNode[]>([]);
-  const params = useParams();
-  console.log('EditorLayout', { params });
+  // const params = useParams();
+  // console.log('EditorLayout', { params });
 
   const isClient = useIsClient();
 

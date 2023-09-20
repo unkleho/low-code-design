@@ -84,7 +84,7 @@ export type CodesignAppState = {
    * TODO: Only handles one node for now.
    */
   setSelectedNodes: (selectedNodes: FiberNode[]) => void;
-  getSelectedNode: () => FiberNode;
+  getSelectedNode: () => FiberNode | null;
   /**
    * The path to element by indexes. TODO: Change to selectedId?
    */
