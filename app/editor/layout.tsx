@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiberNode, NodeChangeEvent } from '../../types';
 import { CodesignWorkArea } from '../../components/CodesignWorkArea';
 import { getReactFiberInstance } from '../../lib/react-fiber-utils';
@@ -15,23 +15,23 @@ import CodesignSidebar from '../../components/CodesignSidebar';
 import { getPathIndexes } from '../../lib/html-element-utils';
 import { useIsClient } from '../../lib/hooks/use-is-client';
 import { useParams } from 'next/navigation';
-
-const defaultCode = `<article class="w-64 bg-white p-6 rounded-lg shadow-xl">
-  <p class="mb-4 text-sm uppercase text-gray-500">Total</p>
-  <h1 class="text-4xl text-gray-800 font-bold leading-tight">77%</h1>
-  <p class="mb-2 text-sm text-teal-400">+13%</p>
-
-  <div class="relative">
-    <div class="absolute w-full h-1 bg-gray-200"></div>
-    <div class="absolute t-0 w-3/4 h-1 bg-pink-500"></div>
-  </div>
-</article>`;
+import { components } from '../../lib/data';
+import Panel from '../../components/Panel';
+import { CodesignRightSidebar } from '../../components/CodesignRightSidebar';
+import { useCodesignParams } from '../../lib/hooks/use-codesign-params';
 
 export function EditorLayout({ children }: { children: React.ReactNode }) {
-  const [code, setCode] = useState(defaultCode);
+  const [code, setCode] = useState(components[0].code);
   const [selectedNodes, setSelectedNodes] = useState<FiberNode[]>([]);
-  // const params = useParams();
-  // console.log('EditorLayout', { params });
+  const { componentId } = useCodesignParams();
+  console.log('EditorLayout', { componentId });
+
+  useEffect(() => {
+    const component = components.find((c) => c.id === componentId);
+
+    setCode(component.code);
+    setSelectedNodes([]);
+  }, [componentId]);
 
   const isClient = useIsClient();
 
@@ -68,6 +68,7 @@ export function EditorLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="livePage h-screen overflow-hidden">
+      {/* TODO: Create header component */}
       <header className="header p-3 bg-gray-800">
         <h1 className="text-sm uppercase text-gray-200 font-bold ">
           {`<>`} Low Code Design <span className="font-normal">/ Demo</span>
@@ -79,7 +80,7 @@ export function EditorLayout({ children }: { children: React.ReactNode }) {
       <CodesignSidebar
         selectedNodes={selectedNodes}
         className={[
-          'designTools',
+          'left-sidebar',
           'max-h-full h-screen overflow-auto border-r',
         ].join(' ')}
         onNodeChange={handleDesignToolsChange}
@@ -118,15 +119,19 @@ export function EditorLayout({ children }: { children: React.ReactNode }) {
         />
       </div>
 
+      <CodesignRightSidebar
+        className={['right-sidebar', 'w-72 border-l'].join(' ')}
+      ></CodesignRightSidebar>
+
       <style>{`
       .livePage {
         display: grid;
         grid-template-areas: 
-          "header header"
-          "designTools preview"
-          "designTools editor";
+          "header header header"
+          "left-sidebar preview right-sidebar"
+          "left-sidebar editor right-sidebar";
         grid-template-rows: auto 1fr 1fr;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto 1fr auto;
       }
 
       .header {
@@ -141,8 +146,12 @@ export function EditorLayout({ children }: { children: React.ReactNode }) {
         grid-area: editor;
       }
 
-      .designTools {
-        grid-area: designTools;
+      .left-sidebar {
+        grid-area: left-sidebar;
+      }
+
+      .right-sidebar {
+        grid-area: right-sidebar;
       }
       `}</style>
     </div>

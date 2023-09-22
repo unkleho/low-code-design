@@ -32,6 +32,8 @@ export const HighlightElement = () => {
       }, 10);
 
       return () => clearTimeout(timer);
+    } else {
+      setRect(null);
     }
   }, [selectedNode, form.className]);
 

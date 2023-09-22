@@ -42,14 +42,15 @@ export type FormState = {
 export type FormField = keyof FormState;
 
 export type PanelName =
-  | 'element'
-  | 'layout'
-  | 'spacing'
-  | 'sizing'
-  | 'typography'
   | 'background'
   | 'effect'
-  | 'layers';
+  | 'element'
+  | 'layers'
+  | 'layout'
+  | 'library'
+  | 'spacing'
+  | 'sizing'
+  | 'typography';
 
 export type PanelState = {
   // TODO: key?

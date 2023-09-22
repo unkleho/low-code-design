@@ -66,4 +66,8 @@ export const defaultPanels: PanelState[] = [
     name: 'layers',
     status: 'open',
   },
+  {
+    name: 'library',
+    status: 'open',
+  },
 ];
