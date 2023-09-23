@@ -24,7 +24,7 @@ export function EditorLayout({ children }: { children: React.ReactNode }) {
   const [code, setCode] = useState(components[0].code);
   const [selectedNodes, setSelectedNodes] = useState<FiberNode[]>([]);
   const { componentId } = useCodesignParams();
-  console.log('EditorLayout', { componentId });
+  // console.log('EditorLayout', { componentId });
 
   useEffect(() => {
     const component = components.find((c) => c.id === componentId);

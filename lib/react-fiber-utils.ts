@@ -1,6 +1,10 @@
 import { FiberNode, FiberNodeWithId } from '../types';
 
 export function getReactFiberInstance(element: EventTarget & HTMLElement) {
+  if (!element) {
+    return null;
+  }
+
   const targetInstKey = Object.keys(element).find((key) => {
     if (key.startsWith('__reactFiber$')) {
       return true;

@@ -18,11 +18,11 @@ export const LibraryPanel = () => {
           const isSelected = component.id === componentId;
 
           return (
-            <li className="">
+            <li className="" key={component.id}>
               <Link
                 href={`/editor/${component.id}`}
                 className={[
-                  'block px-4 py-2',
+                  'block px-4 py-2 text-xs',
                   'hover:bg-blue-100',
                   isSelected ? 'font-semibold' : '',
                 ].join(' ')}

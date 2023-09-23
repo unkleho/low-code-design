@@ -1,6 +1,8 @@
+export const CODESIGN_ROOT_ID = '__codesign';
+
 export function getPathIndexes(
   element: HTMLElement,
-  rootId = '__codesign',
+  rootId = CODESIGN_ROOT_ID,
 ): number[] {
   if (!element) {
     return [];

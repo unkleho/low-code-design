@@ -45,7 +45,7 @@ export const HighlightElement = () => {
 
   return (
     <div
-      className="fixed outline outline-1 outline-cyan-400"
+      className="fixed outline outline-1 outline-cyan-400 pointer-events-none"
       style={{
         top,
         left,
