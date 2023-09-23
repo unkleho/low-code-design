@@ -59,7 +59,7 @@ function getClassNameValue(className = '', prefix: string) {
   return className
     .split(' ')
     .filter((c) => {
-      return c.includes(prefix);
+      return c.startsWith(prefix);
     })[0]
     ?.replace(prefix, '');
 }
