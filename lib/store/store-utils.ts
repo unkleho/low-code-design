@@ -1,4 +1,4 @@
-import classNameValues from '../class-name-values';
+import classNameValues from '../class-name/class-name-values';
 import { textColors } from '../tailwind-config';
 import { FormState } from './store';
 

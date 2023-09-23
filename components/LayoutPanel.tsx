@@ -3,7 +3,7 @@ import PanelRow from './PanelRow';
 
 import Icon from './Icon';
 
-import classNameValues from '../lib/class-name-values';
+import classNameValues from '../lib/class-name/class-name-values';
 import { useCodesignStore } from '../lib/store/store';
 
 type ArrowNarrowDirection =

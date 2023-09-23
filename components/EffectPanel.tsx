@@ -1,7 +1,7 @@
 import Panel from './Panel';
 import PanelRow from './PanelRow';
 
-import classNameValues from '../lib/class-name-values';
+import classNameValues from '../lib/class-name/class-name-values';
 import { useCodesignStore } from '../lib/store/store';
 
 const EffectPanel = () => {

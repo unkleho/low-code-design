@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { defaultForm, defaultPanels } from './default-values';
 import { FiberNode } from '../../types';
-import replaceClassNameValue from '../replace-class-name-value';
+import replaceClassNameValue from '../class-name/class-name-utils';
 import { buildFormValues } from './store-utils';
 import { getPathIndexes } from '../html-element-utils';
 
