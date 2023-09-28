@@ -6,6 +6,7 @@ import { CodesignWorkArea } from '../../components/CodesignWorkArea';
 import { getReactFiberInstance } from '../../lib/react-fiber-utils';
 import RehypeRootComponent from '../../components/RehypeComponent';
 import {
+  addNode,
   parseCode,
   updateNodeClass,
   updateNodeText,
@@ -59,6 +60,9 @@ export function EditorLayout({ children }: { children: React.ReactNode }) {
       setCode(newCode);
     } else if (event.type === 'UPDATE_FILE_TEXT') {
       const newCode = updateNodeText(code, pathIndexes, event.text);
+      setCode(newCode);
+    } else if (event.type === 'CREATE_FILE_ELEMENT') {
+      const newCode = addNode(code, pathIndexes, event.elementType);
       setCode(newCode);
     }
   };

@@ -51,6 +51,25 @@ export function updateNodeText(
   return newCode;
 }
 
+export function addNode(code: string, indexes: number[], tagName: string) {
+  const ast = parseCode(code);
+  const selectedNode = getSelectedNode(ast, indexes);
+
+  if (selectedNode?.children) {
+    selectedNode.children.push({
+      type: 'element',
+      tagName,
+      // TODO: Change default text value?
+      children: [{ type: 'text', value: 'Text', tagName: null }],
+    });
+  }
+
+  console.log('addNode', ast, selectedNode);
+  const newCode = rehype().stringify(ast as Node);
+
+  return newCode;
+}
+
 export function parseCode(code: string): RehypeNode {
   const ast = rehype()
     .data('settings', {
