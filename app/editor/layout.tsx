@@ -119,9 +119,10 @@ export function EditorLayout({ children }: { children: React.ReactNode }) {
         />
       </div>
 
-      <CodesignRightSidebar
+      {/* Hide for now until we get more components */}
+      {/* <CodesignRightSidebar
         className={['right-sidebar', 'w-72 border-l'].join(' ')}
-      ></CodesignRightSidebar>
+      ></CodesignRightSidebar> */}
 
       <style>{`
       .livePage {
